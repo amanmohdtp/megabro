@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" width="200"/>
+  <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" width="150"/>
 </p>
 
 ​<p align="center">
@@ -55,6 +55,7 @@ Your key is stored in `sessionStorage` only - never sent anywhere except directl
 ---
 
 ## Screenshot
+  <img src="https://s6.imgcdn.dev/Yx1bxa.png" alt="screenshot" width="1000"/>
 
 ---
 
