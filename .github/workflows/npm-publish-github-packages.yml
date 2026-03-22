@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  # ── 1. Build & validate ─────────────────────────────────────────────────────
+  # ── 1. Build & Validate ─────────────────────────────────────────────────────
   build:
     name: Build & Validate
     runs-on: ubuntu-latest
