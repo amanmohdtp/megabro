@@ -1,109 +1,859 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGABRO | Infrastructure OS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { background: #000; color: #e4e4e7; font-family: 'JetBrains Mono', monospace; }
-        .glass { background: rgba(9, 9, 11, 0.8); backdrop-filter: blur(16px); border: 1px solid #27272a; }
-        .panel-glow { box-shadow: 0 0 20px rgba(16, 185, 129, 0.05); }
-        .input-glow:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MEGABRO — AI Command Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & base ─────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:     #080808;
+  --bg2:    #0f0f0f;
+  --bg3:    #161616;
+  --border: rgba(245,248,164,.1);
+  --border2:rgba(245,248,164,.18);
+  --acc:    #F5F8A4;
+  --acc2:   #d4d860;
+  --muted:  #555;
+  --text:   #e8e8e8;
+  --green:  #86efac;
+  --red:    #fca5a5;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Mono',monospace;
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* ── Scanlines overlay ────────────────────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,.08) 2px,
+    rgba(0,0,0,.08) 4px
+  );
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* Noise grain */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9998;
+  opacity:.5;
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────── */
+#app{
+  display:grid;
+  grid-template-rows:56px 1fr;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ── Top bar ──────────────────────────────────────────────────────────── */
+#topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  position:relative;
+  z-index:10;
+}
+.tb-left{display:flex;align-items:center;gap:14px}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-img{width:28px;height:28px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(245,248,164,.4))}
+.logo-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:.08em;
+  color:var(--acc);
+  line-height:1;
+}
+.badge{
+  font-size:9px;
+  font-family:'Space Mono',monospace;
+  color:var(--muted);
+  border:1px solid #222;
+  padding:2px 6px;
+  border-radius:3px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.tb-right{display:flex;align-items:center;gap:20px}
+.status-dot{
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:pulse 2s infinite;
+}
+.dot.off{background:var(--red);box-shadow:0 0 6px var(--red);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#btn-key{
+  background:transparent;
+  border:1px solid var(--border2);
+  color:var(--acc);
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  padding:5px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  transition:background .2s,color .2s;
+}
+#btn-key:hover{background:var(--acc);color:#000}
+
+/* ── Main split ───────────────────────────────────────────────────────── */
+#main{
+  display:grid;
+  grid-template-columns:1fr 320px;
+  overflow:hidden;
+}
+
+/* ── Chat pane ────────────────────────────────────────────────────────── */
+#chat-pane{
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  overflow:hidden;
+}
+#messages{
+  flex:1;overflow-y:auto;
+  padding:24px;
+  display:flex;flex-direction:column;gap:16px;
+  scroll-behavior:smooth;
+}
+#messages::-webkit-scrollbar{width:4px}
+#messages::-webkit-scrollbar-track{background:transparent}
+#messages::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+
+/* Welcome hero */
+#hero{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;
+  padding:60px 24px;
+  flex:1;
+  transition:opacity .4s;
+}
+#hero-logo{
+  width:100px;height:100px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 30px rgba(245,248,164,.25));
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:52px;
+  letter-spacing:.06em;
+  color:var(--acc);
+  line-height:1;
+  text-align:center;
+}
+#hero p{
+  color:var(--muted);
+  font-size:11px;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  max-width:300px;
+}
+.quick-cmds{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-top:8px;
+}
+.quick-btn{
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--acc);
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  padding:6px 14px;
+  border-radius:4px;
+  cursor:pointer;
+  letter-spacing:.05em;
+  transition:all .2s;
+}
+.quick-btn:hover{background:rgba(245,248,164,.08);border-color:var(--acc)}
+
+/* Message bubbles */
+.msg{
+  display:flex;gap:12px;
+  animation:slideIn .25s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg-avatar{
+  width:28px;height:28px;
+  border-radius:4px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+  margin-top:2px;
+}
+.msg.user .msg-avatar{background:var(--acc);color:#000}
+.msg.bot  .msg-avatar{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.msg.bot .msg-avatar img{width:22px;height:22px;object-fit:contain;filter:brightness(1.1)}
+.msg-body{flex:1}
+.msg-role{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.msg-text{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:0 8px 8px 8px;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.7;
+  color:var(--text);
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.msg.user .msg-text{
+  background:rgba(245,248,164,.06);
+  border-color:rgba(245,248,164,.15);
+  border-radius:8px 0 8px 8px;
+  color:var(--acc);
+}
+.msg-text code{
+  background:rgba(245,248,164,.08);
+  border:1px solid rgba(245,248,164,.12);
+  padding:1px 5px;
+  border-radius:3px;
+  font-family:'Space Mono',monospace;
+  font-size:12px;
+  color:var(--acc);
+}
+
+/* Typing indicator */
+.typing{display:flex;gap:4px;align-items:center;padding:8px 0}
+.typing span{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--acc);
+  opacity:.5;
+  animation:blink 1.2s infinite;
+}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* ── Input bar ────────────────────────────────────────────────────────── */
+#input-bar{
+  padding:16px 20px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg);
+}
+#input-bar .prompt-sym{color:var(--acc);font-size:16px;flex-shrink:0}
+#user-input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-family:'Space Mono',monospace;
+  font-size:13px;
+  color:var(--text);
+  resize:none;
+  min-height:22px;max-height:120px;
+  overflow-y:auto;
+}
+#user-input::placeholder{color:var(--muted)}
+#send-btn{
+  background:var(--acc);
+  border:none;
+  width:34px;height:34px;
+  border-radius:5px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:all .2s;
+}
+#send-btn:hover{background:var(--acc2);transform:scale(1.05)}
+#send-btn:active{transform:scale(.96)}
+#send-btn svg{width:15px;height:15px}
+#send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────── */
+#sidebar{
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  background:var(--bg2);
+}
+.sidebar-section{
+  border-bottom:1px solid var(--border);
+  padding:16px;
+}
+.sidebar-label{
+  font-size:9px;text-transform:uppercase;letter-spacing:.15em;
+  color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;
+}
+.sidebar-label::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:10px;
+}
+.stat-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px;
+  color:var(--acc);
+  line-height:1;
+}
+.stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+/* Model selector */
+.model-select{
+  width:100%;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  padding:8px 10px;
+  border-radius:5px;
+  outline:none;
+  cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+}
+.model-select:focus{border-color:var(--acc)}
+
+/* Token bar */
+.token-bar-wrap{margin-top:8px}
+.token-bar-track{
+  height:4px;background:var(--bg3);
+  border-radius:2px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.token-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--acc2),var(--acc));
+  border-radius:2px;
+  transition:width .4s ease;
+}
+.token-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px}
+
+/* History list */
+#history-list{
+  flex:1;overflow-y:auto;
+  padding:12px 16px;
+  display:flex;flex-direction:column;gap:6px;
+}
+#history-list::-webkit-scrollbar{width:3px}
+#history-list::-webkit-scrollbar-thumb{background:#222}
+.hist-item{
+  font-size:11px;color:var(--muted);
+  padding:6px 8px;
+  border-radius:4px;
+  cursor:pointer;
+  border:1px solid transparent;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  transition:all .15s;
+}
+.hist-item:hover{
+  background:rgba(245,248,164,.04);
+  border-color:var(--border2);
+  color:var(--acc);
+}
+.hist-empty{font-size:10px;color:var(--muted);text-align:center;padding:24px 0;font-style:italic}
+
+/* Sidebar footer */
+.sidebar-footer{
+  padding:14px 16px;
+  border-top:1px solid var(--border);
+  display:flex;gap:8px;
+}
+.sf-btn{
+  flex:1;background:transparent;
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  padding:7px;
+  border-radius:4px;
+  cursor:pointer;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  transition:all .2s;
+}
+.sf-btn:hover{border-color:var(--acc);color:var(--acc)}
+.sf-btn.danger:hover{border-color:var(--red);color:var(--red)}
+
+/* ── API key overlay ──────────────────────────────────────────────────── */
+#key-overlay{
+  position:fixed;inset:0;
+  background:rgba(8,8,8,.92);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;
+  padding:20px;
+}
+#key-overlay.hidden{display:none}
+.key-card{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:40px;
+  max-width:420px;width:100%;
+  text-align:center;
+  box-shadow:0 0 80px rgba(245,248,164,.06);
+}
+.key-card img{width:60px;height:60px;object-fit:contain;margin:0 auto 20px;display:block;filter:drop-shadow(0 0 16px rgba(245,248,164,.3))}
+.key-card h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;letter-spacing:.06em;
+  color:var(--acc);margin-bottom:6px;
+}
+.key-card p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:28px}
+.key-input-wrap{position:relative;margin-bottom:14px}
+.key-input-wrap input{
+  width:100%;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  padding:12px 16px;
+  font-family:'Space Mono',monospace;
+  font-size:13px;
+  color:var(--acc);
+  outline:none;
+  text-align:center;
+  letter-spacing:.05em;
+  transition:border-color .2s;
+}
+.key-input-wrap input:focus{border-color:var(--acc)}
+.key-input-wrap input::placeholder{color:var(--muted);letter-spacing:normal}
+.boot-btn{
+  width:100%;
+  background:var(--acc);
+  color:#000;
+  border:none;
+  border-radius:6px;
+  padding:13px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:.1em;
+  cursor:pointer;
+  transition:all .2s;
+}
+.boot-btn:hover{background:var(--acc2);transform:scale(1.01)}
+.boot-btn:active{transform:scale(.98)}
+.key-footer{margin-top:16px;font-size:10px;color:var(--muted)}
+.key-footer a{color:var(--acc);text-decoration:none}
+.key-footer a:hover{text-decoration:underline}
+.key-error{color:var(--red);font-size:11px;margin-top:8px;min-height:16px}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media(max-width:700px){
+  #main{grid-template-columns:1fr}
+  #sidebar{display:none}
+}
+</style>
 </head>
-<body class="h-screen flex flex-col p-4 overflow-hidden">
+<body>
 
-    <div id="setup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
-        <div class="glass max-w-md w-full p-10 rounded-2xl panel-glow text-center">
-            <div class="mb-6 inline-block p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 20c4.083 0 7.632-2.424 9.196-5.903m-3.196-5.097A10.003 10.003 0 0112 4c-4.083 0-7.632 2.424-9.196 5.903m3.196 5.097c-.339 1.182-.538 2.426-.595 3.712M12 11V3l4 1m-4 8l4-1m-4-8a9.986 9.986 0 014.546 2.084A10.003 10.003 0 0118 10"></path></svg>
-            </div>
-            <h1 class="text-2xl font-bold tracking-tighter mb-2 italic">MEGABRO_INIT</h1>
-            <p class="text-zinc-500 text-xs mb-8 uppercase tracking-widest">Awaiting Gemini Protocol Key</p>
-            
-            <input type="password" id="key" placeholder="AIza..." class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-center mb-6 input-glow outline-none transition-all text-emerald-400">
-            
-            <button onclick="boot()" class="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-emerald-400 transition-all uppercase text-xs tracking-[0.3em]">
-                System Boot
-            </button>
-            <p class="mt-6 text-[10px] text-zinc-600">Free API via <a href="https://aistudio.google.com/" target="_blank" class="underline hover:text-emerald-500">Google AI Studio</a></p>
+<!-- ── API Key Overlay ─────────────────────────────────────────────────────── -->
+<div id="key-overlay">
+  <div class="key-card">
+    <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" onerror="this.style.display='none'"/>
+    <h2>MEGABRO</h2>
+    <p>Enter your Gemini API key to boot</p>
+    <div class="key-input-wrap">
+      <input type="password" id="api-key-input" placeholder="AIzaSy..." autocomplete="off"/>
+    </div>
+    <div class="key-error" id="key-error"></div>
+    <button class="boot-btn" id="boot-btn">BOOT SYSTEM</button>
+    <p class="key-footer">
+      Free key at <a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a><br/>
+      Your key stays in your browser only.
+    </p>
+  </div>
+</div>
+
+<!-- ── App ─────────────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- Top bar -->
+  <div id="topbar">
+    <div class="tb-left">
+      <a class="logo-wrap" href="#">
+        <img class="logo-img" src="https://s6.imgcdn.dev/Yx103M.png" alt="logo" onerror="this.style.display='none'"/>
+        <span class="logo-name">MEGABRO</span>
+      </a>
+      <span class="badge" id="model-badge">gemini-2.0-flash</span>
+    </div>
+    <div class="tb-right">
+      <div class="status-dot">
+        <div class="dot" id="status-dot"></div>
+        <span id="status-label">ONLINE</span>
+      </div>
+      <button id="btn-key">API Key</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+
+    <!-- Chat pane -->
+    <div id="chat-pane">
+      <div id="messages">
+        <!-- Hero (shown when empty) -->
+        <div id="hero">
+          <img id="hero-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro" onerror="this.style.display='none'"/>
+          <h1>MEGABRO</h1>
+          <p>AI Command Interface — Tell it what to do</p>
+          <div class="quick-cmds" id="quick-cmds">
+            <button class="quick-btn" data-q="Write a bash script to back up a folder">Bash script</button>
+            <button class="quick-btn" data-q="How do I list all running ports on Linux?">Linux ports</button>
+            <button class="quick-btn" data-q="Generate a strong password and explain it">Password gen</button>
+            <button class="quick-btn" data-q="Explain what a REST API is simply">REST API</button>
+            <button class="quick-btn" data-q="Write a Python web scraper template">Web scraper</button>
+          </div>
         </div>
+      </div>
+
+      <!-- Input bar -->
+      <div id="input-bar">
+        <span class="prompt-sym">›</span>
+        <textarea id="user-input" rows="1" placeholder="Type a command or question..."></textarea>
+        <button id="send-btn" title="Send (Enter)">
+          <svg fill="none" stroke="#000" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <div id="dashboard" class="hidden flex-1 flex flex-col gap-4">
-        <div class="h-12 flex items-center justify-between px-4 glass rounded-xl">
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] font-bold text-emerald-500">● ONLINE</span>
-                <span class="text-[10px] text-zinc-500">NODE: TERMUX_01</span>
-            </div>
-            <div class="text-[10px] text-zinc-500 uppercase tracking-widest">Megabro v1.0.0</div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <!-- Stats -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Session Stats</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-val" id="stat-msgs">0</div><div class="stat-lbl">Messages</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-tokens">0</div><div class="stat-lbl">Est. tokens</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-time">0s</div><div class="stat-lbl">Uptime</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-rpm">0</div><div class="stat-lbl">Req/min</div></div>
         </div>
-
-        <div class="flex-1 flex gap-4 overflow-hidden">
-            <div class="flex-[2.5] glass rounded-2xl overflow-hidden relative group">
-                <iframe id="screen" src="" class="w-full h-full border-none"></iframe>
-                <div class="absolute bottom-4 left-4 glass px-3 py-1 rounded-md text-[9px] text-emerald-400 opacity-50 group-hover:opacity-100 transition-opacity">
-                    VNC_STREAM_ACTIVE // 1280x720
-                </div>
-            </div>
-
-            <div class="flex-1 glass rounded-2xl flex flex-col p-6 overflow-hidden">
-                <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-2">
-                    <span class="text-[10px] uppercase font-bold text-zinc-400">Command_Log</span>
-                    <span class="text-[9px] text-zinc-600 italic">Gemini-2.0-Flash</span>
-                </div>
-                
-                <div id="logs" class="flex-1 overflow-y-auto space-y-4 no-scrollbar mb-4 text-[11px]">
-                    <div class="text-zinc-600 italic">// System ready. Instructions logged here.</div>
-                </div>
-
-                <div class="relative">
-                    <div class="absolute left-3 top-3.5 text-emerald-500">></div>
-                    <input type="text" id="input" onkeydown="if(event.key==='Enter') execute()" 
-                           placeholder="Type command..." 
-                           class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 pl-8 outline-none input-glow text-sm transition-all">
-                </div>
-            </div>
+        <div class="token-bar-wrap">
+          <div class="token-bar-track"><div class="token-bar-fill" id="token-bar" style="width:0%"></div></div>
+          <div class="token-meta">
+            <span>Context usage</span>
+            <span id="token-pct">0%</span>
+          </div>
         </div>
+      </div>
+
+      <!-- Model -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Model</div>
+        <select class="model-select" id="model-select">
+          <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+          <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+          <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+          <option value="gemini-2.0-flash-thinking-exp">gemini-2.0-flash (thinking)</option>
+        </select>
+      </div>
+
+      <!-- History -->
+      <div class="sidebar-label" style="padding:12px 16px 0;margin:0">History</div>
+      <div id="history-list">
+        <div class="hist-empty" id="hist-empty">No messages yet</div>
+      </div>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <button class="sf-btn" id="btn-export">Export</button>
+        <button class="sf-btn danger" id="btn-clear">Clear</button>
+      </div>
     </div>
 
-    <script>
-        function boot() {
-            const k = document.getElementById('key').value;
-            if(!k) return;
-            localStorage.setItem('mb_key', k);
-            document.getElementById('setup').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('screen').src = `http://${window.location.hostname}:8080/vnc.html?autoconnect=true&resize=scale`;
-        }
+  </div>
+</div>
 
-        async function execute() {
-            const input = document.getElementById('input');
-            const logs = document.getElementById('logs');
-            const task = input.value;
-            if(!task) return;
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let apiKey = '';
+let history = [];   // [{role,parts:[{text}]}]
+let msgCount = 0;
+let tokenEst = 0;
+let reqTimes = [];
+let startTime = Date.now();
+let isThinking = false;
 
-            logs.innerHTML += `<div class="text-white font-bold tracking-tight">> ${task}</div>`;
-            input.value = '';
-            
-            try {
-                const res = await fetch('/execute', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ prompt: task, api_key: localStorage.getItem('mb_key') })
-                });
-                const data = await res.json();
-                logs.innerHTML += `<div class="text-zinc-500 ml-2 border-l border-zinc-800 pl-2">Executing: ${data.executed}</div>`;
-            } catch (e) {
-                logs.innerHTML += `<div class="text-red-900 ml-2 uppercase text-[9px]">Connection_Error: Check Server</div>`;
-            }
-            logs.scrollTop = logs.scrollHeight;
-        }
+const MAX_CTX_TOKENS = 32000;
 
-        if(localStorage.getItem('mb_key')) boot();
-    </script>
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const $overlay   = document.getElementById('key-overlay');
+const $keyInput  = document.getElementById('api-key-input');
+const $keyErr    = document.getElementById('key-error');
+const $bootBtn   = document.getElementById('boot-btn');
+const $messages  = document.getElementById('messages');
+const $hero      = document.getElementById('hero');
+const $input     = document.getElementById('user-input');
+const $sendBtn   = document.getElementById('send-btn');
+const $statusDot = document.getElementById('status-dot');
+const $statLabel = document.getElementById('status-label');
+const $statMsgs  = document.getElementById('stat-msgs');
+const $statToks  = document.getElementById('stat-tokens');
+const $statTime  = document.getElementById('stat-time');
+const $statRpm   = document.getElementById('stat-rpm');
+const $tokenBar  = document.getElementById('token-bar');
+const $tokenPct  = document.getElementById('token-pct');
+const $histList  = document.getElementById('history-list');
+const $histEmpty = document.getElementById('hist-empty');
+const $model     = document.getElementById('model-select');
+const $badge     = document.getElementById('model-badge');
+const $btnKey    = document.getElementById('btn-key');
+const $btnClear  = document.getElementById('btn-clear');
+const $btnExport = document.getElementById('btn-export');
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+function boot() {
+  const k = $keyInput.value.trim();
+  if (!k) { $keyErr.textContent = 'Please enter an API key.'; return; }
+  if (!k.startsWith('AIza')) { $keyErr.textContent = 'Key should start with AIza...'; return; }
+  apiKey = k;
+  sessionStorage.setItem('mb_key', k);
+  $overlay.classList.add('hidden');
+  $statusDot.classList.remove('off');
+}
+
+$bootBtn.addEventListener('click', boot);
+$keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') boot(); });
+$btnKey.addEventListener('click', () => {
+  $keyInput.value = apiKey;
+  $overlay.classList.remove('hidden');
+});
+
+// Restore key
+const saved = sessionStorage.getItem('mb_key');
+if (saved) { apiKey = saved; $overlay.classList.add('hidden'); }
+
+// ── Quick buttons ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $input.value = btn.dataset.q;
+    sendMessage();
+  });
+});
+
+// ── Model badge sync ──────────────────────────────────────────────────────────
+$model.addEventListener('change', () => { $badge.textContent = $model.value; });
+
+// ── Auto-resize textarea ──────────────────────────────────────────────────────
+$input.addEventListener('input', () => {
+  $input.style.height = 'auto';
+  $input.style.height = Math.min($input.scrollHeight, 120) + 'px';
+});
+$input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+$sendBtn.addEventListener('click', sendMessage);
+
+// ── Send message ──────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const text = $input.value.trim();
+  if (!text || isThinking) return;
+  if (!apiKey) { $overlay.classList.remove('hidden'); return; }
+
+  // Hide hero
+  if ($hero) { $hero.style.display = 'none'; }
+
+  $input.value = '';
+  $input.style.height = 'auto';
+  isThinking = true;
+  $sendBtn.disabled = true;
+
+  // Render user msg
+  appendMsg('user', text);
+  history.push({ role: 'user', parts: [{ text }] });
+  msgCount++;
+  tokenEst += Math.ceil(text.length / 4);
+  updateStats();
+  addHistory(text);
+
+  // Typing indicator
+  const typingEl = appendTyping();
+
+  // Request
+  const t0 = Date.now();
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        apiKey,
+        history: history.slice(0, -1), // exclude last user msg, server adds it
+        model: $model.value
+      })
+    });
+    const data = await res.json();
+
+    typingEl.remove();
+
+    if (data.error) {
+      appendMsg('bot', '⚠ ' + data.error);
+    } else {
+      const reply = data.reply || '_(empty response)_';
+      appendMsg('bot', reply);
+      history.push({ role: 'model', parts: [{ text: reply }] });
+      msgCount++;
+      tokenEst += Math.ceil(reply.length / 4);
+    }
+
+    reqTimes.push(Date.now() - t0);
+    if (reqTimes.length > 10) reqTimes.shift();
+    updateStats();
+
+  } catch (err) {
+    typingEl.remove();
+    appendMsg('bot', '⚠ Network error. Is the server running?');
+  }
+
+  isThinking = false;
+  $sendBtn.disabled = false;
+  $input.focus();
+}
+
+// ── Render helpers ────────────────────────────────────────────────────────────
+function appendMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const avatarContent = role === 'user'
+    ? '<span>U</span>'
+    : `<img src="https://s6.imgcdn.dev/Yx103M.png" alt="bot" onerror="this.parentElement.textContent='AI'"/>`;
+  div.innerHTML = `
+    <div class="msg-avatar">${avatarContent}</div>
+    <div class="msg-body">
+      <div class="msg-role">${role === 'user' ? 'You' : 'Megabro'}</div>
+      <div class="msg-text">${formatText(text)}</div>
+    </div>`;
+  $messages.appendChild(div);
+  $messages.scrollTop = $messages.scrollHeight;
+  return div;
+}
+
+function appendTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `
+    <div class="msg-avatar">
+      <img src="https://s6.imgcdn.dev/Yx103M.png" alt="bot" onerror="this.parentElement.textContent='AI'"/>
+    </div>
+    <div class="msg-body">
+      <div class="msg-role">Megabro</div>
+      <div class="msg-text">
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+    </div>`;
+  $messages.appendChild(div);
+  $messages.scrollTop = $messages.scrollHeight;
+  return div;
+}
+
+function formatText(t) {
+  // Minimal markdown-ish: code blocks, inline code, bold
+  return t
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```([\s\S]*?)```/g, '<pre style="background:rgba(245,248,164,.05);border:1px solid rgba(245,248,164,.1);padding:12px;border-radius:5px;overflow-x:auto;margin:8px 0;font-size:12px;"><code>$1</code></pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--acc)">$1</strong>');
+}
+
+// ── History sidebar ───────────────────────────────────────────────────────────
+function addHistory(text) {
+  if ($histEmpty) $histEmpty.style.display = 'none';
+  const el = document.createElement('div');
+  el.className = 'hist-item';
+  el.textContent = text.slice(0, 48) + (text.length > 48 ? '…' : '');
+  el.title = text;
+  $histList.prepend(el);
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function updateStats() {
+  $statMsgs.textContent = msgCount;
+  const t = Math.floor((Date.now() - startTime) / 1000);
+  $statTime.textContent = t < 60 ? t + 's' : Math.floor(t/60) + 'm';
+  $statToks.textContent = tokenEst > 999 ? (tokenEst/1000).toFixed(1)+'k' : tokenEst;
+  const pct = Math.min(100, Math.round((tokenEst / MAX_CTX_TOKENS) * 100));
+  $tokenBar.style.width = pct + '%';
+  $tokenPct.textContent = pct + '%';
+  // RPM
+  const oneMinAgo = Date.now() - 60000;
+  $statRpm.textContent = reqTimes.length;
+}
+setInterval(updateStats, 2000);
+
+// ── Clear / Export ────────────────────────────────────────────────────────────
+$btnClear.addEventListener('click', () => {
+  history = []; msgCount = 0; tokenEst = 0; reqTimes = [];
+  // Remove all messages and show hero again
+  while ($messages.firstChild) $messages.removeChild($messages.firstChild);
+  const hero = document.getElementById('hero') || (() => {
+    // recreate hero
+    const h = document.createElement('div');
+    h.id = 'hero';
+    h.innerHTML = `
+      <img id="hero-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro" onerror="this.style.display='none'"/>
+      <h1>MEGABRO</h1>
+      <p>AI Command Interface — Tell it what to do</p>`;
+    return h;
+  })();
+  hero.style.display = '';
+  $messages.appendChild(hero);
+  $histList.innerHTML = '<div class="hist-empty" id="hist-empty">No messages yet</div>';
+  updateStats();
+});
+
+$btnExport.addEventListener('click', () => {
+  const lines = history.map(m =>
+    `[${m.role.toUpperCase()}]\n${m.parts[0].text}\n`
+  ).join('\n---\n\n');
+  const blob = new Blob([lines], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `megabro-session-${Date.now()}.txt`;
+  a.click();
+});
+
+// ── Uptime ticker ─────────────────────────────────────────────────────────────
+setInterval(() => {
+  const t = Math.floor((Date.now() - startTime) / 1000);
+  $statTime.textContent = t < 60 ? t + 's' : Math.floor(t/60) + 'm';
+}, 1000);
+</script>
 </body>
 </html>
