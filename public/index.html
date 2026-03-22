@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGABRO | Infrastructure OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #000; color: #e4e4e7; font-family: 'JetBrains Mono', monospace; }
+        .glass { background: rgba(9, 9, 11, 0.8); backdrop-filter: blur(16px); border: 1px solid #27272a; }
+        .panel-glow { box-shadow: 0 0 20px rgba(16, 185, 129, 0.05); }
+        .input-glow:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="h-screen flex flex-col p-4 overflow-hidden">
+
+    <div id="setup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+        <div class="glass max-w-md w-full p-10 rounded-2xl panel-glow text-center">
+            <div class="mb-6 inline-block p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 20c4.083 0 7.632-2.424 9.196-5.903m-3.196-5.097A10.003 10.003 0 0112 4c-4.083 0-7.632 2.424-9.196 5.903m3.196 5.097c-.339 1.182-.538 2.426-.595 3.712M12 11V3l4 1m-4 8l4-1m-4-8a9.986 9.986 0 014.546 2.084A10.003 10.003 0 0118 10"></path></svg>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tighter mb-2 italic">MEGABRO_INIT</h1>
+            <p class="text-zinc-500 text-xs mb-8 uppercase tracking-widest">Awaiting Gemini Protocol Key</p>
+            
+            <input type="password" id="key" placeholder="AIza..." class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-center mb-6 input-glow outline-none transition-all text-emerald-400">
+            
+            <button onclick="boot()" class="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-emerald-400 transition-all uppercase text-xs tracking-[0.3em]">
+                System Boot
+            </button>
+            <p class="mt-6 text-[10px] text-zinc-600">Free API via <a href="https://aistudio.google.com/" target="_blank" class="underline hover:text-emerald-500">Google AI Studio</a></p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden flex-1 flex flex-col gap-4">
+        <div class="h-12 flex items-center justify-between px-4 glass rounded-xl">
+            <div class="flex items-center gap-4">
+                <span class="text-[10px] font-bold text-emerald-500">● ONLINE</span>
+                <span class="text-[10px] text-zinc-500">NODE: TERMUX_01</span>
+            </div>
+            <div class="text-[10px] text-zinc-500 uppercase tracking-widest">Megabro v1.0.0</div>
+        </div>
+
+        <div class="flex-1 flex gap-4 overflow-hidden">
+            <div class="flex-[2.5] glass rounded-2xl overflow-hidden relative group">
+                <iframe id="screen" src="" class="w-full h-full border-none"></iframe>
+                <div class="absolute bottom-4 left-4 glass px-3 py-1 rounded-md text-[9px] text-emerald-400 opacity-50 group-hover:opacity-100 transition-opacity">
+                    VNC_STREAM_ACTIVE // 1280x720
+                </div>
+            </div>
+
+            <div class="flex-1 glass rounded-2xl flex flex-col p-6 overflow-hidden">
+                <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-2">
+                    <span class="text-[10px] uppercase font-bold text-zinc-400">Command_Log</span>
+                    <span class="text-[9px] text-zinc-600 italic">Gemini-2.0-Flash</span>
+                </div>
+                
+                <div id="logs" class="flex-1 overflow-y-auto space-y-4 no-scrollbar mb-4 text-[11px]">
+                    <div class="text-zinc-600 italic">// System ready. Instructions logged here.</div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute left-3 top-3.5 text-emerald-500">></div>
+                    <input type="text" id="input" onkeydown="if(event.key==='Enter') execute()" 
+                           placeholder="Type command..." 
+                           class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 pl-8 outline-none input-glow text-sm transition-all">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function boot() {
+            const k = document.getElementById('key').value;
+            if(!k) return;
+            localStorage.setItem('mb_key', k);
+            document.getElementById('setup').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('screen').src = `http://${window.location.hostname}:8080/vnc.html?autoconnect=true&resize=scale`;
+        }
+
+        async function execute() {
+            const input = document.getElementById('input');
+            const logs = document.getElementById('logs');
+            const task = input.value;
+            if(!task) return;
+
+            logs.innerHTML += `<div class="text-white font-bold tracking-tight">> ${task}</div>`;
+            input.value = '';
+            
+            try {
+                const res = await fetch('/execute', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ prompt: task, api_key: localStorage.getItem('mb_key') })
+                });
+                const data = await res.json();
+                logs.innerHTML += `<div class="text-zinc-500 ml-2 border-l border-zinc-800 pl-2">Executing: ${data.executed}</div>`;
+            } catch (e) {
+                logs.innerHTML += `<div class="text-red-900 ml-2 uppercase text-[9px]">Connection_Error: Check Server</div>`;
+            }
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        if(localStorage.getItem('mb_key')) boot();
+    </script>
+</body>
+</html>
