@@ -14,7 +14,7 @@
   --text:#f0f0f0;--muted:#5a5a5a;--muted2:#7a7a7a;
   --cream:#F5F8A4;--cream2:#fffde8;
   --cream-bg:rgba(245,248,164,.06);--cream-bd:rgba(245,248,164,.18);
-  --green:#10b981;--red:#ef4444;
+  --green:#10b981;--red:#ef4444;--orange:#f59e0b;
   --s1:#F5F8A4;--s2:#e8d84a;--s3:#fff8c0;--s4:#F5F8A4;
 }
 html,body{height:100%;overflow:hidden}
@@ -55,9 +55,12 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 .tb-name{font-weight:700;font-size:13px;letter-spacing:.16em;color:var(--text);text-transform:uppercase}
 .tb-ver{font-size:9px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 7px;border-radius:4px;letter-spacing:.06em}
 .tb-r{display:flex;align-items:center;gap:14px}
-.status-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;cursor:pointer;transition:color .2s}
+.status-pill:hover{color:var(--text)}
 .pill-dot{width:6px;height:6px;border-radius:50%;background:var(--red);transition:background .3s,box-shadow .3s}
 .pill-dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.pill-dot.checking{background:var(--orange);animation:pulse-dot 1s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
 .ghost-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;padding:5px 14px;border-radius:6px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s}
 .ghost-btn:hover{border-color:var(--cream);color:var(--cream)}
 #main-split{flex:1;display:grid;grid-template-columns:1fr 380px;overflow:hidden;min-height:0}
@@ -77,9 +80,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 #idle-screen{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#000;transition:opacity .5s}
 .idle-clouds{position:absolute;top:14px;left:0;right:0;display:flex;gap:48px;padding:0 20px;overflow:hidden}
 .icloud{height:11px;background:#111;border-radius:6px;flex-shrink:0;animation:cmove 10s linear infinite}
-.icloud:nth-child(1){width:38px}
-.icloud:nth-child(2){width:24px;animation-delay:-3.5s}
-.icloud:nth-child(3){width:50px;animation-delay:-7s}
+.icloud:nth-child(1){width:38px}.icloud:nth-child(2){width:24px;animation-delay:-3.5s}.icloud:nth-child(3){width:50px;animation-delay:-7s}
 @keyframes cmove{from{transform:translateX(600px)}to{transform:translateX(-200px)}}
 .idle-label{font-weight:700;font-size:11px;letter-spacing:.22em;color:#2a2a2a;text-transform:uppercase}
 .dino-scene{position:relative;width:260px;height:56px}
@@ -91,6 +92,15 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 .leg-l{animation:la .26s alternate infinite ease-in-out;transform-origin:50% 0}
 .leg-r{animation:la .26s alternate-reverse infinite ease-in-out;transform-origin:50% 0}
 @keyframes la{from{transform:translateY(0)}to{transform:translateY(5px)}}
+
+/* VNC SETUP TOOLTIP */
+#vnc-setup{position:absolute;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:20px;gap:10px}
+#vnc-setup.show{display:flex}
+.setup-title{font-weight:700;font-size:10px;letter-spacing:.2em;color:var(--cream);text-transform:uppercase}
+.setup-code{background:#0a0a0a;border:1px solid var(--border2);border-radius:6px;padding:10px 14px;font-size:9px;color:#88c;line-height:2;letter-spacing:.04em;width:100%}
+.setup-code .cmd{color:var(--cream)}
+.setup-close{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);background:transparent;border:1px solid var(--border);padding:4px 12px;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:.1em;margin-top:4px;transition:color .2s,border-color .2s}
+.setup-close:hover{color:var(--text);border-color:var(--muted2)}
 
 /* CHAT */
 #chat-pane{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
@@ -124,6 +134,16 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 .typing-bubble span:nth-child(3){animation-delay:.36s}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-4px);opacity:1}}
 
+/* QUOTA ERROR CARD */
+.quota-card{background:#1a0f00;border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.6}
+.quota-card .qc-title{font-weight:700;font-size:9px;letter-spacing:.18em;color:var(--orange);text-transform:uppercase}
+.quota-card .qc-msg{color:#d4a060;font-size:11px}
+.quota-card .qc-hint{color:var(--muted2);font-size:10px;line-height:1.7}
+.quota-card .qc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.qc-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;font-weight:700;background:transparent;border:1px solid rgba(245,158,11,.35);color:var(--orange);padding:5px 10px;border-radius:5px;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.qc-btn:hover{background:rgba(245,158,11,.08);border-color:var(--orange)}
+.qc-retry-countdown{font-size:9px;color:var(--muted);letter-spacing:.06em;align-self:center}
+
 /* SABER INPUT */
 #input-area{padding:14px 16px 16px;flex-shrink:0}
 @property --sa{syntax:'<angle>';initial-value:0deg;inherits:false}
@@ -146,7 +166,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 .input-hint{margin-top:6px;font-size:9px;color:var(--muted);text-align:center;letter-spacing:.07em;padding:0 2px}
 
 /* BOTTOM BAR */
-#bottombar{height:38px;flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;position:relative}
+#bottombar{height:38px;flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
 .bstats{display:flex;gap:20px}
 .bstat b{font-weight:700;font-size:12px;color:var(--text);letter-spacing:.06em;margin-left:5px}
 .bmode{color:var(--muted2)}
@@ -159,13 +179,14 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
 .model-trigger::after{content:'';position:absolute;right:10px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid var(--muted);transition:transform .2s,border-top-color .2s}
 .model-dropdown.open .model-trigger{border-color:var(--cream);color:var(--cream)}
 .model-dropdown.open .model-trigger::after{transform:translateY(-50%) rotate(180deg);border-top-color:var(--cream)}
-.model-menu{position:absolute;bottom:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;min-width:180px;box-shadow:0 -14px 36px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;z-index:99}
+.model-menu{position:absolute;bottom:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;min-width:200px;box-shadow:0 -14px 36px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;z-index:99}
 .model-dropdown.open .model-menu{opacity:1;pointer-events:all;transform:translateY(0)}
 .model-option{display:block;width:100%;padding:10px 14px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;text-align:left;transition:background .12s,color .12s;border-bottom:1px solid var(--border)}
 .model-option:last-child{border-bottom:none}
 .model-option:hover{background:var(--panel);color:var(--text)}
 .model-option.selected{color:var(--cream);background:rgba(245,248,164,.04)}
 .model-option.selected::before{content:'> ';opacity:.5}
+.model-option .opt-note{display:block;font-size:8px;color:var(--muted);margin-top:2px;letter-spacing:.04em;text-transform:none}
 
 /* MOBILE */
 @media(max-width:720px){
@@ -193,7 +214,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
     <input class="key-field" type="password" id="key-in" placeholder="Enter Gemini API key" autocomplete="off" aria-label="Gemini API Key"/>
     <div class="key-err" id="key-err"></div>
     <button class="key-btn" id="key-btn">INITIALIZE SYSTEM</button>
-    <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank" rel="noopener">aistudio.google.com</a><br/>Stored in your browser only.</p>
+    <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank" rel="noopener">aistudio.google.com</a><br/>Stored in your browser session only.</p>
   </div>
 </div>
 
@@ -209,12 +230,12 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
     <div class="tb-l">
       <img class="tb-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
       <span class="tb-name">MEGABRO</span>
-      <span class="tb-ver">v2.0</span>
+      <span class="tb-ver">v2.1</span>
     </div>
     <div class="tb-r">
-      <div class="status-pill">
-        <div class="pill-dot" id="vnc-dot"></div>
-        <span id="vnc-label">VNC OFFLINE</span>
+      <div class="status-pill" id="vnc-pill" title="Click for VNC setup guide">
+        <div class="pill-dot checking" id="vnc-dot"></div>
+        <span id="vnc-label">CHECKING...</span>
       </div>
       <button class="ghost-btn" id="change-key-btn">API KEY</button>
     </div>
@@ -225,10 +246,11 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
       <div class="monitor-wrap">
         <div class="monitor-frame">
           <div class="monitor-screen">
-            <iframe id="vnc-frame" src="" title="VNC Live"></iframe>
+            <iframe id="vnc-frame" src="" title="VNC Live" allow="clipboard-read; clipboard-write"></iframe>
+
             <div id="idle-screen">
               <div class="idle-clouds"><div class="icloud"></div><div class="icloud"></div><div class="icloud"></div></div>
-              <div class="idle-label">SIGNAL LOST</div>
+              <div class="idle-label" id="idle-label">SIGNAL LOST</div>
               <div class="dino-scene">
                 <svg class="dino-svg" width="44" height="52" viewBox="0 0 44 52" fill="none">
                   <rect x="16" y="2" width="20" height="14" rx="3" fill="#1e1e1e"/>
@@ -248,7 +270,21 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
                 </svg>
                 <div class="dino-ground"></div>
               </div>
-              <div class="idle-hint">Awaiting VNC packets</div>
+              <div class="idle-hint" id="idle-hint">Awaiting VNC packets</div>
+            </div>
+
+            <!-- VNC SETUP GUIDE (shown when user clicks status pill) -->
+            <div id="vnc-setup">
+              <div class="setup-title">⚡ Start VNC on Termux</div>
+              <div class="setup-code">
+                <span class="cmd">vncserver :1 -geometry 1280x720 -depth 24</span><br/>
+                <span style="color:var(--muted)"># then start noVNC websockify:</span><br/>
+                <span class="cmd">websockify --web=/usr/share/novnc 8080 localhost:5901 &amp;</span>
+              </div>
+              <div style="font-size:9px;color:var(--muted2);text-align:center;letter-spacing:.06em">
+                MEGABRO checks port 5901 (VNC) &amp; 8080 (noVNC) every 5s
+              </div>
+              <button class="setup-close" id="vnc-setup-close">CLOSE</button>
             </div>
           </div>
         </div>
@@ -296,10 +332,22 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;d
         <span id="model-label">GEMINI-2.0-FLASH</span>
       </div>
       <div class="model-menu" role="listbox" id="model-menu">
-        <button class="model-option selected" data-value="gemini-2.0-flash" role="option">Gemini 2.0 Flash</button>
-        <button class="model-option" data-value="gemini-1.5-flash" role="option">Gemini 1.5 Flash</button>
-        <button class="model-option" data-value="gemini-1.5-pro" role="option">Gemini 1.5 Pro</button>
-        <button class="model-option" data-value="gemini-2.0-flash-lite" role="option">Gemini 2.0 Lite</button>
+        <button class="model-option selected" data-value="gemini-2.0-flash" role="option">
+          Gemini 2.0 Flash
+          <span class="opt-note">Fast · Default</span>
+        </button>
+        <button class="model-option" data-value="gemini-2.0-flash-lite" role="option">
+          Gemini 2.0 Flash Lite
+          <span class="opt-note">Highest quota · Try if rate limited</span>
+        </button>
+        <button class="model-option" data-value="gemini-1.5-flash" role="option">
+          Gemini 1.5 Flash
+          <span class="opt-note">Reliable fallback</span>
+        </button>
+        <button class="model-option" data-value="gemini-1.5-pro" role="option">
+          Gemini 1.5 Pro
+          <span class="opt-note">Smartest · Lower quota</span>
+        </button>
       </div>
     </div>
   </div>
@@ -323,11 +371,17 @@ const $vncDot=$('vnc-dot'),$vncLbl=$('vnc-label');
 let apiKey=sessionStorage.getItem('mb_key')||'';
 let history=[],msgCount=0,tokenEst=0,busy=false,vncLive=false;
 let selectedModel='gemini-2.0-flash';
+let retryTimer=null;
 
-// Custom dropdown
+// ── Custom dropdown ──────────────────────────────────────────────────────────
 const $dd=$('model-dropdown'),$trigger=$('model-trigger'),$label=$('model-label'),$menu=$('model-menu');
 const opts=$menu.querySelectorAll('.model-option');
-const LABELS={'gemini-2.0-flash':'GEMINI-2.0-FLASH','gemini-1.5-flash':'GEMINI-1.5-FLASH','gemini-1.5-pro':'GEMINI-1.5-PRO','gemini-2.0-flash-lite':'GEMINI-2.0-LITE'};
+const LABELS={
+  'gemini-2.0-flash':'GEMINI-2.0-FLASH',
+  'gemini-1.5-flash':'GEMINI-1.5-FLASH',
+  'gemini-1.5-pro':'GEMINI-1.5-PRO',
+  'gemini-2.0-flash-lite':'GEMINI-2.0-LITE'
+};
 
 function toggleDD(force){
   const open=force!==undefined?force:!$dd.classList.contains('open');
@@ -350,7 +404,7 @@ opts.forEach(opt=>{
 });
 document.addEventListener('click',e=>{if(!$dd.contains(e.target))toggleDD(false)});
 
-// Loader
+// ── Loader ───────────────────────────────────────────────────────────────────
 async function runLoader(){
   const steps=[
     {pct:15,msg:'INITIALISING',sub:'WAKING UP THE BRO'},
@@ -390,21 +444,75 @@ $('change-key-btn').addEventListener('click',()=>{
   $app.style.display='none';$keyIn.value='';$keyErr.textContent='';show($sKey);$keyIn.focus();
 });
 
+// ── VNC Status ───────────────────────────────────────────────────────────────
+// FIX: Now uses port check on server. Handles 3 states:
+//   running=true  novncReady=true  → VNC + noVNC live → show iframe
+//   running=true  novncReady=false → VNC up but no noVNC → show hint
+//   running=false                  → fully offline → idle animation
+let vncCheckScheduled = false;
 async function checkVNC(){
+  vncCheckScheduled = false;
+  $vncDot.className='pill-dot checking';
   try{
-    const r=await fetch('/api/vnc-status');const d=await r.json();
-    if(d.running&&!vncLive){
-      vncLive=true;$vncDot.classList.add('on');$vncLbl.textContent='VNC LIVE';
-      $vnc.src=d.vncUrl;$vnc.classList.add('live');
-      $idle.style.opacity='0';setTimeout(()=>{$idle.style.display='none'},500);
-    }else if(!d.running&&vncLive){
-      vncLive=false;$vncDot.classList.remove('on');$vncLbl.textContent='VNC OFFLINE';
-      $vnc.classList.remove('live');$idle.style.display='';$idle.style.opacity='1';
-    }else if(!d.running){$vncDot.classList.remove('on');$vncLbl.textContent='VNC OFFLINE'}
-  }catch(_){$vncDot.classList.remove('on');$vncLbl.textContent='NO SIGNAL'}
-  setTimeout(checkVNC,5000);
+    const r=await fetch('/api/vnc-status');
+    const d=await r.json();
+
+    if(d.novncReady && d.running){
+      // Both VNC and noVNC are up → show iframe
+      if(!vncLive){
+        vncLive=true;
+        $vncDot.className='pill-dot on';
+        $vncLbl.textContent='VNC LIVE';
+        $vnc.src=d.vncUrl;
+        $vnc.classList.add('live');
+        $idle.style.opacity='0';
+        setTimeout(()=>{$idle.style.display='none'},500);
+      } else {
+        $vncDot.className='pill-dot on';
+        $vncLbl.textContent='VNC LIVE';
+      }
+    } else if(d.running && !d.novncReady){
+      // VNC port open but noVNC not running
+      vncLive=false;
+      $vnc.classList.remove('live');
+      $idle.style.display='';$idle.style.opacity='1';
+      $vncDot.className='pill-dot';
+      $vncDot.style.background='var(--orange)';
+      $vncLbl.textContent='VNC UP · NO NOVNC';
+      $('idle-label').textContent='VNC DETECTED';
+      $('idle-hint').textContent='Start websockify on port 8080';
+    } else {
+      // Nothing running
+      vncLive=false;
+      $vnc.classList.remove('live');
+      $idle.style.display='';$idle.style.opacity='1';
+      $vncDot.className='pill-dot';
+      $vncDot.style.background='var(--red)';
+      $vncLbl.textContent='VNC OFFLINE';
+      $('idle-label').textContent='SIGNAL LOST';
+      $('idle-hint').textContent='Awaiting VNC packets';
+    }
+  }catch(_){
+    $vncDot.className='pill-dot';
+    $vncDot.style.background='var(--muted)';
+    $vncLbl.textContent='NO SIGNAL';
+  }
+  if(!vncCheckScheduled){
+    vncCheckScheduled=true;
+    setTimeout(checkVNC,5000);
+  }
 }
 
+// VNC setup guide toggle
+$('vnc-pill').addEventListener('click',()=>{
+  const setup=$('vnc-setup');
+  setup.classList.toggle('show');
+});
+$('vnc-setup-close').addEventListener('click',()=>{
+  $('vnc-setup').classList.remove('show');
+});
+
+// ── Chat input ────────────────────────────────────────────────────────────────
 $ta.addEventListener('input',()=>{$ta.style.height='auto';$ta.style.height=Math.min($ta.scrollHeight,110)+'px'});
 $ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
 $send.addEventListener('click',send);
@@ -418,14 +526,84 @@ async function send(){
   msgCount++;tokenEst+=Math.ceil(text.length/4);updateStats();
   const typing=appendTyping();
   try{
-    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,apiKey,history:history.slice(0,-1),model:selectedModel})});
-    const data=await res.json();typing.remove();
-    const reply=data.error?'Error: '+data.error:data.reply;
-    if(!data.error){history.push({role:'model',parts:[{text:reply}]});msgCount++;tokenEst+=Math.ceil(reply.length/4)}
-    appendMsg('bot',reply);
-  }catch(err){typing.remove();appendMsg('bot','Network error. Is the server running?')}
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:text,apiKey,history:history.slice(0,-1),model:selectedModel})
+    });
+    const data=await res.json();
+    typing.remove();
+
+    if(data.errorType==='QUOTA_EXCEEDED'){
+      // Special quota error UI
+      appendQuotaError(data);
+    } else if(data.error){
+      appendMsg('bot','⚠ '+data.error+(data.hint?'\n\n'+data.hint:''));
+    } else {
+      history.push({role:'model',parts:[{text:data.reply}]});
+      msgCount++;
+      tokenEst+=Math.ceil(data.reply.length/4);
+      appendMsg('bot',data.reply);
+    }
+  }catch(err){
+    typing.remove();
+    appendMsg('bot','Network error. Is the megabro server running?');
+  }
   updateStats();busy=false;$send.disabled=false;$msgs.scrollTop=$msgs.scrollHeight;$ta.focus();
 }
+
+// ── Quota error card ──────────────────────────────────────────────────────────
+function appendQuotaError(data){
+  const wrap=document.createElement('div');wrap.className='msg bot';
+  const who=document.createElement('div');who.className='msg-who';who.textContent='MEGABRO';
+
+  const card=document.createElement('div');card.className='quota-card';
+  card.innerHTML=`
+    <div class="qc-title">⚠ Rate Limit / Quota Exceeded</div>
+    <div class="qc-msg">${escHtml(data.error||'Gemini quota exhausted')}</div>
+    <div class="qc-hint">
+      Free Gemini tier has per-minute &amp; per-day limits.<br/>
+      💡 <strong>Try Gemini 2.0 Flash Lite</strong> — it has the highest free quota.<br/>
+      Or wait ~60 seconds for the per-minute limit to reset.
+    </div>
+    <div class="qc-actions">
+      <button class="qc-btn" id="qc-switch">Switch to Flash Lite</button>
+      <button class="qc-btn" id="qc-retry">Retry in <span id="qc-cd">60</span>s</button>
+    </div>
+  `;
+
+  wrap.appendChild(who);wrap.appendChild(card);
+  $msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;
+
+  // Switch model button
+  wrap.querySelector('#qc-switch').addEventListener('click',()=>{
+    const liteOpt=[...opts].find(o=>o.dataset.value==='gemini-2.0-flash-lite');
+    if(liteOpt) liteOpt.click();
+  });
+
+  // Retry countdown
+  let cd=60;
+  const cdEl=wrap.querySelector('#qc-cd');
+  const retryBtn=wrap.querySelector('#qc-retry');
+  if(retryTimer) clearInterval(retryTimer);
+  retryTimer=setInterval(()=>{
+    cd--;cdEl.textContent=cd;
+    if(cd<=0){
+      clearInterval(retryTimer);retryTimer=null;
+      retryBtn.textContent='Retry Now';
+      retryBtn.addEventListener('click',()=>{
+        wrap.remove();
+        $ta.value=history[history.length-1]?.parts?.[0]?.text||'';
+        // Pop last user message from history so it re-sends clean
+        if(history.length&&history[history.length-1].role==='user') history.pop();
+        msgCount=Math.max(0,msgCount-1);updateStats();
+        send();
+      },{once:true});
+    }
+  },1000);
+}
+
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 function appendMsg(role,text){
   const wrap=document.createElement('div');wrap.className='msg '+role;
@@ -442,15 +620,17 @@ function appendTyping(){
 }
 
 function fmt(t){
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  return escHtml(t)
     .replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
     .replace(/`([^`\n]+)`/g,'<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
 }
+
 function updateStats(){$bMsgs.textContent=msgCount;$bToks.textContent=tokenEst>999?(tokenEst/1000).toFixed(1)+'k':tokenEst}
 
 $('clear-btn').addEventListener('click',()=>{
   history=[];msgCount=0;tokenEst=0;
+  if(retryTimer){clearInterval(retryTimer);retryTimer=null;}
   $msgs.innerHTML='<div class="chat-empty" id="chat-empty"><img src="https://s6.imgcdn.dev/Yx103M.png" style="width:38px;height:38px;object-fit:contain;opacity:.15;filter:grayscale(1)" onerror="this.style.display=\'none\'"/><p>System nominal.<br/>Awaiting your command.</p></div>';
   updateStats();
 });
@@ -460,8 +640,8 @@ $('export-btn').addEventListener('click',()=>{
   let out=`MEGABRO Export | ${new Date().toLocaleString()} | ${selectedModel}\n${'─'.repeat(52)}\n\n`;
   document.querySelectorAll('.msg').forEach(m=>{
     const who=m.querySelector('.msg-who')?.textContent||'';
-    const text=m.querySelector('.msg-text')?.textContent||'';
-    if(text)out+=`[${who}]\n${text}\n\n`;
+    const text=m.querySelector('.msg-text,.quota-card')?.textContent||'';
+    if(text)out+=`[${who}]\n${text.trim()}\n\n`;
   });
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([out],{type:'text/plain'}));
