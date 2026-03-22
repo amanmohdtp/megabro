@@ -1,7 +1,7 @@
 {
   "name": "megabro",
   "version": "1.0.2",
-  "description": "AI-powered command interface for Google Gemini. Install. Type megabro. Get to work.",
+  "description": "AI-powered Gemini computer-use interface. Install. Type megabro. Get to work.",
   "main": "index.js",
   "bin": {
     "megabro": "./bin/cli.js"
@@ -13,19 +13,13 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "open": "^9.1.0"
+    "open": "^9.1.0",
+    "ws": "^8.17.1"
   },
   "keywords": [
-    "megabro",
-    "ai",
-    "terminal",
-    "gemini",
-    "cli",
-    "chatbot",
-    "google-gemini",
-    "local-ai",
-    "command-line",
-    "developer-tools"
+    "megabro", "ai", "terminal", "gemini", "cli",
+    "chatbot", "google-gemini", "computer-use",
+    "vnc", "browser-automation", "termux"
   ],
   "author": "Aman",
   "license": "MIT",
@@ -33,11 +27,30 @@
     "type": "git",
     "url": "git+https://github.com/amanmohdtp/megabro.git"
   },
-  "bugs": {
-    "url": "https://github.com/amanmohdtp/megabro/issues"
-  },
+  "bugs": { "url": "https://github.com/amanmohdtp/megabro/issues" },
   "homepage": "https://github.com/amanmohdtp/megabro#readme",
-  "engines": {
-    "node": ">=14.0.0"
+  "engines": { "node": ">=14.0.0" },
+  "_termuxSystemDeps": {
+    "note": "Run these in Termux before using computer-use features",
+    "pkg": [
+      "x11-repo",
+      "tigervnc",
+      "fluxbox",
+      "chromium",
+      "xdotool",
+      "scrot",
+      "python",
+      "nodejs-lts",
+      "git"
+    ],
+    "pip": [
+      "google-genai",
+      "pillow",
+      "fastapi",
+      "uvicorn"
+    ],
+    "npm": [
+      "websockify (install via: pip install websockify)"
+    ]
   }
 }
