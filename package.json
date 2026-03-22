@@ -1,6 +1,6 @@
 {
   "name": "megabro",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "AI-powered Gemini computer-use interface. Install. Type megabro. Get to work.",
   "main": "index.js",
   "bin": {
