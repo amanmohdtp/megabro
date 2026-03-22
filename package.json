@@ -1,0 +1,20 @@
+{
+  "name": "megabro",
+  "version": "1.0.0",
+  "description": "Infrastructure-grade Gemini Computer Use Interface for Termux",
+  "main": "index.js",
+  "bin": {
+    "megabro": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "shelljs": "^0.8.5"
+  },
+  "author": "Aman",
+  "license": "MIT"
+}
