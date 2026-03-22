@@ -2,7 +2,9 @@
   <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" width="200"/>
 </p>
 
-<h1 align="center">MEGABRO</h1>
+​<p align="center">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=FFFFFF&center=true&vCenter=true&width=435&lines=MEGABRO" alt="Typing SVG" />
+</p>
 <p align="center"><em>AI-powered command interface. Install once. Type megabro. Go.</em></p>
 
 <p align="center">
@@ -31,7 +33,7 @@ That's it. A progress bar boots, your browser opens, and you're in.
 
 ## What it does
 
-Megabro is a local AI interface that talks to **Google Gemini** directly from your browser — no cloud dashboard, no account wall, no tracking. Just a clean terminal-style UI on `localhost:3000`.
+Megabro is a local AI interface that talks to **Google Gemini** directly from your browser. So no cloud dashboard, no account wall, no tracking. Just a clean terminal-style UI on `localhost:3000`.
 
 - **Instant boot** : minimal dependencies, sub-second startup
 - **Live chat** : send commands, get smart AI responses
@@ -48,13 +50,11 @@ Megabro is a local AI interface that talks to **Google Gemini** directly from yo
 3. Copy the key (starts with `AIza...`)
 4. Paste it into the Megabro boot screen
 
-Your key is stored in `sessionStorage` only — never sent anywhere except directly to Google's API via your own server.
+Your key is stored in `sessionStorage` only - never sent anywhere except directly to Google's API via your own server.
 
 ---
 
 ## Screenshot
-
-> Dark terminal aesthetic, `#F5F8A4` accent, animated stats sidebar.
 
 ---
 
