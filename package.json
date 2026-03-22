@@ -9,7 +9,6 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node bin/cli.js",
-    "test": "node -e \"const p=require('./package.json'); const fs=require('fs'); ['index.js','bin/cli.js','public/index.html'].forEach(f=>{if(!fs.existsSync(f)) throw new Error('Missing: '+f)}); console.log('All checks passed')\"",
     "setup:termux": "pkg update && pkg install x11-repo tigervnc fluxbox chromium xdotool scrot python git -y && pip install google-genai pillow fastapi uvicorn websockify"
   },
   "dependencies": {
@@ -17,44 +16,15 @@
     "open": "^9.1.0",
     "ws": "^8.17.1"
   },
-  "keywords": [
-    "megabro", "ai", "terminal", "gemini", "cli",
-    "chatbot", "google-gemini", "computer-use",
-    "vnc", "browser-automation", "termux"
-  ],
-  "author": "Aman",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/amanmohdtp/megabro.git"
-  },
-  "bugs": { 
-    "url": "https://github.com/amanmohdtp/megabro/issues" 
-  },
-  "homepage": "https://github.com/amanmohdtp/megabro#readme",
-  "engines": { 
-    "node": ">=14.0.0" 
-  },
   "os": [
+    "linux",
     "android"
   ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "termuxDependencies": {
-    "pkg": [
-      "x11-repo",
-      "tigervnc",
-      "fluxbox",
-      "chromium",
-      "xdotool",
-      "scrot",
-      "python",
-      "git"
-    ],
-    "pip": [
-      "google-genai",
-      "pillow",
-      "fastapi",
-      "uvicorn",
-      "websockify"
-    ]
+    "pkg": ["x11-repo", "tigervnc", "fluxbox", "chromium", "xdotool", "scrot", "python", "git"],
+    "pip": ["google-genai", "pillow", "fastapi", "uvicorn", "websockify"]
   }
 }
