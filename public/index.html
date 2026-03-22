@@ -2,819 +2,470 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MEGABRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>MEGABRO | Infrastructure AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-/* ── Reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --cream:#FAF7F2;
-  --cream2:#F3EDE4;
-  --cream3:#E6DDD1;
-  --brown:#3A2A1C;
-  --brown2:#6B4C3B;
-  --muted:#9A8070;
-  --acc:#C8C430;
-  --acc2:#A8A420;
-  --pale:#F5F8A4;
-  --green:#5a9a5a;
-  --red:#c0504d;
-
-  /* saber colors */
-  --s1:#00c8ff;
-  --s2:#a020f0;
-  --s3:#00ff88;
-  --s4:#ff3c3c;
+  --bg:#080808;--surface:#101010;--panel:#141414;
+  --border:#242424;--border2:#2e2e2e;
+  --text:#f0f0f0;--muted:#5a5a5a;--muted2:#7a7a7a;
+  --cream:#F5F8A4;--cream2:#fffde8;
+  --cream-bg:rgba(245,248,164,.06);--cream-bd:rgba(245,248,164,.18);
+  --green:#10b981;--red:#ef4444;
+  --s1:#F5F8A4;--s2:#e8d84a;--s3:#fff8c0;--s4:#F5F8A4;
 }
-html,body{height:100%;overflow:hidden;background:var(--cream)}
-body{font-family:'Space Mono',monospace;color:var(--brown)}
-
-/* ── Screen system ── */
-.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+.screen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .screen.gone{display:none}
 
-/* ─────────────────────────────────────────────
-   1. API KEY SCREEN
-───────────────────────────────────────────── */
-#screen-key{background:var(--cream)}
-.key-card{
-  background:#fff;
-  border:1.5px solid var(--cream3);
-  border-radius:20px;
-  padding:52px 48px 44px;
-  width:100%;max-width:400px;
-  text-align:center;
-  box-shadow:0 12px 50px rgba(58,42,28,.07);
-}
-.key-logo{width:68px;height:68px;object-fit:contain;display:block;margin:0 auto 22px;
-  animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.key-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:40px;letter-spacing:.07em;color:var(--brown);line-height:1;margin-bottom:6px;
-}
-.key-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:30px}
-.key-field{
-  width:100%;
-  border:1.5px solid var(--cream3);
-  border-radius:9px;
-  padding:13px 18px;
-  font-family:'Space Mono',monospace;
-  font-size:13px;color:var(--brown);
-  background:var(--cream);outline:none;text-align:center;
-  transition:border-color .25s,box-shadow .25s;
-  margin-bottom:6px;
-}
-.key-field:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(200,196,48,.15)}
-.key-err{font-size:11px;color:var(--red);min-height:16px;margin-bottom:10px}
-.key-btn{
-  width:100%;background:var(--brown);color:var(--pale);border:none;
-  border-radius:9px;padding:14px;
-  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;
-  cursor:pointer;transition:background .2s,transform .15s;margin-top:2px;
-}
-.key-btn:hover{background:var(--brown2)}
-.key-btn:active{transform:scale(.98)}
-.key-note{margin-top:18px;font-size:10px;color:var(--muted)}
-.key-note a{color:var(--brown2);text-decoration:none}
+/* KEY */
+.key-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:44px 40px 38px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03)}
+.key-logo{width:62px;height:62px;object-fit:contain;display:block;margin:0 auto 22px;filter:drop-shadow(0 0 14px rgba(245,248,164,.4));animation:float 3.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.key-title{font-weight:700;font-size:22px;letter-spacing:.15em;color:var(--text);line-height:1;margin-bottom:5px;text-transform:uppercase}
+.key-sub{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.18em;margin-bottom:28px}
+.key-field{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:13px 16px;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;text-align:center;letter-spacing:.04em;outline:none;margin-bottom:6px;transition:border-color .2s,box-shadow .2s}
+.key-field:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(245,248,164,.1)}
+.key-field::placeholder{color:var(--muted)}
+.key-err{font-size:10px;color:var(--red);min-height:16px;margin-bottom:12px;letter-spacing:.04em}
+.key-btn{width:100%;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:13px;font-family:'Space Mono',monospace;font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s,transform .12s,box-shadow .2s}
+.key-btn:hover{background:var(--cream);color:#111;box-shadow:0 0 18px rgba(245,248,164,.25)}
+.key-btn:active{transform:scale(.97)}
+.key-note{margin-top:16px;font-size:9px;color:var(--muted);line-height:1.9;letter-spacing:.04em}
+.key-note a{color:var(--cream);text-decoration:none}
 .key-note a:hover{text-decoration:underline}
 
-/* ─────────────────────────────────────────────
-   2. LOADING SCREEN
-───────────────────────────────────────────── */
-#screen-loading{background:var(--cream);flex-direction:column;gap:22px}
-.ld-logo{width:54px;height:54px;object-fit:contain;animation:float 3s ease-in-out infinite}
-.ld-title{
-  font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.1em;color:var(--brown);
-}
-.ld-track{width:240px;height:4px;background:var(--cream3);border-radius:2px;overflow:hidden}
-.ld-fill{
-  height:100%;width:0%;border-radius:2px;
-  background:linear-gradient(90deg,var(--acc),var(--pale));
-  transition:width .12s linear;
-}
-.ld-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+/* LOADING */
+#screen-loading{flex-direction:column;gap:20px}
+.ld-logo{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(245,248,164,.35));animation:float 3s ease-in-out infinite}
+.ld-title{font-weight:700;font-size:13px;letter-spacing:.2em;color:var(--text);text-transform:uppercase}
+.ld-track{width:220px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.ld-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--cream),#fff8c0);transition:width .14s ease}
+.ld-sub{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.15em}
 
-/* ─────────────────────────────────────────────
-   3. MAIN APP
-───────────────────────────────────────────── */
-#screen-app{
-  background:var(--cream);
-  flex-direction:column;
-  align-items:stretch;
-  overflow:hidden;
-}
-
-/* Top bar */
-#topbar{
-  padding:13px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1.5px solid var(--cream3);
-  flex-shrink:0;background:var(--cream);
-}
+/* APP */
+#app{display:flex;flex-direction:column;height:100%}
+#topbar{height:52px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
 .tb-l{display:flex;align-items:center;gap:10px}
-.tb-logo{width:25px;height:25px;object-fit:contain}
-.tb-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.07em;color:var(--brown)}
+.tb-logo{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(245,248,164,.3))}
+.tb-name{font-weight:700;font-size:13px;letter-spacing:.16em;color:var(--text);text-transform:uppercase}
+.tb-ver{font-size:9px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 7px;border-radius:4px;letter-spacing:.06em}
 .tb-r{display:flex;align-items:center;gap:14px}
-.pill{
-  display:flex;align-items:center;gap:5px;
-  font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;
-  background:var(--cream2);border:1px solid var(--cream3);border-radius:20px;padding:4px 12px;
-}
-.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)}
-.pill-dot.off{background:var(--red);box-shadow:0 0 5px var(--red)}
-.ghost-btn{
-  background:transparent;border:1.5px solid var(--cream3);color:var(--brown2);
-  font-family:'Space Mono',monospace;font-size:10px;
-  padding:5px 14px;border-radius:6px;cursor:pointer;
-  text-transform:uppercase;letter-spacing:.08em;transition:border-color .2s,color .2s;
-}
-.ghost-btn:hover{border-color:var(--brown2);color:var(--brown)}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--red);transition:background .3s,box-shadow .3s}
+.pill-dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.ghost-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;padding:5px 14px;border-radius:6px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s}
+.ghost-btn:hover{border-color:var(--cream);color:var(--cream)}
+#main-split{flex:1;display:grid;grid-template-columns:1fr 380px;overflow:hidden;min-height:0}
 
-/* Main split */
-#main-split{
-  flex:1;display:grid;grid-template-columns:1fr 360px;
-  overflow:hidden;
-  gap:0;
-}
+/* MONITOR */
+#tv-area{padding:32px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#111 0%,var(--bg) 70%);overflow:hidden}
+.monitor-wrap{width:100%;max-width:680px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.monitor-frame{width:100%;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:11px;box-shadow:0 0 0 1px rgba(255,255,255,.03),0 28px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
+.monitor-stand{width:120px;height:18px;background:linear-gradient(to bottom,var(--border) 0%,var(--bg) 100%);border-radius:0 0 8px 8px;border:1px solid var(--border);border-top:none;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.monitor-base{width:200px;height:7px;background:var(--border);border-radius:4px}
+.monitor-screen{width:100%;height:100%;background:#000;border-radius:9px;overflow:hidden;position:relative;border:1px solid #1a1a1a}
+.monitor-screen::after{content:'';position:absolute;inset:0;z-index:20;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(0,0,0,.09) 2px,rgba(0,0,0,.09) 4px);border-radius:9px}
+#vnc-frame{width:100%;height:100%;border:none;opacity:0;transition:opacity .6s}
+#vnc-frame.live{opacity:1}
 
-/* ── LEFT: TV AREA ── */
-#tv-area{
-  display:flex;align-items:center;justify-content:center;
-  padding:20px 16px 16px 24px;
-  overflow:hidden;
-}
-
-/* TV cabinet */
-.tv-cabinet{
-  background:linear-gradient(155deg,#3d2c1a 0%,#2C2016 55%,#201810 100%);
-  border-radius:26px;
-  padding:20px 20px 28px;
-  box-shadow:
-    0 0 0 3px #190f05,
-    0 22px 60px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(255,255,255,.05);
-  position:relative;width:100%;max-width:600px;
-}
-.tv-knobs{
-  position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:8px;
-}
-.knob{
-  width:13px;height:13px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#5a4a38,#281c10);
-  border:2px solid #190f05;box-shadow:0 2px 5px rgba(0,0,0,.6);
-}
-.tv-badge{
-  position:absolute;bottom:7px;left:50%;transform:translateX(-50%);
-  font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.2em;
-  color:rgba(245,248,164,.25);
-}
-.tv-bezel{
-  background:#0e0e0e;border-radius:14px;padding:9px;
-  box-shadow:inset 0 2px 10px rgba(0,0,0,.9);
-  margin-right:24px;
-}
-.tv-screen{
-  background:#050505;border-radius:8px;
-  width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;
-  box-shadow:inset 0 0 50px rgba(0,0,0,.7),0 0 16px rgba(245,248,164,.05);
-}
-/* CRT scanlines */
-.tv-screen::after{
-  content:'';position:absolute;inset:0;z-index:20;pointer-events:none;border-radius:8px;
-  background:repeating-linear-gradient(
-    to bottom,transparent 0,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px
-  );
-}
-/* CRT vignette */
-.tv-screen::before{
-  content:'';position:absolute;inset:0;z-index:21;pointer-events:none;border-radius:8px;
-  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);
-}
-
-/* ── IDLE / DINO ── */
-#idle-screen{
-  position:absolute;inset:0;z-index:5;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  background:#050505;
-}
-.idle-clouds{
-  position:absolute;top:16px;left:0;right:0;display:flex;gap:50px;padding:0 24px;overflow:hidden;
-}
-.cloud{
-  height:12px;background:#111;border-radius:6px;flex-shrink:0;
-  animation:cloud-move 9s linear infinite;
-}
-.cloud:nth-child(1){width:40px}
-.cloud:nth-child(2){width:26px;animation-delay:-3s}
-.cloud:nth-child(3){width:52px;animation-delay:-6.5s}
-@keyframes cloud-move{from{transform:translateX(500px)}to{transform:translateX(-200px)}}
-.idle-heading{
-  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.18em;color:#3a3a3a;
-}
-.dino-scene{position:relative;width:280px;height:60px}
-.dino-svg{position:absolute;left:30px;bottom:0}
-.cactus-svg{position:absolute;right:20px;bottom:0}
-.dino-ground{position:absolute;bottom:-2px;left:0;right:0;height:2px;background:#222}
-.idle-hint{
-  font-size:10px;color:#3a3a3a;text-transform:uppercase;letter-spacing:.14em;
-  animation:blink 1.1s step-start infinite;
-}
+/* IDLE */
+#idle-screen{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#000;transition:opacity .5s}
+.idle-clouds{position:absolute;top:14px;left:0;right:0;display:flex;gap:48px;padding:0 20px;overflow:hidden}
+.icloud{height:11px;background:#111;border-radius:6px;flex-shrink:0;animation:cmove 10s linear infinite}
+.icloud:nth-child(1){width:38px}
+.icloud:nth-child(2){width:24px;animation-delay:-3.5s}
+.icloud:nth-child(3){width:50px;animation-delay:-7s}
+@keyframes cmove{from{transform:translateX(600px)}to{transform:translateX(-200px)}}
+.idle-label{font-weight:700;font-size:11px;letter-spacing:.22em;color:#2a2a2a;text-transform:uppercase}
+.dino-scene{position:relative;width:260px;height:56px}
+.dino-svg{position:absolute;left:24px;bottom:0}
+.cactus-svg{position:absolute;right:16px;bottom:0}
+.dino-ground{position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#1e1e1e}
+.idle-hint{font-size:9px;color:#2e2e2e;text-transform:uppercase;letter-spacing:.16em;animation:blink 1.1s step-start infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.leg-l{animation:la .26s alternate infinite ease-in-out;transform-origin:50% 0}
+.leg-r{animation:la .26s alternate-reverse infinite ease-in-out;transform-origin:50% 0}
+@keyframes la{from{transform:translateY(0)}to{transform:translateY(5px)}}
 
-/* Dino leg animation */
-.leg-l{animation:lega .28s alternate infinite ease-in-out}
-.leg-r{animation:lega .28s alternate-reverse infinite ease-in-out}
-@keyframes lega{from{transform:translateY(0)}to{transform:translateY(5px)}}
-
-/* ── VNC IFRAME ── */
-#vnc-frame{
-  position:absolute;inset:0;z-index:4;
-  width:100%;height:100%;border:none;
-  opacity:0;transition:opacity .6s;pointer-events:none;
-}
-#vnc-frame.live{opacity:1;pointer-events:all}
-
-/* ── RIGHT: CHAT PANE ── */
-#chat-pane{
-  display:flex;flex-direction:column;
-  border-left:1.5px solid var(--cream3);
-  overflow:hidden;
-  background:var(--cream);
-}
-#chat-pane-header{
-  padding:14px 18px 12px;
-  border-bottom:1px solid var(--cream3);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
-.pane-title{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)}
-.pane-actions{display:flex;gap:8px}
-.mini-btn{
-  font-size:9px;text-transform:uppercase;letter-spacing:.09em;
-  background:transparent;border:1px solid var(--cream3);color:var(--muted);
-  padding:4px 10px;border-radius:5px;cursor:pointer;
-  font-family:'Space Mono',monospace;transition:all .15s;
-}
-.mini-btn:hover{border-color:var(--brown2);color:var(--brown)}
+/* CHAT */
+#chat-pane{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+#chat-header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.chat-header-l{font-weight:700;font-size:10px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase}
+.chat-header-r{display:flex;gap:8px}
+.mini-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;font-weight:700;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 12px;border-radius:5px;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.mini-btn:hover{border-color:var(--muted2);color:var(--text)}
 .mini-btn.danger:hover{border-color:var(--red);color:var(--red)}
-
-#chat-msgs{
-  flex:1;overflow-y:auto;
-  padding:16px;display:flex;flex-direction:column;gap:14px;
-}
+#chat-msgs{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:16px;min-height:0}
 #chat-msgs::-webkit-scrollbar{width:3px}
-#chat-msgs::-webkit-scrollbar-thumb{background:var(--cream3);border-radius:2px}
+#chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted)}
+.chat-empty img{width:38px;height:38px;object-fit:contain;opacity:.15;filter:grayscale(1)}
+.chat-empty p{font-size:10px;text-transform:uppercase;letter-spacing:.12em;line-height:1.8;text-align:center}
 
-/* Empty state */
-#chat-empty{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:10px;padding:24px;text-align:center;
-  color:var(--muted);
-}
-#chat-empty img{width:42px;height:42px;object-fit:contain;opacity:.35}
-#chat-empty p{font-size:10px;text-transform:uppercase;letter-spacing:.1em;line-height:1.7}
+/* MESSAGES */
+.msg{display:flex;flex-direction:column;gap:4px;animation:fadeup .22s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.msg-who{font-weight:700;font-size:9px;letter-spacing:.16em;color:var(--muted);padding:0 2px;text-transform:uppercase}
+.msg-text{font-size:12px;line-height:1.7;padding:11px 14px;border-radius:4px 10px 10px 10px;word-break:break-word;white-space:pre-wrap}
+.msg.bot .msg-text{background:var(--panel);border:1px solid var(--border);color:var(--text)}
+.msg.user{align-items:flex-end}
+.msg.user .msg-who{color:var(--cream);opacity:.7}
+.msg.user .msg-text{background:var(--cream-bg);border:1px solid var(--cream-bd);color:var(--cream2);border-radius:10px 4px 10px 10px}
+.msg-text code{background:rgba(245,248,164,.07);border:1px solid rgba(245,248,164,.15);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--cream)}
+.msg-text pre{background:#0d0d0d;border:1px solid var(--border);padding:10px;border-radius:6px;overflow-x:auto;margin:6px 0;font-size:11px;color:#aaa}
+.typing-bubble{background:var(--panel);border:1px solid var(--border);padding:11px 16px;border-radius:4px 10px 10px 10px;display:inline-flex;gap:5px;align-items:center}
+.typing-bubble span{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:tdot 1.3s infinite ease-in-out}
+.typing-bubble span:nth-child(2){animation-delay:.18s}
+.typing-bubble span:nth-child(3){animation-delay:.36s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-4px);opacity:1}}
 
-/* Messages */
-.msg{display:flex;gap:9px;animation:fadeup .22s ease}
-@keyframes fadeup{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.msg-av{
-  width:24px;height:24px;border-radius:5px;flex-shrink:0;margin-top:1px;
-  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+/* SABER INPUT */
+#input-area{padding:14px 16px 16px;flex-shrink:0}
+@property --sa{syntax:'<angle>';initial-value:0deg;inherits:false}
+.saber-wrap{position:relative;border-radius:11px;padding:1.5px;background:var(--border);transition:box-shadow .3s}
+.saber-wrap:focus-within{background:conic-gradient(from var(--sa),var(--s1),var(--s2),var(--s3),var(--s4),var(--s1));animation:saberspin 2.5s linear infinite;box-shadow:0 0 18px rgba(245,248,164,.2),0 0 40px rgba(245,248,164,.07)}
+@keyframes saberspin{to{--sa:360deg}}
+@supports not (background:conic-gradient(red,blue)){
+  .saber-wrap:focus-within{background:linear-gradient(90deg,var(--s1),var(--s2),var(--s3));background-size:200% 100%;animation:saberslide 2s linear infinite}
+  @keyframes saberslide{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 }
-.msg.user .msg-av{background:var(--acc);color:#000}
-.msg.bot  .msg-av{background:var(--cream2);border:1.5px solid var(--cream3);overflow:hidden}
-.msg.bot  .msg-av img{width:18px;height:18px;object-fit:contain}
-.msg-body{flex:1;min-width:0}
-.msg-who{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
-.msg-text{
-  font-size:12px;line-height:1.7;color:var(--brown);
-  white-space:pre-wrap;word-break:break-word;
-  background:var(--cream2);border:1px solid var(--cream3);
-  border-radius:4px 10px 10px 10px;padding:10px 12px;
-}
-.msg.user .msg-text{
-  background:#fff;border-color:var(--cream3);
-  border-radius:10px 4px 10px 10px;
-  color:var(--brown);
-}
-.msg-text code{
-  background:var(--cream);border:1px solid var(--cream3);
-  padding:1px 5px;border-radius:3px;font-size:11px;color:var(--brown2);
-}
-.msg-text pre{
-  background:var(--cream);border:1px solid var(--cream3);
-  padding:10px;border-radius:6px;overflow-x:auto;
-  margin:6px 0;font-size:11px;color:var(--brown2);
-}
-.typing-dots{display:flex;gap:4px;padding:2px 0}
-.typing-dots span{
-  width:5px;height:5px;border-radius:50%;background:var(--muted);
-  animation:tdot 1.2s infinite;
-}
-.typing-dots span:nth-child(2){animation-delay:.2s}
-.typing-dots span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,80%,100%{opacity:.2}40%{opacity:.9}}
-
-/* ── SABER INPUT AREA ── */
-#input-area{
-  padding:14px 16px;
-  border-top:1.5px solid var(--cream3);
-  flex-shrink:0;
-}
-/* The animated saber border container */
-.saber-wrap{
-  position:relative;border-radius:12px;padding:2px;
-  background:var(--cream3); /* fallback */
-}
-
-/* Animated conic-gradient border (saber effect) */
-@supports (background: conic-gradient(red, blue)) {
-  @property --sa {syntax:'<angle>';initial-value:0deg;inherits:false}
-  .saber-wrap{
-    background:conic-gradient(from var(--sa),var(--s1),var(--s2),var(--s3),var(--s4),var(--s1));
-    animation:saber-spin 3s linear infinite;
-  }
-  @keyframes saber-spin{to{--sa:360deg}}
-}
-
-/* Fallback for browsers without @property */
-@supports not (background: conic-gradient(red, blue)) {
-  .saber-wrap{
-    background:linear-gradient(90deg,var(--s1),var(--s2),var(--s3),var(--s4));
-    background-size:300% 100%;
-    animation:saber-slide 3s linear infinite;
-  }
-  @keyframes saber-slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
-}
-
-.saber-glow{
-  box-shadow:0 0 12px 2px rgba(0,200,255,.25),0 0 24px 4px rgba(160,32,240,.15);
-  border-radius:12px;
-}
-.saber-inner{
-  background:var(--cream);border-radius:10px;padding:10px 12px;
-  display:flex;align-items:flex-end;gap:10px;
-}
-#chat-ta{
-  flex:1;background:transparent;border:none;outline:none;
-  font-family:'Space Mono',monospace;font-size:12px;color:var(--brown);
-  resize:none;min-height:20px;max-height:90px;overflow-y:auto;
-  line-height:1.5;
-}
+.saber-inner{background:var(--bg);border-radius:9.5px;padding:10px 12px;display:flex;align-items:flex-end;gap:10px}
+#chat-ta{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:12px;color:var(--text);resize:none;min-height:22px;max-height:110px;overflow-y:auto;line-height:1.6}
 #chat-ta::placeholder{color:var(--muted)}
-#chat-send{
-  background:var(--brown);border:none;
-  width:30px;height:30px;border-radius:6px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .15s;
-}
-#chat-send:hover{background:var(--brown2);transform:scale(1.06)}
-#chat-send:active{transform:scale(.96)}
-#chat-send:disabled{opacity:.3;cursor:not-allowed;transform:none}
-#chat-send svg{pointer-events:none}
-.input-hint{
-  margin-top:6px;font-size:9px;color:var(--muted);
-  text-align:center;letter-spacing:.06em;
-}
+#chat-ta::-webkit-scrollbar{width:2px}
+#chat-ta::-webkit-scrollbar-thumb{background:var(--border)}
+#chat-send{background:none;border:none;cursor:pointer;color:var(--cream);padding:4px;flex-shrink:0;transition:transform .15s,filter .15s;line-height:0}
+#chat-send:hover{transform:scale(1.12);filter:drop-shadow(0 0 6px var(--cream))}
+#chat-send:active{transform:scale(.95)}
+#chat-send:disabled{opacity:.25;cursor:not-allowed;transform:none;filter:none}
+.input-hint{margin-top:6px;font-size:9px;color:var(--muted);text-align:center;letter-spacing:.07em;padding:0 2px}
 
-/* Bottom bar */
-#bottombar{
-  padding:7px 24px;
-  border-top:1.5px solid var(--cream3);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;background:var(--cream);
-}
-.bstat{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.bstat b{color:var(--brown);font-weight:700}
+/* BOTTOM BAR */
+#bottombar{height:38px;flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;position:relative}
 .bstats{display:flex;gap:20px}
-.model-sel{
-  background:var(--cream2);border:1.5px solid var(--cream3);
-  color:var(--brown2);font-family:'Space Mono',monospace;font-size:10px;
-  padding:4px 10px;border-radius:5px;outline:none;cursor:pointer;appearance:none;
-  transition:border-color .2s;
-}
-.model-sel:focus{border-color:var(--acc)}
+.bstat b{font-weight:700;font-size:12px;color:var(--text);letter-spacing:.06em;margin-left:5px}
+.bmode{color:var(--muted2)}
+.bmode span{color:var(--cream)}
 
-/* responsive */
-@media(max-width:800px){
-  #main-split{grid-template-columns:1fr}
-  #chat-pane{display:none}
-  .tv-knobs{display:none}
-  .tv-bezel{margin-right:0}
+/* CUSTOM DROPDOWN */
+.model-dropdown{position:relative}
+.model-trigger{background:var(--panel);border:1px solid var(--border);color:var(--muted2);font-family:'Space Mono',monospace;font-size:9px;padding:5px 28px 5px 10px;border-radius:5px;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;position:relative;transition:border-color .2s,color .2s;user-select:none;white-space:nowrap;min-width:148px}
+.model-trigger:hover{border-color:var(--cream);color:var(--cream)}
+.model-trigger::after{content:'';position:absolute;right:10px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid var(--muted);transition:transform .2s,border-top-color .2s}
+.model-dropdown.open .model-trigger{border-color:var(--cream);color:var(--cream)}
+.model-dropdown.open .model-trigger::after{transform:translateY(-50%) rotate(180deg);border-top-color:var(--cream)}
+.model-menu{position:absolute;bottom:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;min-width:180px;box-shadow:0 -14px 36px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;z-index:99}
+.model-dropdown.open .model-menu{opacity:1;pointer-events:all;transform:translateY(0)}
+.model-option{display:block;width:100%;padding:10px 14px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;text-align:left;transition:background .12s,color .12s;border-bottom:1px solid var(--border)}
+.model-option:last-child{border-bottom:none}
+.model-option:hover{background:var(--panel);color:var(--text)}
+.model-option.selected{color:var(--cream);background:rgba(245,248,164,.04)}
+.model-option.selected::before{content:'> ';opacity:.5}
+
+/* MOBILE */
+@media(max-width:720px){
+  #main-split{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  #tv-area{padding:16px;height:180px;flex-shrink:0}
+  .monitor-stand,.monitor-base{display:none}
+  #chat-pane{border-left:none;border-top:1px solid var(--border)}
+  .tb-ver,.ghost-btn{display:none}
+  #bottombar{padding:0 14px}
+}
+@media(max-width:420px){
+  .key-card{padding:32px 24px 28px}
+  .key-title{font-size:18px}
+  #tv-area{height:150px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── SCREEN 1: API KEY ────────────────────────────────────────── -->
 <div class="screen" id="screen-key">
   <div class="key-card">
-    <img class="key-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro" onerror="this.style.display='none'"/>
+    <img class="key-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="MEGABRO" onerror="this.style.display='none'"/>
     <div class="key-title">MEGABRO</div>
-    <div class="key-sub">Enter your Gemini API key</div>
-    <input class="key-field" type="password" id="key-in" placeholder="AIzaSy..." autocomplete="off" aria-label="Gemini API Key"/>
+    <div class="key-sub">Infrastructure Access Gate</div>
+    <input class="key-field" type="password" id="key-in" placeholder="Enter Gemini API key" autocomplete="off" aria-label="Gemini API Key"/>
     <div class="key-err" id="key-err"></div>
-    <button class="key-btn" id="key-btn">BOOT SYSTEM</button>
-    <p class="key-note">
-      Free key at <a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a><br/>
-      Stored in your browser only.
-    </p>
+    <button class="key-btn" id="key-btn">INITIALIZE SYSTEM</button>
+    <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank" rel="noopener">aistudio.google.com</a><br/>Stored in your browser only.</p>
   </div>
 </div>
 
-<!-- ── SCREEN 2: LOADING ────────────────────────────────────────── -->
 <div class="screen gone" id="screen-loading">
   <img class="ld-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
-  <div class="ld-title" id="ld-msg">Initialising...</div>
+  <div class="ld-title" id="ld-msg">INITIALISING</div>
   <div class="ld-track"><div class="ld-fill" id="ld-bar"></div></div>
-  <div class="ld-sub" id="ld-sub">Waking up the bro</div>
+  <div class="ld-sub" id="ld-sub">WAKING UP THE BRO</div>
 </div>
 
-<!-- ── SCREEN 3: MAIN APP ───────────────────────────────────────── -->
-<div class="screen gone" id="screen-app">
-
-  <!-- Top bar -->
+<div id="app" style="display:none;height:100%">
   <div id="topbar">
     <div class="tb-l">
       <img class="tb-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
       <span class="tb-name">MEGABRO</span>
+      <span class="tb-ver">v2.0</span>
     </div>
     <div class="tb-r">
-      <div class="pill"><div class="pill-dot" id="vnc-dot"></div><span id="vnc-label">Checking VNC...</span></div>
-      <button class="ghost-btn" id="change-key-btn">Change Key</button>
+      <div class="status-pill">
+        <div class="pill-dot" id="vnc-dot"></div>
+        <span id="vnc-label">VNC OFFLINE</span>
+      </div>
+      <button class="ghost-btn" id="change-key-btn">API KEY</button>
     </div>
   </div>
 
-  <!-- Main content -->
   <div id="main-split">
-
-    <!-- LEFT: TV -->
     <div id="tv-area">
-      <div class="tv-cabinet">
-        <div class="tv-knobs">
-          <div class="knob"></div>
-          <div class="knob"></div>
-          <div class="knob"></div>
-        </div>
-
-        <div class="tv-bezel">
-          <div class="tv-screen">
-
-            <!-- VNC live feed -->
-            <iframe id="vnc-frame" src="" title="VNC Live Screen" allowfullscreen></iframe>
-
-            <!-- Dino idle (shown when VNC offline) -->
+      <div class="monitor-wrap">
+        <div class="monitor-frame">
+          <div class="monitor-screen">
+            <iframe id="vnc-frame" src="" title="VNC Live"></iframe>
             <div id="idle-screen">
-              <div class="idle-clouds">
-                <div class="cloud"></div>
-                <div class="cloud"></div>
-                <div class="cloud"></div>
-              </div>
-              <div class="idle-heading">NO SIGNAL</div>
-
-              <!-- Dino SVG -->
+              <div class="idle-clouds"><div class="icloud"></div><div class="icloud"></div><div class="icloud"></div></div>
+              <div class="idle-label">SIGNAL LOST</div>
               <div class="dino-scene">
-                <svg class="dino-svg" width="46" height="54" viewBox="0 0 46 54" fill="none">
-                  <rect x="17" y="2" width="21" height="15" rx="4" fill="#F5F8A4"/>
-                  <rect x="29" y="4" width="4" height="4" rx="1" fill="#0a0a0a"/>
-                  <rect x="35" y="9" width="9" height="4" rx="2" fill="#F5F8A4"/>
-                  <rect x="11" y="15" width="27" height="23" rx="4" fill="#F5F8A4"/>
-                  <rect x="5" y="20" width="9" height="5" rx="2" fill="#F5F8A4"/>
-                  <rect class="leg-l" x="17" y="36" width="8" height="17" rx="3" fill="#F5F8A4"/>
-                  <rect class="leg-r" x="27" y="36" width="8" height="17" rx="3" fill="#F5F8A4"/>
+                <svg class="dino-svg" width="44" height="52" viewBox="0 0 44 52" fill="none">
+                  <rect x="16" y="2" width="20" height="14" rx="3" fill="#1e1e1e"/>
+                  <rect x="28" y="4" width="4" height="4" rx="1" fill="#444"/>
+                  <rect x="33" y="8" width="9" height="4" rx="2" fill="#1e1e1e"/>
+                  <rect x="10" y="14" width="26" height="22" rx="3" fill="#1e1e1e"/>
+                  <rect x="4" y="18" width="9" height="5" rx="2" fill="#1e1e1e"/>
+                  <rect class="leg-l" x="16" y="34" width="8" height="16" rx="2" fill="#1e1e1e"/>
+                  <rect class="leg-r" x="26" y="34" width="8" height="16" rx="2" fill="#1e1e1e"/>
                 </svg>
-                <!-- Cactus -->
-                <svg class="cactus-svg" width="24" height="44" viewBox="0 0 24 44" fill="#2a4a2a">
-                  <rect x="9" y="10" width="6" height="34" rx="3"/>
-                  <rect x="1" y="20" width="10" height="5" rx="2"/>
-                  <rect x="13" y="24" width="10" height="5" rx="2"/>
-                  <rect x="1" y="16" width="5" height="9" rx="2"/>
-                  <rect x="18" y="20" width="5" height="9" rx="2"/>
+                <svg class="cactus-svg" width="22" height="42" viewBox="0 0 22 42" fill="#1a2a1a">
+                  <rect x="8" y="8" width="6" height="34" rx="3"/>
+                  <rect x="0" y="18" width="10" height="5" rx="2"/>
+                  <rect x="12" y="22" width="10" height="5" rx="2"/>
+                  <rect x="0" y="14" width="5" height="9" rx="2"/>
+                  <rect x="17" y="18" width="5" height="9" rx="2"/>
                 </svg>
                 <div class="dino-ground"></div>
               </div>
-
-              <div class="idle-hint">Start VNC to see live screen</div>
+              <div class="idle-hint">Awaiting VNC packets</div>
             </div>
+          </div>
+        </div>
+        <div class="monitor-stand"></div>
+        <div class="monitor-base"></div>
+      </div>
+    </div>
 
-          </div><!-- tv-screen -->
-        </div><!-- tv-bezel -->
-        <div class="tv-badge">MEGABRO</div>
-      </div><!-- tv-cabinet -->
-    </div><!-- tv-area -->
-
-    <!-- RIGHT: CHAT -->
     <div id="chat-pane">
-      <div id="chat-pane-header">
-        <span class="pane-title">AI Chat</span>
-        <div class="pane-actions">
-          <button class="mini-btn" id="export-btn">Export</button>
-          <button class="mini-btn danger" id="clear-btn">Clear</button>
+      <div id="chat-header">
+        <span class="chat-header-l">AI TERMINAL</span>
+        <div class="chat-header-r">
+          <button class="mini-btn" id="export-btn">EXPORT</button>
+          <button class="mini-btn danger" id="clear-btn">CLEAR</button>
         </div>
       </div>
-
       <div id="chat-msgs">
-        <!-- Empty state -->
-        <div id="chat-empty">
+        <div class="chat-empty" id="chat-empty">
           <img src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
-          <p>Ask Megabro anything.<br/>Type below and press Enter.</p>
+          <p>System nominal.<br/>Awaiting your command.</p>
         </div>
       </div>
-
       <div id="input-area">
-        <div class="saber-wrap saber-glow">
+        <div class="saber-wrap">
           <div class="saber-inner">
-            <textarea id="chat-ta" rows="1" placeholder="Ask anything..." aria-label="Chat message"></textarea>
-            <button id="chat-send" aria-label="Send">
-              <svg width="13" height="13" fill="none" stroke="#F5F8A4" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
-              </svg>
+            <textarea id="chat-ta" rows="1" placeholder="Type a command..." aria-label="Message input"></textarea>
+            <button id="chat-send" aria-label="Send message" title="Send (Enter)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
         </div>
-        <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+        <div class="input-hint">Enter to send &middot; Shift+Enter for new line</div>
       </div>
     </div>
-
-  </div><!-- main-split -->
-
-  <!-- Bottom bar -->
-  <div id="bottombar">
-    <div class="bstats">
-      <div class="bstat">Messages <b id="b-msgs">0</b></div>
-      <div class="bstat">Tokens <b id="b-toks">0</b></div>
-    </div>
-    <select class="model-sel" id="model-sel" aria-label="AI Model">
-      <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-      <option value="gemini-1.5-flash">gemini-1.5-flash</option>
-      <option value="gemini-1.5-pro">gemini-1.5-pro</option>
-      <option value="gemini-2.0-flash-lite">gemini-2.0-flash-lite</option>
-    </select>
   </div>
 
-</div><!-- screen-app -->
+  <div id="bottombar">
+    <div class="bmode">INFRA MODE &nbsp;<span>STABLE</span></div>
+    <div class="bstats">
+      <span class="bstat">MSGS<b id="b-msgs">0</b></span>
+      <span class="bstat">TOKENS<b id="b-toks">0</b></span>
+    </div>
+    <div class="model-dropdown" id="model-dropdown">
+      <div class="model-trigger" id="model-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+        <span id="model-label">GEMINI-2.0-FLASH</span>
+      </div>
+      <div class="model-menu" role="listbox" id="model-menu">
+        <button class="model-option selected" data-value="gemini-2.0-flash" role="option">Gemini 2.0 Flash</button>
+        <button class="model-option" data-value="gemini-1.5-flash" role="option">Gemini 1.5 Flash</button>
+        <button class="model-option" data-value="gemini-1.5-pro" role="option">Gemini 1.5 Pro</button>
+        <button class="model-option" data-value="gemini-2.0-flash-lite" role="option">Gemini 2.0 Lite</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-// ── State ──────────────────────────────────────────────────────
-let apiKey  = sessionStorage.getItem('mb_key') || '';
-let history = [];
-let msgCount = 0, tokenEst = 0;
-let busy = false;
-let vncLive = false;
+'use strict';
+const $=id=>document.getElementById(id);
+const show=el=>{el.style.display='';el.classList.remove('gone')};
+const hide=el=>{el.style.display='none';el.classList.add('gone')};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-// ── DOM refs ────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const $sKey   = $('screen-key');
-const $sLoad  = $('screen-loading');
-const $sApp   = $('screen-app');
-const $keyIn  = $('key-in');
-const $keyErr = $('key-err');
-const $ldBar  = $('ld-bar');
-const $ldMsg  = $('ld-msg');
-const $ldSub  = $('ld-sub');
-const $msgs   = $('chat-msgs');
-const $empty  = $('chat-empty');
-const $ta     = $('chat-ta');
-const $send   = $('chat-send');
-const $bMsgs  = $('b-msgs');
-const $bToks  = $('b-toks');
-const $model  = $('model-sel');
-const $vnc    = $('vnc-frame');
-const $idle   = $('idle-screen');
-const $vncDot = $('vnc-dot');
-const $vncLbl = $('vnc-label');
+const $sKey=$('screen-key'),$sLoad=$('screen-loading'),$app=$('app');
+const $keyIn=$('key-in'),$keyErr=$('key-err');
+const $ldBar=$('ld-bar'),$ldMsg=$('ld-msg'),$ldSub=$('ld-sub');
+const $msgs=$('chat-msgs'),$ta=$('chat-ta'),$send=$('chat-send');
+const $bMsgs=$('b-msgs'),$bToks=$('b-toks');
+const $vnc=$('vnc-frame'),$idle=$('idle-screen');
+const $vncDot=$('vnc-dot'),$vncLbl=$('vnc-label');
 
-const show = el => el.classList.remove('gone');
-const hide = el => el.classList.add('gone');
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+let apiKey=sessionStorage.getItem('mb_key')||'';
+let history=[],msgCount=0,tokenEst=0,busy=false,vncLive=false;
+let selectedModel='gemini-2.0-flash';
 
-// ── Loading sequence ────────────────────────────────────────────
-async function runLoader() {
-  const steps = [
-    { pct: 18,  msg: 'Initialising...',    sub: 'Waking up the bro'     },
-    { pct: 40,  msg: 'Loading modules...',  sub: 'Setting up AI bridge'  },
-    { pct: 65,  msg: 'Connecting API...',   sub: 'Reaching Gemini'       },
-    { pct: 85,  msg: 'Almost ready...',     sub: 'Booting interface'     },
-    { pct: 100, msg: 'Ready!',              sub: 'Welcome back, bro'     },
+// Custom dropdown
+const $dd=$('model-dropdown'),$trigger=$('model-trigger'),$label=$('model-label'),$menu=$('model-menu');
+const opts=$menu.querySelectorAll('.model-option');
+const LABELS={'gemini-2.0-flash':'GEMINI-2.0-FLASH','gemini-1.5-flash':'GEMINI-1.5-FLASH','gemini-1.5-pro':'GEMINI-1.5-PRO','gemini-2.0-flash-lite':'GEMINI-2.0-LITE'};
+
+function toggleDD(force){
+  const open=force!==undefined?force:!$dd.classList.contains('open');
+  $dd.classList.toggle('open',open);
+  $trigger.setAttribute('aria-expanded',open);
+}
+$trigger.addEventListener('click',e=>{e.stopPropagation();toggleDD()});
+$trigger.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleDD()}
+  if(e.key==='Escape')toggleDD(false);
+});
+opts.forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    selectedModel=opt.dataset.value;
+    $label.textContent=LABELS[selectedModel]||selectedModel.toUpperCase();
+    opts.forEach(o=>o.classList.toggle('selected',o===opt));
+    toggleDD(false);
+    $trigger.focus();
+  });
+});
+document.addEventListener('click',e=>{if(!$dd.contains(e.target))toggleDD(false)});
+
+// Loader
+async function runLoader(){
+  const steps=[
+    {pct:15,msg:'INITIALISING',sub:'WAKING UP THE BRO'},
+    {pct:38,msg:'LOADING MODULES',sub:'SETTING UP AI BRIDGE'},
+    {pct:62,msg:'CONNECTING API',sub:'REACHING GEMINI'},
+    {pct:84,msg:'ALMOST READY',sub:'BOOTING INTERFACE'},
+    {pct:100,msg:'SYSTEMS ONLINE',sub:'WELCOME BACK, BRO'},
   ];
-  for (const s of steps) {
-    $ldBar.style.width = s.pct + '%';
-    $ldMsg.textContent = s.msg;
-    $ldSub.textContent = s.sub;
-    await sleep(300 + Math.random() * 200);
+  for(const s of steps){
+    $ldBar.style.width=s.pct+'%';
+    $ldMsg.textContent=s.msg;
+    $ldSub.textContent=s.sub;
+    await sleep(290+Math.random()*210);
   }
-  await sleep(280);
+  await sleep(260);
 }
 
-// ── Boot ────────────────────────────────────────────────────────
-async function boot() {
-  const k = $keyIn.value.trim();
-  if (!k) { $keyErr.textContent = 'Please enter your API key.'; return; }
-  if (!k.startsWith('AIza')) { $keyErr.textContent = 'Key should start with AIza...'; return; }
-  apiKey = k;
-  sessionStorage.setItem('mb_key', k);
-  hide($sKey);
-  show($sLoad);
+async function boot(){
+  const k=$keyIn.value.trim();
+  if(!k){$keyErr.textContent='Please enter your API key.';return}
+  if(!k.startsWith('AIza')){$keyErr.textContent='Key should start with AIza...';return}
+  $keyErr.textContent='';
+  apiKey=k;sessionStorage.setItem('mb_key',k);
+  hide($sKey);show($sLoad);
   await runLoader();
-  hide($sLoad);
-  show($sApp);
-  $ta.focus();
-  checkVNC();
+  hide($sLoad);$app.style.display='flex';$ta.focus();checkVNC();
+}
+$('key-btn').addEventListener('click',boot);
+$keyIn.addEventListener('keydown',e=>{if(e.key==='Enter')boot()});
+
+if(apiKey){
+  hide($sKey);show($sLoad);
+  (async()=>{await runLoader();hide($sLoad);$app.style.display='flex';$ta.focus();checkVNC()})();
 }
 
-// Auto-boot if key saved
-if (apiKey) {
-  (async () => {
-    hide($sKey);
-    show($sLoad);
-    await runLoader();
-    hide($sLoad);
-    show($sApp);
-    $ta.focus();
-    checkVNC();
-  })();
-}
-
-$('key-btn').addEventListener('click', boot);
-$keyIn.addEventListener('keydown', e => { if (e.key === 'Enter') boot(); });
-
-$('change-key-btn').addEventListener('click', () => {
-  hide($sApp);
-  $keyIn.value = '';
-  $keyErr.textContent = '';
-  show($sKey);
-  $keyIn.focus();
+$('change-key-btn').addEventListener('click',()=>{
+  $app.style.display='none';$keyIn.value='';$keyErr.textContent='';show($sKey);$keyIn.focus();
 });
 
-// ── VNC status polling ──────────────────────────────────────────
-async function checkVNC() {
-  try {
-    const r = await fetch('/api/vnc-status');
-    const d = await r.json();
-    if (d.running && !vncLive) {
-      vncLive = true;
-      $vncDot.classList.remove('off');
-      $vncLbl.textContent = 'VNC Live';
-      $vnc.src = d.vncUrl;
-      $vnc.classList.add('live');
-      $idle.style.transition = 'opacity .5s';
-      $idle.style.opacity = '0';
-      setTimeout(() => { $idle.style.display = 'none'; }, 500);
-    } else if (!d.running && vncLive) {
-      vncLive = false;
-      $vncDot.classList.add('off');
-      $vncLbl.textContent = 'VNC Offline';
-      $vnc.classList.remove('live');
-      $idle.style.display = '';
-      $idle.style.opacity = '1';
-    } else if (!d.running) {
-      $vncDot.classList.add('off');
-      $vncLbl.textContent = 'VNC Offline';
-    }
-  } catch (_) {
-    $vncDot.classList.add('off');
-    $vncLbl.textContent = 'No Signal';
-  }
-  setTimeout(checkVNC, 5000);
+async function checkVNC(){
+  try{
+    const r=await fetch('/api/vnc-status');const d=await r.json();
+    if(d.running&&!vncLive){
+      vncLive=true;$vncDot.classList.add('on');$vncLbl.textContent='VNC LIVE';
+      $vnc.src=d.vncUrl;$vnc.classList.add('live');
+      $idle.style.opacity='0';setTimeout(()=>{$idle.style.display='none'},500);
+    }else if(!d.running&&vncLive){
+      vncLive=false;$vncDot.classList.remove('on');$vncLbl.textContent='VNC OFFLINE';
+      $vnc.classList.remove('live');$idle.style.display='';$idle.style.opacity='1';
+    }else if(!d.running){$vncDot.classList.remove('on');$vncLbl.textContent='VNC OFFLINE'}
+  }catch(_){$vncDot.classList.remove('on');$vncLbl.textContent='NO SIGNAL'}
+  setTimeout(checkVNC,5000);
 }
 
-// ── Send message ────────────────────────────────────────────────
-$ta.addEventListener('input', () => {
-  $ta.style.height = 'auto';
-  $ta.style.height = Math.min($ta.scrollHeight, 90) + 'px';
-});
-$ta.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-});
-$send.addEventListener('click', send);
+$ta.addEventListener('input',()=>{$ta.style.height='auto';$ta.style.height=Math.min($ta.scrollHeight,110)+'px'});
+$ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+$send.addEventListener('click',send);
 
-async function send() {
-  const text = $ta.value.trim();
-  if (!text || busy) return;
-  $ta.value = '';
-  $ta.style.height = 'auto';
-  busy = true;
-  $send.disabled = true;
-
-  // Hide empty state
-  if ($empty) $empty.style.display = 'none';
-
-  addMsg('user', text);
-  history.push({ role: 'user', parts: [{ text }] });
-  msgCount++;
-  tokenEst += Math.ceil(text.length / 4);
-  updateStats();
-
-  const typing = addTyping();
-
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: text,
-        apiKey,
-        history: history.slice(0, -1),
-        model: $model.value
-      })
-    });
-    const data = await res.json();
-    typing.remove();
-
-    const reply = data.error ? 'Error: ' + data.error : data.reply;
-    addMsg('bot', reply);
-
-    if (!data.error) {
-      history.push({ role: 'model', parts: [{ text: reply }] });
-      msgCount++;
-      tokenEst += Math.ceil(reply.length / 4);
-    }
-  } catch (err) {
-    typing.remove();
-    addMsg('bot', 'Network error. Is the server running?');
-  }
-
-  updateStats();
-  busy = false;
-  $send.disabled = false;
-  $msgs.scrollTop = $msgs.scrollHeight;
-  $ta.focus();
+async function send(){
+  const text=$ta.value.trim();if(!text||busy)return;
+  $ta.value='';$ta.style.height='auto';busy=true;$send.disabled=true;
+  const empty=$('chat-empty');if(empty)empty.style.display='none';
+  appendMsg('user',text);
+  history.push({role:'user',parts:[{text}]});
+  msgCount++;tokenEst+=Math.ceil(text.length/4);updateStats();
+  const typing=appendTyping();
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,apiKey,history:history.slice(0,-1),model:selectedModel})});
+    const data=await res.json();typing.remove();
+    const reply=data.error?'Error: '+data.error:data.reply;
+    if(!data.error){history.push({role:'model',parts:[{text:reply}]});msgCount++;tokenEst+=Math.ceil(reply.length/4)}
+    appendMsg('bot',reply);
+  }catch(err){typing.remove();appendMsg('bot','Network error. Is the server running?')}
+  updateStats();busy=false;$send.disabled=false;$msgs.scrollTop=$msgs.scrollHeight;$ta.focus();
 }
 
-// ── Message rendering ────────────────────────────────────────────
-function addMsg(role, text) {
-  const d = document.createElement('div');
-  d.className = 'msg ' + role;
-  const av = role === 'user'
-    ? `<div class="msg-av">Y</div>`
-    : `<div class="msg-av"><img src="https://s6.imgcdn.dev/Yx103M.png" onerror="this.parentElement.textContent='AI'"/></div>`;
-  d.innerHTML = `${av}<div class="msg-body">
-    <div class="msg-who">${role === 'user' ? 'You' : 'Megabro'}</div>
-    <div class="msg-text">${fmt(text)}</div>
-  </div>`;
-  $msgs.appendChild(d);
-  $msgs.scrollTop = $msgs.scrollHeight;
-  return d;
+function appendMsg(role,text){
+  const wrap=document.createElement('div');wrap.className='msg '+role;
+  const who=document.createElement('div');who.className='msg-who';who.textContent=role==='user'?'YOU':'MEGABRO';
+  const body=document.createElement('div');body.className='msg-text';body.innerHTML=fmt(text);
+  wrap.appendChild(who);wrap.appendChild(body);$msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;return wrap;
 }
 
-function addTyping() {
-  const d = document.createElement('div');
-  d.className = 'msg bot';
-  d.innerHTML = `<div class="msg-av"><img src="https://s6.imgcdn.dev/Yx103M.png" onerror="this.parentElement.textContent='AI'"/></div>
-    <div class="msg-body">
-      <div class="msg-who">Megabro</div>
-      <div class="msg-text"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-    </div>`;
-  $msgs.appendChild(d);
-  $msgs.scrollTop = $msgs.scrollHeight;
-  return d;
+function appendTyping(){
+  const wrap=document.createElement('div');wrap.className='msg bot';
+  const who=document.createElement('div');who.className='msg-who';who.textContent='MEGABRO';
+  const b=document.createElement('div');b.className='typing-bubble';b.innerHTML='<span></span><span></span><span></span>';
+  wrap.appendChild(who);wrap.appendChild(b);$msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;return wrap;
 }
 
-function fmt(t) {
-  return t
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+function fmt(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
     .replace(/`([^`\n]+)`/g,'<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
 }
+function updateStats(){$bMsgs.textContent=msgCount;$bToks.textContent=tokenEst>999?(tokenEst/1000).toFixed(1)+'k':tokenEst}
 
-function updateStats() {
-  $bMsgs.textContent = msgCount;
-  $bToks.textContent = tokenEst > 999 ? (tokenEst/1000).toFixed(1)+'k' : tokenEst;
-}
-
-// ── Clear ────────────────────────────────────────────────────────
-$('clear-btn').addEventListener('click', () => {
-  history = []; msgCount = 0; tokenEst = 0;
-  $msgs.innerHTML = '';
-  const e = document.createElement('div');
-  e.id = 'chat-empty';
-  e.className = '';
-  e.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;color:var(--muted)';
-  e.innerHTML = `<img src="https://s6.imgcdn.dev/Yx103M.png" style="width:42px;height:42px;object-fit:contain;opacity:.35" onerror="this.style.display='none'"/><p style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;line-height:1.7">Ask Megabro anything.<br/>Type below and press Enter.</p>`;
-  $msgs.appendChild(e);
+$('clear-btn').addEventListener('click',()=>{
+  history=[];msgCount=0;tokenEst=0;
+  $msgs.innerHTML='<div class="chat-empty" id="chat-empty"><img src="https://s6.imgcdn.dev/Yx103M.png" style="width:38px;height:38px;object-fit:contain;opacity:.15;filter:grayscale(1)" onerror="this.style.display=\'none\'"/><p>System nominal.<br/>Awaiting your command.</p></div>';
   updateStats();
 });
 
-// ── Export ───────────────────────────────────────────────────────
-$('export-btn').addEventListener('click', () => {
-  if (msgCount === 0) return;
-  let txt = `MEGABRO Chat Export\nDate: ${new Date().toLocaleString()}\nModel: ${$model.value}\n${'='.repeat(48)}\n\n`;
-  document.querySelectorAll('.msg').forEach(m => {
-    const who = m.querySelector('.msg-who')?.textContent || '';
-    const body = m.querySelector('.msg-text')?.textContent || '';
-    if (body && !body.includes('···')) txt += `[${who}]\n${body}\n\n`;
+$('export-btn').addEventListener('click',()=>{
+  if(!msgCount)return;
+  let out=`MEGABRO Export | ${new Date().toLocaleString()} | ${selectedModel}\n${'─'.repeat(52)}\n\n`;
+  document.querySelectorAll('.msg').forEach(m=>{
+    const who=m.querySelector('.msg-who')?.textContent||'';
+    const text=m.querySelector('.msg-text')?.textContent||'';
+    if(text)out+=`[${who}]\n${text}\n\n`;
   });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
-  a.download = `megabro-${Date.now()}.txt`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([out],{type:'text/plain'}));
+  a.download=`megabro-${Date.now()}.txt`;a.click();URL.revokeObjectURL(a.href);
 });
 </script>
 </body>
