@@ -1,31 +1,64 @@
-const express = require('express');
-const cors = require('cors');
-const { exec } = require('child_process');
-const path = require('path');
+'use strict';
 
-const app = express();
-app.use(cors());
+const express = require('express');
+const path    = require('path');
+const https   = require('https');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Gemini Action Bridge
-app.post('/execute', (req, res) => {
-    const { prompt, api_key } = req.body;
-    
-    // Python bridge for Gemini API (reusing your server logic)
-    const pythonCmd = `python3 -c "
-import google.genai as genai
-client = genai.Client(api_key='${api_key}')
-resp = client.models.generate_content(model='gemini-2.0-flash', contents='Output ONLY xdotool command for: ${prompt}')
-print(resp.text.strip())"`;
+// ── Gemini proxy (keeps API key server-side) ─────────────────────────────────
+app.post('/api/chat', async (req, res) => {
+  const { message, apiKey, history = [] } = req.body;
+  if (!message || !apiKey) {
+    return res.status(400).json({ error: 'message and apiKey are required' });
+  }
 
-    exec(pythonCmd, (error, stdout) => {
-        const xCommand = stdout.trim().replace(/`/g, "");
-        exec(`DISPLAY=:1 ${xCommand}`);
-        res.json({ status: 'success', executed: xCommand });
+  const payload = JSON.stringify({
+    contents: [
+      ...history,
+      { role: 'user', parts: [{ text: message }] }
+    ],
+    generationConfig: { temperature: 0.9, maxOutputTokens: 1024 }
+  });
+
+  const options = {
+    hostname: 'generativelanguage.googleapis.com',
+    path: `/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'Content-Length': Buffer.byteLength(payload)
+    }
+  };
+
+  const apiReq = https.request(options, apiRes => {
+    let data = '';
+    apiRes.on('data', chunk => { data += chunk; });
+    apiRes.on('end', () => {
+      try {
+        const parsed = JSON.parse(data);
+        const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        res.json({ reply: text, raw: parsed });
+      } catch (e) {
+        res.status(500).json({ error: 'Failed to parse Gemini response' });
+      }
     });
+  });
+
+  apiReq.on('error', err => res.status(500).json({ error: err.message }));
+  apiReq.write(payload);
+  apiReq.end();
 });
 
-app.listen(3000, () => {
-    console.log("✅ Megabro UI active at http://localhost:3000");
+// Health check
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: '1.0.0' }));
+
+app.listen(PORT, () => {
+  // silence — cli.js already printed the message
 });
+
+module.exports = app;

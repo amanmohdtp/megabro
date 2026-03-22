@@ -1,40 +1,74 @@
-# ⚡ MEGABRO
-**Infrastructure-Grade Gemini Computer Use for Termux**
+<p align="center">
+  <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" width="100"/>
+</p>
 
-`megabro` is a professional-grade automation layer that connects Google's Gemini 2.0/2.5 Flash models directly to your Termux environment. It provides a headless VNC desktop and a clean, high-performance web interface to control your Android device via AI.
+<h1 align="center">MEGABRO</h1>
+<p align="center"><em>AI-powered command interface. Install once. Type megabro. Go.</em></p>
+
+<p align="center">
+  <img src="https://img.shields.io/npm/v/megabro?color=F5F8A4&labelColor=111&style=flat-square" alt="version"/>
+  <img src="https://img.shields.io/badge/license-MIT-F5F8A4?labelColor=111&style=flat-square" alt="license"/>
+  <img src="https://img.shields.io/badge/node-%3E%3D14-F5F8A4?labelColor=111&style=flat-square" alt="node"/>
+</p>
 
 ---
 
-## 🛠️ Prerequisites
-
-Before installing, ensure your Termux environment is ready:
+## Install
 
 ```bash
-pkg update && pkg upgrade -y
-pkg install x11-repo -y
-pkg install python nodejs-lts tigervnc fluxbox chromium xdotool git -y
-pip install google-genai
-npm install -g websockify
+npm install -g megabro
 ```
 
-🚀 Installation
-Install the package globally from your terminal:
+## Use
 
-```npm install -g megabro```
+```bash
+megabro
+```
 
-💻 Usage
-Launch the entire stack with a single command:
-```megabro```
+That's it. A progress bar boots, your browser opens, and you're in.
 
- * Open your browser to http://localhost:3000.
- * Initialize with your Gemini API Key (Get one at Google AI Studio).
- * Watch the live Chromium stream and give instructions in the console.
-✨ Features
- * Cyber-Industrial UI: Minimalist, dark-themed dashboard for high-focus work.
- * VNC over Web: Live screen recording streamed via noVNC to your local host.
- * Zero-Latency Execution: Direct bridge between AI outputs and xdotool shell commands.
- * State Persistence: API keys and session settings are stored securely in local storage.
-📁 Architecture
- * Frontend: Tailwind CSS / Vanilla JS (SPA)
- * Backend: Node.js / Express
- * Automation: Google Gemini 2.0 Flash / X11 / xdotool
+---
+
+## What it does
+
+Megabro is a local AI interface that talks to **Google Gemini** directly from your browser — no cloud dashboard, no account wall, no tracking. Just a clean terminal-style UI on `localhost:3000`.
+
+- **Instant boot** : minimal dependencies, sub-second startup
+- **Live chat** : send commands, get smart AI responses
+- **Session stats** : message count, token estimate, requests/min
+- **Export** : save your session to a `.txt` file
+- **Model picker** : switch between Gemini models on the fly
+
+---
+
+## Get a free API key
+
+1. Go to [aistudio.google.com](https://aistudio.google.com/)
+2. Click **Get API Key**
+3. Copy the key (starts with `AIza...`)
+4. Paste it into the Megabro boot screen
+
+Your key is stored in `sessionStorage` only — never sent anywhere except directly to Google's API via your own server.
+
+---
+
+## Screenshot
+
+> Dark terminal aesthetic, `#F5F8A4` accent, animated stats sidebar.
+
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Server | Node.js + Express |
+| Browser open | `open` |
+| Frontend | Vanilla HTML/CSS/JS |
+| AI | Google Gemini API |
+
+---
+
+## License
+
+MIT © Aman
