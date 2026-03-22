@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro logo" width="150"/>
+  <img src="https://s6.imgcdn.dev/Yx1HLD.png" alt="Megabro logo" width="150"/>
 </p>
 
 <p align="center">
