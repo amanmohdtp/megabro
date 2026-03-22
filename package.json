@@ -1,21 +1,42 @@
 {
   "name": "megabro",
-  "version": "1.0.1",
-  "description": "AI-powered command interface. Install. Type megabro. Get to work.",
+  "version": "1.0.2",
+  "description": "AI-powered command interface for Google Gemini. Install. Type megabro. Get to work.",
   "main": "index.js",
   "bin": {
     "megabro": "./bin/cli.js"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node bin/cli.js",
+    "test": "node -e \"const p=require('./package.json'); const fs=require('fs'); ['index.js','bin/cli.js','public/index.html'].forEach(f=>{if(!fs.existsSync(f)) throw new Error('Missing: '+f)}); console.log('All checks passed')\""
   },
   "dependencies": {
     "express": "^4.18.2",
     "open": "^9.1.0"
   },
-  "keywords": ["megabro", "ai", "terminal", "gemini", "cli"],
+  "keywords": [
+    "megabro",
+    "ai",
+    "terminal",
+    "gemini",
+    "cli",
+    "chatbot",
+    "google-gemini",
+    "local-ai",
+    "command-line",
+    "developer-tools"
+  ],
   "author": "Aman",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amanmohdtp/megabro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amanmohdtp/megabro/issues"
+  },
+  "homepage": "https://github.com/amanmohdtp/megabro#readme",
   "engines": {
     "node": ">=14.0.0"
   }
