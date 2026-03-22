@@ -140,7 +140,7 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
 }
 .tb-key-btn:hover{border-color:var(--brown2);color:var(--brown)}
 
-/* Center — the TV */
+/* Center - the TV */
 #tv-area{
   flex:1;display:flex;align-items:center;justify-content:center;
   overflow:hidden;padding:20px 0 8px;
@@ -370,7 +370,7 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
     <img class="key-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro" onerror="this.style.display='none'"/>
     <div class="key-title">MEGABRO</div>
     <div class="key-sub">Enter your Gemini API key</div>
-    <input class="key-field" type="password" id="key-in" placeholder="AIzaSy..." autocomplete="off"/>
+    <input class="key-field" type="password" id="key-in" aria-label="Gemini API Key" placeholder="AIzaSy..." autocomplete="off"/>
     <div class="key-err" id="key-err"></div>
     <button class="key-btn" id="key-btn">BOOT SYSTEM</button>
     <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a><br/>Stays in your browser only.</p>
@@ -451,8 +451,8 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
               <div id="chat-msgs"></div>
               <div id="chat-input-bar">
                 <span class="prompt">›</span>
-                <textarea id="chat-ta" rows="1" placeholder="Ask anything..."></textarea>
-                <button id="chat-send">
+                <textarea id="chat-ta" rows="1" aria-label="Chat message input" placeholder="Ask anything..."></textarea>
+                <button id="chat-send" aria-label="Send message" title="Send message">
                   <svg width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
                   </svg>
@@ -472,10 +472,12 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
       <div class="bstat">Messages <span id="b-msgs">0</span></div>
       <div class="bstat">Tokens <span id="b-toks">0</span></div>
     </div>
-    <select class="model-sel" id="model-sel">
+    <button class="tb-key-btn" id="export-btn" title="Export chat to text file" style="font-size:10px;padding:4px 12px;border-radius:5px;margin-right:8px">Export</button>
+    <select class="model-sel" id="model-sel" aria-label="Select AI model">
       <option value="gemini-2.0-flash">gemini-2.0-flash</option>
       <option value="gemini-1.5-flash">gemini-1.5-flash</option>
       <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+      <option value="gemini-2.0-flash-lite">gemini-2.0-flash-lite</option>
     </select>
   </div>
 
@@ -697,6 +699,38 @@ function updateStats() {
   $bMsgs.textContent = msgCount;
   $bToks.textContent = tokenEst > 999 ? (tokenEst/1000).toFixed(1)+'k' : tokenEst;
 }
+
+
+// Export chat
+document.getElementById('export-btn').addEventListener('click', () => {
+  if (msgCount === 0) return;
+  const msgs = document.querySelectorAll('.msg');
+  let text = 'MEGABRO Chat Export\n';
+  text += 'Date: ' + new Date().toLocaleString() + '\n';
+  text += 'Model: ' + $modelSel.value + '\n';
+  text += '='.repeat(50) + '\n\n';
+  msgs.forEach(m => {
+    const who = m.querySelector('.msg-who')?.textContent || '';
+    const content = m.querySelector('.msg-text')?.textContent || '';
+    if (content && !content.includes('...')) {
+      text += who + ':\n' + content + '\n\n';
+    }
+  });
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'megabro-chat-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// Keyboard shortcut: Ctrl+E to export
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+    e.preventDefault();
+    document.getElementById('export-btn').click();
+  }
+});
 </script>
 </body>
 </html>
