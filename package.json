@@ -1,6 +1,6 @@
 {
   "name": "megabro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI-powered command interface. Install. Type megabro. Get to work.",
   "main": "index.js",
   "bin": {
