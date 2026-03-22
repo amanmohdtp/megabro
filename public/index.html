@@ -7,74 +7,73 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
+/* ── Reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --cream:#FAF6EE;
-  --cream2:#F2EBE0;
-  --cream3:#E8DFD2;
-  --brown:#3D2B1F;
+  --cream:#FAF7F2;
+  --cream2:#F3EDE4;
+  --cream3:#E6DDD1;
+  --brown:#3A2A1C;
   --brown2:#6B4C3B;
-  --muted:#A08070;
-  --acc:#c8c430;
-  --acc-pale:#F5F8A4;
-  --tv-body:#2C2016;
-  --tv-bezel:#1A1208;
-  --tv-screen:#0a0a0a;
+  --muted:#9A8070;
+  --acc:#C8C430;
+  --acc2:#A8A420;
+  --pale:#F5F8A4;
   --green:#5a9a5a;
   --red:#c0504d;
+
+  /* saber colors */
+  --s1:#00c8ff;
+  --s2:#a020f0;
+  --s3:#00ff88;
+  --s4:#ff3c3c;
 }
 html,body{height:100%;overflow:hidden;background:var(--cream)}
 body{font-family:'Space Mono',monospace;color:var(--brown)}
 
-/* ─── SCREENS ────────────────────────────────────────────── */
-.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .4s}
-.screen.gone{opacity:0;pointer-events:none}
+/* ── Screen system ── */
+.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.screen.gone{display:none}
 
-/* ─── API KEY SCREEN ─────────────────────────────────────── */
-#screen-key{background:var(--cream);flex-direction:column;gap:0}
-.key-wrap{
+/* ─────────────────────────────────────────────
+   1. API KEY SCREEN
+───────────────────────────────────────────── */
+#screen-key{background:var(--cream)}
+.key-card{
   background:#fff;
-  border:2px solid var(--cream3);
-  border-radius:16px;
-  padding:48px 44px 40px;
+  border:1.5px solid var(--cream3);
+  border-radius:20px;
+  padding:52px 48px 44px;
   width:100%;max-width:400px;
   text-align:center;
-  box-shadow:0 8px 40px rgba(61,43,31,.08);
+  box-shadow:0 12px 50px rgba(58,42,28,.07);
 }
-.key-logo{width:72px;height:72px;object-fit:contain;margin:0 auto 20px;display:block}
+.key-logo{width:68px;height:68px;object-fit:contain;display:block;margin:0 auto 22px;
+  animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .key-title{
   font-family:'Bebas Neue',sans-serif;
-  font-size:38px;letter-spacing:.07em;
-  color:var(--brown);margin-bottom:4px;
+  font-size:40px;letter-spacing:.07em;color:var(--brown);line-height:1;margin-bottom:6px;
 }
-.key-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:32px}
+.key-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:30px}
 .key-field{
   width:100%;
   border:1.5px solid var(--cream3);
-  border-radius:8px;
-  padding:12px 16px;
+  border-radius:9px;
+  padding:13px 18px;
   font-family:'Space Mono',monospace;
-  font-size:13px;
-  color:var(--brown);
-  background:var(--cream);
-  outline:none;
-  text-align:center;
-  transition:border-color .2s;
-  margin-bottom:8px;
+  font-size:13px;color:var(--brown);
+  background:var(--cream);outline:none;text-align:center;
+  transition:border-color .25s,box-shadow .25s;
+  margin-bottom:6px;
 }
-.key-field:focus{border-color:var(--acc)}
-.key-err{font-size:11px;color:var(--red);min-height:18px;margin-bottom:10px;text-align:center}
+.key-field:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(200,196,48,.15)}
+.key-err{font-size:11px;color:var(--red);min-height:16px;margin-bottom:10px}
 .key-btn{
-  width:100%;
-  background:var(--brown);
-  color:var(--acc-pale);
-  border:none;
-  border-radius:8px;
-  padding:14px;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:20px;letter-spacing:.1em;
-  cursor:pointer;
-  transition:background .2s,transform .15s;
+  width:100%;background:var(--brown);color:var(--pale);border:none;
+  border-radius:9px;padding:14px;
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;
+  cursor:pointer;transition:background .2s,transform .15s;margin-top:2px;
 }
 .key-btn:hover{background:var(--brown2)}
 .key-btn:active{transform:scale(.98)}
@@ -82,281 +81,329 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
 .key-note a{color:var(--brown2);text-decoration:none}
 .key-note a:hover{text-decoration:underline}
 
-/* ─── LOADING SCREEN ─────────────────────────────────────── */
-#screen-loading{background:var(--cream);flex-direction:column;gap:24px}
-.loading-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:32px;letter-spacing:.1em;
-  color:var(--brown);
+/* ─────────────────────────────────────────────
+   2. LOADING SCREEN
+───────────────────────────────────────────── */
+#screen-loading{background:var(--cream);flex-direction:column;gap:22px}
+.ld-logo{width:54px;height:54px;object-fit:contain;animation:float 3s ease-in-out infinite}
+.ld-title{
+  font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.1em;color:var(--brown);
 }
-.loading-bar-track{
-  width:260px;height:5px;
-  background:var(--cream3);
-  border-radius:3px;overflow:hidden;
+.ld-track{width:240px;height:4px;background:var(--cream3);border-radius:2px;overflow:hidden}
+.ld-fill{
+  height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,var(--acc),var(--pale));
+  transition:width .12s linear;
 }
-.loading-bar-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--acc),var(--acc-pale));
-  border-radius:3px;
-  width:0%;
-  transition:width .1s linear;
-}
-.loading-msg{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.ld-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
 
-/* ─── MAIN APP ────────────────────────────────────────────── */
-#screen-app{background:var(--cream);flex-direction:column;overflow:hidden}
+/* ─────────────────────────────────────────────
+   3. MAIN APP
+───────────────────────────────────────────── */
+#screen-app{
+  background:var(--cream);
+  flex-direction:column;
+  align-items:stretch;
+  overflow:hidden;
+}
 
-/* Top strip */
+/* Top bar */
 #topbar{
-  width:100%;
-  padding:14px 28px;
+  padding:13px 28px;
   display:flex;align-items:center;justify-content:space-between;
   border-bottom:1.5px solid var(--cream3);
-  flex-shrink:0;
-  background:var(--cream);
+  flex-shrink:0;background:var(--cream);
 }
-.tb-brand{display:flex;align-items:center;gap:10px}
-.tb-logo{width:26px;height:26px;object-fit:contain}
-.tb-name{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:22px;letter-spacing:.07em;color:var(--brown);
-}
-.tb-right{display:flex;align-items:center;gap:16px}
+.tb-l{display:flex;align-items:center;gap:10px}
+.tb-logo{width:25px;height:25px;object-fit:contain}
+.tb-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.07em;color:var(--brown)}
+.tb-r{display:flex;align-items:center;gap:14px}
 .pill{
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;gap:5px;
   font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;
-  background:var(--cream2);
-  border:1px solid var(--cream3);
-  border-radius:20px;padding:4px 12px;
+  background:var(--cream2);border:1px solid var(--cream3);border-radius:20px;padding:4px 12px;
 }
-.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green)}
-.tb-key-btn{
-  background:transparent;border:1.5px solid var(--cream3);
-  color:var(--brown2);
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)}
+.pill-dot.off{background:var(--red);box-shadow:0 0 5px var(--red)}
+.ghost-btn{
+  background:transparent;border:1.5px solid var(--cream3);color:var(--brown2);
   font-family:'Space Mono',monospace;font-size:10px;
   padding:5px 14px;border-radius:6px;cursor:pointer;
-  text-transform:uppercase;letter-spacing:.08em;
-  transition:border-color .2s,color .2s;
+  text-transform:uppercase;letter-spacing:.08em;transition:border-color .2s,color .2s;
 }
-.tb-key-btn:hover{border-color:var(--brown2);color:var(--brown)}
+.ghost-btn:hover{border-color:var(--brown2);color:var(--brown)}
 
-/* Center - the TV */
+/* Main split */
+#main-split{
+  flex:1;display:grid;grid-template-columns:1fr 360px;
+  overflow:hidden;
+  gap:0;
+}
+
+/* ── LEFT: TV AREA ── */
 #tv-area{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;padding:20px 0 8px;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px 16px 16px 24px;
+  overflow:hidden;
 }
 
-/* ─── TV FRAME ────────────────────────────────────────────── */
-.tv{
-  position:relative;
-  display:flex;align-items:center;justify-content:center;
-}
+/* TV cabinet */
 .tv-cabinet{
-  background:linear-gradient(160deg,#3a2a18 0%,#2C2016 50%,#221a0e 100%);
-  border-radius:28px;
-  padding:22px 22px 26px;
+  background:linear-gradient(155deg,#3d2c1a 0%,#2C2016 55%,#201810 100%);
+  border-radius:26px;
+  padding:20px 20px 28px;
   box-shadow:
-    0 0 0 3px #1A1208,
-    0 20px 60px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.06);
-  position:relative;
+    0 0 0 3px #190f05,
+    0 22px 60px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;width:100%;max-width:600px;
 }
-/* Knobs row */
 .tv-knobs{
-  position:absolute;right:18px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:10px;
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:8px;
 }
 .knob{
-  width:14px;height:14px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#5a4a38,#2a1e12);
-  border:2px solid #1a1208;
-  box-shadow:0 2px 4px rgba(0,0,0,.5);
+  width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#5a4a38,#281c10);
+  border:2px solid #190f05;box-shadow:0 2px 5px rgba(0,0,0,.6);
 }
-/* Logo badge on cabinet */
-.tv-brand-badge{
-  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  font-family:'Bebas Neue',sans-serif;
-  font-size:11px;letter-spacing:.2em;
-  color:rgba(245,248,164,.3);
+.tv-badge{
+  position:absolute;bottom:7px;left:50%;transform:translateX(-50%);
+  font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.2em;
+  color:rgba(245,248,164,.25);
 }
-/* Screen bezel */
 .tv-bezel{
-  background:#111;
-  border-radius:16px;
-  padding:10px;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.8);
-  width:680px;
-  /* leave room for knobs */
-  margin-right:28px;
+  background:#0e0e0e;border-radius:14px;padding:9px;
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.9);
+  margin-right:24px;
 }
-/* The actual screen */
 .tv-screen{
-  background:var(--tv-screen);
-  border-radius:10px;
-  width:100%;
-  aspect-ratio:4/3;
-  overflow:hidden;
-  position:relative;
-  /* CRT glow effect */
-  box-shadow:
-    inset 0 0 40px rgba(0,0,0,.6),
-    0 0 20px rgba(245,248,164,.08);
+  background:#050505;border-radius:8px;
+  width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;
+  box-shadow:inset 0 0 50px rgba(0,0,0,.7),0 0 16px rgba(245,248,164,.05);
 }
-/* scanlines on screen */
+/* CRT scanlines */
 .tv-screen::after{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;z-index:20;pointer-events:none;border-radius:8px;
   background:repeating-linear-gradient(
-    to bottom,transparent 0px,transparent 3px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px
+    to bottom,transparent 0,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px
   );
-  pointer-events:none;z-index:10;border-radius:10px;
 }
-/* screen curvature vignette */
+/* CRT vignette */
 .tv-screen::before{
-  content:'';position:absolute;inset:0;z-index:11;
-  background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.5) 100%);
-  pointer-events:none;border-radius:10px;
+  content:'';position:absolute;inset:0;z-index:21;pointer-events:none;border-radius:8px;
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);
 }
 
-/* ─── IDLE / DINO SCREEN ─────────────────────────────────── */
+/* ── IDLE / DINO ── */
 #idle-screen{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:10px;
-  background:#0a0a0a;
-  z-index:5;
+  position:absolute;inset:0;z-index:5;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:#050505;
 }
-.dino-ground{
-  position:absolute;bottom:70px;left:0;right:0;
-  height:2px;background:#333;
+.idle-clouds{
+  position:absolute;top:16px;left:0;right:0;display:flex;gap:50px;padding:0 24px;overflow:hidden;
 }
-.dino-scene{position:relative;width:300px;height:70px}
-/* SVG dino */
-.dino-svg{position:absolute;left:40px;bottom:0;animation:dino-run .3s steps(2) infinite}
-@keyframes dino-run{0%{transform:scaleX(1)}100%{transform:scaleX(1)}}
-/* cactus */
-.cactus{position:absolute;right:30px;bottom:0}
-.idle-press{
-  font-family:'Space Mono',monospace;
-  font-size:11px;color:#555;
-  text-transform:uppercase;letter-spacing:.15em;
+.cloud{
+  height:12px;background:#111;border-radius:6px;flex-shrink:0;
+  animation:cloud-move 9s linear infinite;
+}
+.cloud:nth-child(1){width:40px}
+.cloud:nth-child(2){width:26px;animation-delay:-3s}
+.cloud:nth-child(3){width:52px;animation-delay:-6.5s}
+@keyframes cloud-move{from{transform:translateX(500px)}to{transform:translateX(-200px)}}
+.idle-heading{
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.18em;color:#3a3a3a;
+}
+.dino-scene{position:relative;width:280px;height:60px}
+.dino-svg{position:absolute;left:30px;bottom:0}
+.cactus-svg{position:absolute;right:20px;bottom:0}
+.dino-ground{position:absolute;bottom:-2px;left:0;right:0;height:2px;background:#222}
+.idle-hint{
+  font-size:10px;color:#3a3a3a;text-transform:uppercase;letter-spacing:.14em;
   animation:blink 1.1s step-start infinite;
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.idle-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:20px;letter-spacing:.15em;color:#444;
-}
-.idle-clouds{position:absolute;top:20px;left:0;right:0;display:flex;gap:60px;padding:0 30px}
-.cloud{width:40px;height:14px;background:#1a1a1a;border-radius:7px;animation:cloud-move 8s linear infinite}
-.cloud:nth-child(2){animation-delay:-3s;width:28px;height:10px}
-.cloud:nth-child(3){animation-delay:-6s;width:50px;height:16px}
-@keyframes cloud-move{from{transform:translateX(300px)}to{transform:translateX(-100px)}}
 
-/* ─── CHAT SCREEN ────────────────────────────────────────── */
-#chat-screen{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  background:#0d0d0d;
-  z-index:5;
-  opacity:0;pointer-events:none;
-  transition:opacity .5s;
+/* Dino leg animation */
+.leg-l{animation:lega .28s alternate infinite ease-in-out}
+.leg-r{animation:lega .28s alternate-reverse infinite ease-in-out}
+@keyframes lega{from{transform:translateY(0)}to{transform:translateY(5px)}}
+
+/* ── VNC IFRAME ── */
+#vnc-frame{
+  position:absolute;inset:0;z-index:4;
+  width:100%;height:100%;border:none;
+  opacity:0;transition:opacity .6s;pointer-events:none;
 }
-#chat-screen.active{opacity:1;pointer-events:all}
+#vnc-frame.live{opacity:1;pointer-events:all}
+
+/* ── RIGHT: CHAT PANE ── */
+#chat-pane{
+  display:flex;flex-direction:column;
+  border-left:1.5px solid var(--cream3);
+  overflow:hidden;
+  background:var(--cream);
+}
+#chat-pane-header{
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--cream3);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.pane-title{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)}
+.pane-actions{display:flex;gap:8px}
+.mini-btn{
+  font-size:9px;text-transform:uppercase;letter-spacing:.09em;
+  background:transparent;border:1px solid var(--cream3);color:var(--muted);
+  padding:4px 10px;border-radius:5px;cursor:pointer;
+  font-family:'Space Mono',monospace;transition:all .15s;
+}
+.mini-btn:hover{border-color:var(--brown2);color:var(--brown)}
+.mini-btn.danger:hover{border-color:var(--red);color:var(--red)}
 
 #chat-msgs{
   flex:1;overflow-y:auto;
-  padding:18px 20px;
-  display:flex;flex-direction:column;gap:12px;
+  padding:16px;display:flex;flex-direction:column;gap:14px;
 }
 #chat-msgs::-webkit-scrollbar{width:3px}
-#chat-msgs::-webkit-scrollbar-thumb{background:#222}
+#chat-msgs::-webkit-scrollbar-thumb{background:var(--cream3);border-radius:2px}
 
-.msg{display:flex;gap:10px;animation:fadeup .2s ease}
-@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+/* Empty state */
+#chat-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;padding:24px;text-align:center;
+  color:var(--muted);
+}
+#chat-empty img{width:42px;height:42px;object-fit:contain;opacity:.35}
+#chat-empty p{font-size:10px;text-transform:uppercase;letter-spacing:.1em;line-height:1.7}
+
+/* Messages */
+.msg{display:flex;gap:9px;animation:fadeup .22s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .msg-av{
-  width:22px;height:22px;border-radius:4px;
-  flex-shrink:0;margin-top:1px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:700;
+  width:24px;height:24px;border-radius:5px;flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
 }
 .msg.user .msg-av{background:var(--acc);color:#000}
-.msg.bot  .msg-av{background:#1e1e1e;border:1px solid #2a2a2a;overflow:hidden}
+.msg.bot  .msg-av{background:var(--cream2);border:1.5px solid var(--cream3);overflow:hidden}
 .msg.bot  .msg-av img{width:18px;height:18px;object-fit:contain}
-.msg-content{flex:1}
-.msg-who{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.msg-body{flex:1;min-width:0}
+.msg-who{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
 .msg-text{
-  font-size:12px;line-height:1.65;color:#ccc;
+  font-size:12px;line-height:1.7;color:var(--brown);
   white-space:pre-wrap;word-break:break-word;
+  background:var(--cream2);border:1px solid var(--cream3);
+  border-radius:4px 10px 10px 10px;padding:10px 12px;
 }
-.msg.user .msg-text{color:var(--acc-pale)}
+.msg.user .msg-text{
+  background:#fff;border-color:var(--cream3);
+  border-radius:10px 4px 10px 10px;
+  color:var(--brown);
+}
 .msg-text code{
-  background:#1a1a1a;border:1px solid #2a2a2a;
-  padding:1px 5px;border-radius:3px;
-  font-size:11px;color:var(--acc-pale);
+  background:var(--cream);border:1px solid var(--cream3);
+  padding:1px 5px;border-radius:3px;font-size:11px;color:var(--brown2);
 }
 .msg-text pre{
-  background:#141414;border:1px solid #222;
-  padding:10px;border-radius:6px;
-  overflow-x:auto;margin:6px 0;font-size:11px;color:#aaa;
+  background:var(--cream);border:1px solid var(--cream3);
+  padding:10px;border-radius:6px;overflow-x:auto;
+  margin:6px 0;font-size:11px;color:var(--brown2);
 }
-
-.typing-dots{display:flex;gap:4px;padding:4px 0}
+.typing-dots{display:flex;gap:4px;padding:2px 0}
 .typing-dots span{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--acc);opacity:.3;
+  width:5px;height:5px;border-radius:50%;background:var(--muted);
   animation:tdot 1.2s infinite;
 }
 .typing-dots span:nth-child(2){animation-delay:.2s}
 .typing-dots span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+@keyframes tdot{0%,80%,100%{opacity:.2}40%{opacity:.9}}
 
-/* chat input inside screen */
-#chat-input-bar{
-  padding:10px 14px;
-  border-top:1px solid #1a1a1a;
-  display:flex;align-items:center;gap:8px;
-  background:#0a0a0a;
+/* ── SABER INPUT AREA ── */
+#input-area{
+  padding:14px 16px;
+  border-top:1.5px solid var(--cream3);
   flex-shrink:0;
 }
-#chat-input-bar .prompt{color:var(--acc);font-size:13px;flex-shrink:0}
+/* The animated saber border container */
+.saber-wrap{
+  position:relative;border-radius:12px;padding:2px;
+  background:var(--cream3); /* fallback */
+}
+
+/* Animated conic-gradient border (saber effect) */
+@supports (background: conic-gradient(red, blue)) {
+  @property --sa {syntax:'<angle>';initial-value:0deg;inherits:false}
+  .saber-wrap{
+    background:conic-gradient(from var(--sa),var(--s1),var(--s2),var(--s3),var(--s4),var(--s1));
+    animation:saber-spin 3s linear infinite;
+  }
+  @keyframes saber-spin{to{--sa:360deg}}
+}
+
+/* Fallback for browsers without @property */
+@supports not (background: conic-gradient(red, blue)) {
+  .saber-wrap{
+    background:linear-gradient(90deg,var(--s1),var(--s2),var(--s3),var(--s4));
+    background-size:300% 100%;
+    animation:saber-slide 3s linear infinite;
+  }
+  @keyframes saber-slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+}
+
+.saber-glow{
+  box-shadow:0 0 12px 2px rgba(0,200,255,.25),0 0 24px 4px rgba(160,32,240,.15);
+  border-radius:12px;
+}
+.saber-inner{
+  background:var(--cream);border-radius:10px;padding:10px 12px;
+  display:flex;align-items:flex-end;gap:10px;
+}
 #chat-ta{
   flex:1;background:transparent;border:none;outline:none;
-  font-family:'Space Mono',monospace;font-size:12px;color:#ccc;
-  resize:none;min-height:20px;max-height:80px;overflow-y:auto;
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--brown);
+  resize:none;min-height:20px;max-height:90px;overflow-y:auto;
+  line-height:1.5;
 }
-#chat-ta::placeholder{color:#333}
+#chat-ta::placeholder{color:var(--muted)}
 #chat-send{
-  background:var(--acc);border:none;
-  width:28px;height:28px;border-radius:5px;
-  cursor:pointer;flex-shrink:0;
+  background:var(--brown);border:none;
+  width:30px;height:30px;border-radius:6px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
+  cursor:pointer;transition:all .15s;
 }
-#chat-send:hover{background:var(--acc2, #a8a820);transform:scale(1.05)}
+#chat-send:hover{background:var(--brown2);transform:scale(1.06)}
+#chat-send:active{transform:scale(.96)}
 #chat-send:disabled{opacity:.3;cursor:not-allowed;transform:none}
+#chat-send svg{pointer-events:none}
+.input-hint{
+  margin-top:6px;font-size:9px;color:var(--muted);
+  text-align:center;letter-spacing:.06em;
+}
 
-/* Bottom strip */
+/* Bottom bar */
 #bottombar{
-  padding:8px 28px;
+  padding:7px 24px;
   border-top:1.5px solid var(--cream3);
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:var(--cream);
 }
-.bbar-left{display:flex;gap:20px}
 .bstat{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.bstat span{color:var(--brown);font-weight:700}
+.bstat b{color:var(--brown);font-weight:700}
+.bstats{display:flex;gap:20px}
 .model-sel{
   background:var(--cream2);border:1.5px solid var(--cream3);
-  color:var(--brown2);
-  font-family:'Space Mono',monospace;font-size:10px;
-  padding:4px 10px;border-radius:5px;outline:none;cursor:pointer;
-  appearance:none;
+  color:var(--brown2);font-family:'Space Mono',monospace;font-size:10px;
+  padding:4px 10px;border-radius:5px;outline:none;cursor:pointer;appearance:none;
+  transition:border-color .2s;
 }
+.model-sel:focus{border-color:var(--acc)}
 
 /* responsive */
-@media(max-width:760px){
-  .tv-bezel{width:calc(100vw - 80px)}
+@media(max-width:800px){
+  #main-split{grid-template-columns:1fr}
+  #chat-pane{display:none}
   .tv-knobs{display:none}
   .tv-bezel{margin-right:0}
 }
@@ -364,116 +411,145 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
 </head>
 <body>
 
-<!-- ─── 1. API KEY ──────────────────────────────────────────────────────── -->
+<!-- ── SCREEN 1: API KEY ────────────────────────────────────────── -->
 <div class="screen" id="screen-key">
-  <div class="key-wrap">
+  <div class="key-card">
     <img class="key-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="Megabro" onerror="this.style.display='none'"/>
     <div class="key-title">MEGABRO</div>
     <div class="key-sub">Enter your Gemini API key</div>
-    <input class="key-field" type="password" id="key-in" aria-label="Gemini API Key" placeholder="AIzaSy..." autocomplete="off"/>
+    <input class="key-field" type="password" id="key-in" placeholder="AIzaSy..." autocomplete="off" aria-label="Gemini API Key"/>
     <div class="key-err" id="key-err"></div>
     <button class="key-btn" id="key-btn">BOOT SYSTEM</button>
-    <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a><br/>Stays in your browser only.</p>
+    <p class="key-note">
+      Free key at <a href="https://aistudio.google.com/" target="_blank">aistudio.google.com</a><br/>
+      Stored in your browser only.
+    </p>
   </div>
 </div>
 
-<!-- ─── 2. LOADING ─────────────────────────────────────────────────────── -->
+<!-- ── SCREEN 2: LOADING ────────────────────────────────────────── -->
 <div class="screen gone" id="screen-loading">
-  <img src="https://s6.imgcdn.dev/Yx103M.png" style="width:52px;height:52px;object-fit:contain;animation:float 3s ease-in-out infinite" alt="" onerror="this.style.display='none'"/>
-  <div class="loading-title" id="load-msg">Initialising...</div>
-  <div class="loading-bar-track">
-    <div class="loading-bar-fill" id="load-bar"></div>
-  </div>
-  <div class="loading-msg" id="load-sub">Waking up the bro</div>
+  <img class="ld-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
+  <div class="ld-title" id="ld-msg">Initialising...</div>
+  <div class="ld-track"><div class="ld-fill" id="ld-bar"></div></div>
+  <div class="ld-sub" id="ld-sub">Waking up the bro</div>
 </div>
 
-<!-- ─── 3. MAIN APP ────────────────────────────────────────────────────── -->
+<!-- ── SCREEN 3: MAIN APP ───────────────────────────────────────── -->
 <div class="screen gone" id="screen-app">
 
+  <!-- Top bar -->
   <div id="topbar">
-    <div class="tb-brand">
+    <div class="tb-l">
       <img class="tb-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
       <span class="tb-name">MEGABRO</span>
     </div>
-    <div class="tb-right">
-      <div class="pill"><div class="pill-dot"></div>Online</div>
-      <button class="tb-key-btn" id="change-key-btn">Change Key</button>
+    <div class="tb-r">
+      <div class="pill"><div class="pill-dot" id="vnc-dot"></div><span id="vnc-label">Checking VNC...</span></div>
+      <button class="ghost-btn" id="change-key-btn">Change Key</button>
     </div>
   </div>
 
-  <div id="tv-area">
-    <div class="tv">
+  <!-- Main content -->
+  <div id="main-split">
+
+    <!-- LEFT: TV -->
+    <div id="tv-area">
       <div class="tv-cabinet">
-        <!-- Knobs -->
         <div class="tv-knobs">
           <div class="knob"></div>
           <div class="knob"></div>
           <div class="knob"></div>
         </div>
-        <!-- Screen bezel -->
+
         <div class="tv-bezel">
           <div class="tv-screen">
 
-            <!-- IDLE: dino screen -->
+            <!-- VNC live feed -->
+            <iframe id="vnc-frame" src="" title="VNC Live Screen" allowfullscreen></iframe>
+
+            <!-- Dino idle (shown when VNC offline) -->
             <div id="idle-screen">
               <div class="idle-clouds">
                 <div class="cloud"></div>
                 <div class="cloud"></div>
                 <div class="cloud"></div>
               </div>
-              <div class="idle-title">MEGABRO</div>
-              <div class="dino-scene">
-                <!-- dino SVG -->
-                <svg class="dino-svg" width="44" height="52" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="16" y="2" width="20" height="14" rx="3" fill="#F5F8A4"/>
-                  <rect x="28" y="4" width="4" height="4" rx="1" fill="#0a0a0a"/>
-                  <rect x="34" y="8" width="8" height="4" rx="2" fill="#F5F8A4"/>
-                  <rect x="10" y="14" width="26" height="22" rx="3" fill="#F5F8A4"/>
-                  <rect x="6" y="18" width="8" height="4" rx="2" fill="#F5F8A4"/>
-                  <rect x="16" y="34" width="8" height="16" rx="2" fill="#F5F8A4" id="leg-l"/>
-                  <rect x="26" y="34" width="8" height="16" rx="2" fill="#F5F8A4" id="leg-r"/>
-                </svg>
-                <!-- cactus -->
-                <svg class="cactus" width="22" height="40" viewBox="0 0 22 40" fill="#2a4a2a">
-                  <rect x="8" y="10" width="6" height="30" rx="3"/>
-                  <rect x="0" y="18" width="10" height="5" rx="2"/>
-                  <rect x="12" y="22" width="10" height="5" rx="2"/>
-                  <rect x="0" y="14" width="5" height="9" rx="2"/>
-                  <rect x="17" y="18" width="5" height="9" rx="2"/>
-                </svg>
-              </div>
-              <div class="dino-ground"></div>
-              <div class="idle-press">Press Enter to start chatting</div>
-            </div>
+              <div class="idle-heading">NO SIGNAL</div>
 
-            <!-- CHAT screen (inside TV) -->
-            <div id="chat-screen">
-              <div id="chat-msgs"></div>
-              <div id="chat-input-bar">
-                <span class="prompt">›</span>
-                <textarea id="chat-ta" rows="1" aria-label="Chat message input" placeholder="Ask anything..."></textarea>
-                <button id="chat-send" aria-label="Send message" title="Send message">
-                  <svg width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
-                  </svg>
-                </button>
+              <!-- Dino SVG -->
+              <div class="dino-scene">
+                <svg class="dino-svg" width="46" height="54" viewBox="0 0 46 54" fill="none">
+                  <rect x="17" y="2" width="21" height="15" rx="4" fill="#F5F8A4"/>
+                  <rect x="29" y="4" width="4" height="4" rx="1" fill="#0a0a0a"/>
+                  <rect x="35" y="9" width="9" height="4" rx="2" fill="#F5F8A4"/>
+                  <rect x="11" y="15" width="27" height="23" rx="4" fill="#F5F8A4"/>
+                  <rect x="5" y="20" width="9" height="5" rx="2" fill="#F5F8A4"/>
+                  <rect class="leg-l" x="17" y="36" width="8" height="17" rx="3" fill="#F5F8A4"/>
+                  <rect class="leg-r" x="27" y="36" width="8" height="17" rx="3" fill="#F5F8A4"/>
+                </svg>
+                <!-- Cactus -->
+                <svg class="cactus-svg" width="24" height="44" viewBox="0 0 24 44" fill="#2a4a2a">
+                  <rect x="9" y="10" width="6" height="34" rx="3"/>
+                  <rect x="1" y="20" width="10" height="5" rx="2"/>
+                  <rect x="13" y="24" width="10" height="5" rx="2"/>
+                  <rect x="1" y="16" width="5" height="9" rx="2"/>
+                  <rect x="18" y="20" width="5" height="9" rx="2"/>
+                </svg>
+                <div class="dino-ground"></div>
               </div>
+
+              <div class="idle-hint">Start VNC to see live screen</div>
             </div>
 
           </div><!-- tv-screen -->
         </div><!-- tv-bezel -->
-        <div class="tv-brand-badge">MEGABRO</div>
+        <div class="tv-badge">MEGABRO</div>
       </div><!-- tv-cabinet -->
-    </div><!-- tv -->
-  </div>
+    </div><!-- tv-area -->
 
-  <div id="bottombar">
-    <div class="bbar-left">
-      <div class="bstat">Messages <span id="b-msgs">0</span></div>
-      <div class="bstat">Tokens <span id="b-toks">0</span></div>
+    <!-- RIGHT: CHAT -->
+    <div id="chat-pane">
+      <div id="chat-pane-header">
+        <span class="pane-title">AI Chat</span>
+        <div class="pane-actions">
+          <button class="mini-btn" id="export-btn">Export</button>
+          <button class="mini-btn danger" id="clear-btn">Clear</button>
+        </div>
+      </div>
+
+      <div id="chat-msgs">
+        <!-- Empty state -->
+        <div id="chat-empty">
+          <img src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
+          <p>Ask Megabro anything.<br/>Type below and press Enter.</p>
+        </div>
+      </div>
+
+      <div id="input-area">
+        <div class="saber-wrap saber-glow">
+          <div class="saber-inner">
+            <textarea id="chat-ta" rows="1" placeholder="Ask anything..." aria-label="Chat message"></textarea>
+            <button id="chat-send" aria-label="Send">
+              <svg width="13" height="13" fill="none" stroke="#F5F8A4" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+      </div>
     </div>
-    <button class="tb-key-btn" id="export-btn" title="Export chat to text file" style="font-size:10px;padding:4px 12px;border-radius:5px;margin-right:8px">Export</button>
-    <select class="model-sel" id="model-sel" aria-label="Select AI model">
+
+  </div><!-- main-split -->
+
+  <!-- Bottom bar -->
+  <div id="bottombar">
+    <div class="bstats">
+      <div class="bstat">Messages <b id="b-msgs">0</b></div>
+      <div class="bstat">Tokens <b id="b-toks">0</b></div>
+    </div>
+    <select class="model-sel" id="model-sel" aria-label="AI Model">
       <option value="gemini-2.0-flash">gemini-2.0-flash</option>
       <option value="gemini-1.5-flash">gemini-1.5-flash</option>
       <option value="gemini-1.5-pro">gemini-1.5-pro</option>
@@ -483,95 +559,91 @@ body{font-family:'Space Mono',monospace;color:var(--brown)}
 
 </div><!-- screen-app -->
 
-<style>
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-/* Leg animation */
-#leg-l{animation:leg-a .3s alternate infinite}
-#leg-r{animation:leg-a .3s alternate-reverse infinite}
-@keyframes leg-a{from{transform:translateY(0)}to{transform:translateY(4px)}}
-</style>
-
 <script>
-// ── State ─────────────────────────────────────────────────────────────────────
-let apiKey = sessionStorage.getItem('mb_key') || '';
+// ── State ──────────────────────────────────────────────────────
+let apiKey  = sessionStorage.getItem('mb_key') || '';
 let history = [];
 let msgCount = 0, tokenEst = 0;
 let busy = false;
-let chatStarted = false;
+let vncLive = false;
 
-// ── DOM ───────────────────────────────────────────────────────────────────────
-const $sKey     = document.getElementById('screen-key');
-const $sLoad    = document.getElementById('screen-loading');
-const $sApp     = document.getElementById('screen-app');
-const $keyIn    = document.getElementById('key-in');
-const $keyErr   = document.getElementById('key-err');
-const $keyBtn   = document.getElementById('key-btn');
-const $loadBar  = document.getElementById('load-bar');
-const $loadMsg  = document.getElementById('load-msg');
-const $loadSub  = document.getElementById('load-sub');
-const $idle     = document.getElementById('idle-screen');
-const $chatScr  = document.getElementById('chat-screen');
-const $chatMsgs = document.getElementById('chat-msgs');
-const $chatTa   = document.getElementById('chat-ta');
-const $chatSend = document.getElementById('chat-send');
-const $bMsgs    = document.getElementById('b-msgs');
-const $bToks    = document.getElementById('b-toks');
-const $modelSel = document.getElementById('model-sel');
+// ── DOM refs ────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const $sKey   = $('screen-key');
+const $sLoad  = $('screen-loading');
+const $sApp   = $('screen-app');
+const $keyIn  = $('key-in');
+const $keyErr = $('key-err');
+const $ldBar  = $('ld-bar');
+const $ldMsg  = $('ld-msg');
+const $ldSub  = $('ld-sub');
+const $msgs   = $('chat-msgs');
+const $empty  = $('chat-empty');
+const $ta     = $('chat-ta');
+const $send   = $('chat-send');
+const $bMsgs  = $('b-msgs');
+const $bToks  = $('b-toks');
+const $model  = $('model-sel');
+const $vnc    = $('vnc-frame');
+const $idle   = $('idle-screen');
+const $vncDot = $('vnc-dot');
+const $vncLbl = $('vnc-label');
 
-// ── Boot flow ─────────────────────────────────────────────────────────────────
-function show(el)  { el.classList.remove('gone'); }
-function hide(el)  { el.classList.add('gone'); }
+const show = el => el.classList.remove('gone');
+const hide = el => el.classList.add('gone');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// ── Loading sequence ────────────────────────────────────────────
 async function runLoader() {
   const steps = [
-    { pct: 20, msg: 'Initialising...',     sub: 'Waking up the bro' },
-    { pct: 45, msg: 'Loading modules...',  sub: 'Setting up AI bridge' },
-    { pct: 70, msg: 'Connecting API...',   sub: 'Reaching Gemini' },
-    { pct: 90, msg: 'Almost ready...',     sub: 'Booting interface' },
-    { pct: 100,msg: 'Ready!',              sub: 'Welcome back, bro' },
+    { pct: 18,  msg: 'Initialising...',    sub: 'Waking up the bro'     },
+    { pct: 40,  msg: 'Loading modules...',  sub: 'Setting up AI bridge'  },
+    { pct: 65,  msg: 'Connecting API...',   sub: 'Reaching Gemini'       },
+    { pct: 85,  msg: 'Almost ready...',     sub: 'Booting interface'     },
+    { pct: 100, msg: 'Ready!',              sub: 'Welcome back, bro'     },
   ];
   for (const s of steps) {
-    $loadBar.style.width = s.pct + '%';
-    $loadMsg.textContent = s.msg;
-    $loadSub.textContent = s.sub;
-    await sleep(320 + Math.random() * 180);
+    $ldBar.style.width = s.pct + '%';
+    $ldMsg.textContent = s.msg;
+    $ldSub.textContent = s.sub;
+    await sleep(300 + Math.random() * 200);
   }
-  await sleep(300);
+  await sleep(280);
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
+// ── Boot ────────────────────────────────────────────────────────
 async function boot() {
   const k = $keyIn.value.trim();
   if (!k) { $keyErr.textContent = 'Please enter your API key.'; return; }
   if (!k.startsWith('AIza')) { $keyErr.textContent = 'Key should start with AIza...'; return; }
   apiKey = k;
   sessionStorage.setItem('mb_key', k);
-
   hide($sKey);
   show($sLoad);
   await runLoader();
   hide($sLoad);
   show($sApp);
-  $chatTa.focus();
+  $ta.focus();
+  checkVNC();
 }
 
 // Auto-boot if key saved
-(async () => {
-  if (apiKey) {
+if (apiKey) {
+  (async () => {
     hide($sKey);
     show($sLoad);
     await runLoader();
     hide($sLoad);
     show($sApp);
-  }
-})();
+    $ta.focus();
+    checkVNC();
+  })();
+}
 
-$keyBtn.addEventListener('click', boot);
+$('key-btn').addEventListener('click', boot);
 $keyIn.addEventListener('keydown', e => { if (e.key === 'Enter') boot(); });
 
-// Change key
-document.getElementById('change-key-btn').addEventListener('click', () => {
+$('change-key-btn').addEventListener('click', () => {
   hide($sApp);
   $keyIn.value = '';
   $keyErr.textContent = '';
@@ -579,53 +651,66 @@ document.getElementById('change-key-btn').addEventListener('click', () => {
   $keyIn.focus();
 });
 
-// ── Chat ──────────────────────────────────────────────────────────────────────
-function startChat() {
-  if (chatStarted) return;
-  chatStarted = true;
-  $idle.style.opacity = '0';
-  $idle.style.transition = 'opacity .4s';
-  setTimeout(() => { $idle.style.display = 'none'; $chatScr.classList.add('active'); }, 400);
+// ── VNC status polling ──────────────────────────────────────────
+async function checkVNC() {
+  try {
+    const r = await fetch('/api/vnc-status');
+    const d = await r.json();
+    if (d.running && !vncLive) {
+      vncLive = true;
+      $vncDot.classList.remove('off');
+      $vncLbl.textContent = 'VNC Live';
+      $vnc.src = d.vncUrl;
+      $vnc.classList.add('live');
+      $idle.style.transition = 'opacity .5s';
+      $idle.style.opacity = '0';
+      setTimeout(() => { $idle.style.display = 'none'; }, 500);
+    } else if (!d.running && vncLive) {
+      vncLive = false;
+      $vncDot.classList.add('off');
+      $vncLbl.textContent = 'VNC Offline';
+      $vnc.classList.remove('live');
+      $idle.style.display = '';
+      $idle.style.opacity = '1';
+    } else if (!d.running) {
+      $vncDot.classList.add('off');
+      $vncLbl.textContent = 'VNC Offline';
+    }
+  } catch (_) {
+    $vncDot.classList.add('off');
+    $vncLbl.textContent = 'No Signal';
+  }
+  setTimeout(checkVNC, 5000);
 }
 
-// Press Enter on idle screen → activate chat
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !chatStarted && !$sApp.classList.contains('gone') && !e.target.matches('textarea,input')) {
-    startChat();
-    setTimeout(() => $chatTa.focus(), 450);
-  }
+// ── Send message ────────────────────────────────────────────────
+$ta.addEventListener('input', () => {
+  $ta.style.height = 'auto';
+  $ta.style.height = Math.min($ta.scrollHeight, 90) + 'px';
 });
-
-// Also clicking/typing in input starts chat
-$chatTa.addEventListener('focus', startChat);
-
-$chatTa.addEventListener('input', () => {
-  $chatTa.style.height = 'auto';
-  $chatTa.style.height = Math.min($chatTa.scrollHeight, 80) + 'px';
-});
-
-$chatTa.addEventListener('keydown', e => {
+$ta.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
 });
-$chatSend.addEventListener('click', send);
+$send.addEventListener('click', send);
 
 async function send() {
-  const text = $chatTa.value.trim();
+  const text = $ta.value.trim();
   if (!text || busy) return;
-
-  startChat();
-  $chatTa.value = '';
-  $chatTa.style.height = 'auto';
+  $ta.value = '';
+  $ta.style.height = 'auto';
   busy = true;
-  $chatSend.disabled = true;
+  $send.disabled = true;
+
+  // Hide empty state
+  if ($empty) $empty.style.display = 'none';
 
   addMsg('user', text);
   history.push({ role: 'user', parts: [{ text }] });
-  msgCount++; tokenEst += Math.ceil(text.length / 4);
+  msgCount++;
+  tokenEst += Math.ceil(text.length / 4);
   updateStats();
 
-  const typingEl = addTyping();
-  $chatMsgs.scrollTop = $chatMsgs.scrollHeight;
+  const typing = addTyping();
 
   try {
     const res = await fetch('/api/chat', {
@@ -635,43 +720,45 @@ async function send() {
         message: text,
         apiKey,
         history: history.slice(0, -1),
-        model: $modelSel.value
+        model: $model.value
       })
     });
     const data = await res.json();
-    typingEl.remove();
+    typing.remove();
 
-    if (data.error) {
-      addMsg('bot', 'Error: ' + data.error);
-    } else {
-      addMsg('bot', data.reply);
-      history.push({ role: 'model', parts: [{ text: data.reply }] });
-      msgCount++; tokenEst += Math.ceil(data.reply.length / 4);
+    const reply = data.error ? 'Error: ' + data.error : data.reply;
+    addMsg('bot', reply);
+
+    if (!data.error) {
+      history.push({ role: 'model', parts: [{ text: reply }] });
+      msgCount++;
+      tokenEst += Math.ceil(reply.length / 4);
     }
   } catch (err) {
-    typingEl.remove();
+    typing.remove();
     addMsg('bot', 'Network error. Is the server running?');
   }
 
   updateStats();
   busy = false;
-  $chatSend.disabled = false;
-  $chatMsgs.scrollTop = $chatMsgs.scrollHeight;
-  $chatTa.focus();
+  $send.disabled = false;
+  $msgs.scrollTop = $msgs.scrollHeight;
+  $ta.focus();
 }
 
+// ── Message rendering ────────────────────────────────────────────
 function addMsg(role, text) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   const av = role === 'user'
-    ? '<div class="msg-av" style="background:#c8c430;color:#000">U</div>'
-    : '<div class="msg-av"><img src="https://s6.imgcdn.dev/Yx103M.png" onerror="this.parentElement.textContent=\'AI\'"/></div>';
-  d.innerHTML = `${av}<div class="msg-content">
+    ? `<div class="msg-av">Y</div>`
+    : `<div class="msg-av"><img src="https://s6.imgcdn.dev/Yx103M.png" onerror="this.parentElement.textContent='AI'"/></div>`;
+  d.innerHTML = `${av}<div class="msg-body">
     <div class="msg-who">${role === 'user' ? 'You' : 'Megabro'}</div>
     <div class="msg-text">${fmt(text)}</div>
   </div>`;
-  $chatMsgs.appendChild(d);
-  $chatMsgs.scrollTop = $chatMsgs.scrollHeight;
+  $msgs.appendChild(d);
+  $msgs.scrollTop = $msgs.scrollHeight;
   return d;
 }
 
@@ -679,11 +766,12 @@ function addTyping() {
   const d = document.createElement('div');
   d.className = 'msg bot';
   d.innerHTML = `<div class="msg-av"><img src="https://s6.imgcdn.dev/Yx103M.png" onerror="this.parentElement.textContent='AI'"/></div>
-    <div class="msg-content">
+    <div class="msg-body">
       <div class="msg-who">Megabro</div>
       <div class="msg-text"><div class="typing-dots"><span></span><span></span><span></span></div></div>
     </div>`;
-  $chatMsgs.appendChild(d);
+  $msgs.appendChild(d);
+  $msgs.scrollTop = $msgs.scrollHeight;
   return d;
 }
 
@@ -692,7 +780,7 @@ function fmt(t) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
     .replace(/`([^`\n]+)`/g,'<code>$1</code>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--acc-pale)">$1</strong>');
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
 }
 
 function updateStats() {
@@ -700,36 +788,33 @@ function updateStats() {
   $bToks.textContent = tokenEst > 999 ? (tokenEst/1000).toFixed(1)+'k' : tokenEst;
 }
 
-
-// Export chat
-document.getElementById('export-btn').addEventListener('click', () => {
-  if (msgCount === 0) return;
-  const msgs = document.querySelectorAll('.msg');
-  let text = 'MEGABRO Chat Export\n';
-  text += 'Date: ' + new Date().toLocaleString() + '\n';
-  text += 'Model: ' + $modelSel.value + '\n';
-  text += '='.repeat(50) + '\n\n';
-  msgs.forEach(m => {
-    const who = m.querySelector('.msg-who')?.textContent || '';
-    const content = m.querySelector('.msg-text')?.textContent || '';
-    if (content && !content.includes('...')) {
-      text += who + ':\n' + content + '\n\n';
-    }
-  });
-  const blob = new Blob([text], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'megabro-chat-' + Date.now() + '.txt';
-  a.click();
-  URL.revokeObjectURL(a.href);
+// ── Clear ────────────────────────────────────────────────────────
+$('clear-btn').addEventListener('click', () => {
+  history = []; msgCount = 0; tokenEst = 0;
+  $msgs.innerHTML = '';
+  const e = document.createElement('div');
+  e.id = 'chat-empty';
+  e.className = '';
+  e.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;color:var(--muted)';
+  e.innerHTML = `<img src="https://s6.imgcdn.dev/Yx103M.png" style="width:42px;height:42px;object-fit:contain;opacity:.35" onerror="this.style.display='none'"/><p style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;line-height:1.7">Ask Megabro anything.<br/>Type below and press Enter.</p>`;
+  $msgs.appendChild(e);
+  updateStats();
 });
 
-// Keyboard shortcut: Ctrl+E to export
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
-    e.preventDefault();
-    document.getElementById('export-btn').click();
-  }
+// ── Export ───────────────────────────────────────────────────────
+$('export-btn').addEventListener('click', () => {
+  if (msgCount === 0) return;
+  let txt = `MEGABRO Chat Export\nDate: ${new Date().toLocaleString()}\nModel: ${$model.value}\n${'='.repeat(48)}\n\n`;
+  document.querySelectorAll('.msg').forEach(m => {
+    const who = m.querySelector('.msg-who')?.textContent || '';
+    const body = m.querySelector('.msg-text')?.textContent || '';
+    if (body && !body.includes('···')) txt += `[${who}]\n${body}\n\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+  a.download = `megabro-${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
 </script>
 </body>
