@@ -1,6 +1,6 @@
 {
   "name": "megabro",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AI-powered Gemini computer-use interface. Install. Type megabro. Get to work.",
   "main": "index.js",
   "bin": {
@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node bin/cli.js",
-    "test": "node -e \"const p=require('./package.json'); const fs=require('fs'); ['index.js','bin/cli.js','public/index.html'].forEach(f=>{if(!fs.existsSync(f)) throw new Error('Missing: '+f)}); console.log('All checks passed')\""
+    "test": "node -e \"const p=require('./package.json'); const fs=require('fs'); ['index.js','bin/cli.js','public/index.html'].forEach(f=>{if(!fs.existsSync(f)) throw new Error('Missing: '+f)}); console.log('All checks passed')\"",
+    "setup:termux": "pkg update && pkg install x11-repo tigervnc fluxbox chromium xdotool scrot python git -y && pip install google-genai pillow fastapi uvicorn websockify"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -27,11 +28,17 @@
     "type": "git",
     "url": "git+https://github.com/amanmohdtp/megabro.git"
   },
-  "bugs": { "url": "https://github.com/amanmohdtp/megabro/issues" },
+  "bugs": { 
+    "url": "https://github.com/amanmohdtp/megabro/issues" 
+  },
   "homepage": "https://github.com/amanmohdtp/megabro#readme",
-  "engines": { "node": ">=14.0.0" },
-  "_termuxSystemDeps": {
-    "note": "Run these in Termux before using computer-use features",
+  "engines": { 
+    "node": ">=14.0.0" 
+  },
+  "os": [
+    "android"
+  ],
+  "termuxDependencies": {
     "pkg": [
       "x11-repo",
       "tigervnc",
@@ -40,17 +47,14 @@
       "xdotool",
       "scrot",
       "python",
-      "nodejs-lts",
       "git"
     ],
     "pip": [
       "google-genai",
       "pillow",
       "fastapi",
-      "uvicorn"
-    ],
-    "npm": [
-      "websockify (install via: pip install websockify)"
+      "uvicorn",
+      "websockify"
     ]
   }
 }
