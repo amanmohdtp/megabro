@@ -13,7 +13,12 @@
   <img src="https://img.shields.io/badge/node-%3E%3D14-F5F8A4?labelColor=111&style=flat-square" alt="node"/>
   <img src="https://img.shields.io/npm/dm/megabro?color=F5F8A4&labelColor=111&style=flat-square" alt="downloads"/>
   <img src="https://img.shields.io/github/stars/amanmohdtp/megabro?color=F5F8A4&labelColor=111&style=flat-square" alt="stars"/>
+
+<a href="https://discord.gg/nazsuzQqXX">
+  <img src="https://img.shields.io/badge/Community-Discord-f5f8a4?logo=discord&logocolor=111&labelcolor=111&style=flat-square" alt="discord"/>
+</a>
 </p>
+
 
 <br/>
 
