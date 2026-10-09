@@ -89,7 +89,7 @@ Your key is stored in `sessionStorage` only and is never sent anywhere except di
 ## Screenshot
 
 <p align="center">
-  <img src="https://s6.imgcdn.dev/Yx1bxa.png" alt="Megabro screenshot" width="1000"/>
+  <img src="screenshot_1.png" alt="Megabro screenshot" width="1000"/>
 </p>
 
 <br/>
