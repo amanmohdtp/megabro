@@ -1,9 +1,10 @@
+<div>
 <p align="center">
-  <img src="https://s6.imgcdn.dev/Yx1HLD.png" alt="Megabro logo" width="150"/>
+  <img src="logo.png" alt="Megabro logo" width="150"/>
 </p>
-
+</div>
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=FFFFFF&center=true&vCenter=true&width=435&lines=MEGABRO" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=F5F8A4&center=true&vCenter=true&width=435&lines=MEGABRO" alt="Typing SVG" />
 </p>
 <p align="center"><em>AI-powered command interface. Install once. Type megabro. Go.</em></p>
 
