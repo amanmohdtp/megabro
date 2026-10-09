@@ -1,132 +1,112 @@
 #!/usr/bin/env node
 'use strict';
 
-// ─── ANSI helpers (zero deps) ───────────────────────────────────────────────
-const R  = '\x1b[0m';
-const B  = '\x1b[1m';
-const DIM = '\x1b[2m';
-const Y  = '\x1b[93m';   // bright yellow  ≈ #F5F8A4 vibe
-const W  = '\x1b[97m';   // bright white
-const G  = '\x1b[92m';   // bright green
-const C  = '\x1b[96m';   // bright cyan
-const GREY = '\x1b[90m'; // dark grey
+const fs = require('fs');
+const net = require('net');
+const path = require('path');
+const { execFile } = require('child_process');
+const pkg = require('../package.json');
 
-const hideCursor = () => process.stdout.write('\x1b[?25l');
-const showCursor = () => process.stdout.write('\x1b[?25h');
-const clearLine  = () => process.stdout.write('\r\x1b[2K');
-const moveTo     = (n) => process.stdout.write(`\x1b[${n}A`);
+// ── flags ────────────────────────────────────────────────────────────────────
+const args = process.argv.slice(2);
+if (args.includes('-v') || args.includes('--version')) { console.log(pkg.version); process.exit(0); }
+if (args.includes('-h') || args.includes('--help')) {
+  console.log(`megabro ${pkg.version}\n\nUsage: megabro [options]\n\n  --no-open    don't open the browser\n  -v, --version\n  -h, --help\n\nEnv: PORT, GEMINI_API_KEY, MEGABRO_DISPLAY`);
+  process.exit(0);
+}
 
+// ── terminal capabilities (phone-safe) ───────────────────────────────────────
+const tty = !!process.stdout.isTTY;
+const color = tty && !process.env.NO_COLOR && process.env.TERM !== 'dumb';
+const cols = Math.max(20, Math.min(process.stdout.columns || 40, 60));
+const c = code => s => (color ? `\x1b[${code}m${s}\x1b[0m` : String(s));
+const bold = c(1), yellow = c(33), green = c(32), red = c(31);
+const OK = green('✔'), BAD = red('✖'), WARN = yellow('!');
+const out = (s = '') => process.stdout.write(s + '\n');
+const hideCursor = () => color && process.stdout.write('\x1b[?25l');
+const showCursor = () => color && process.stdout.write('\x1b[?25h');
 process.on('exit', showCursor);
-process.on('SIGINT', () => { showCursor(); process.exit(); });
+process.on('SIGINT', () => { showCursor(); process.exit(0); });
 
-// ─── ASCII banner ────────────────────────────────────────────────────────────
+// ── banner: 3 lines, 24 columns, fits any phone ──────────────────────────────
 function banner() {
-  console.log();
-  console.log(`${Y}${B}  ███╗   ███╗███████╗ ██████╗  █████╗ ██████╗ ██████╗  ██████╗${R}`);
-  console.log(`${Y}${B}  ████╗ ████║██╔════╝██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔═══██╗${R}`);
-  console.log(`${Y}${B}  ██╔████╔██║█████╗  ██║  ███╗███████║██████╔╝██████╔╝██║   ██║${R}`);
-  console.log(`${Y}${B}  ██║╚██╔╝██║██╔══╝  ██║   ██║██╔══██║██╔══██╗██╔══██╗██║   ██║${R}`);
-  console.log(`${Y}${B}  ██║ ╚═╝ ██║███████╗╚██████╔╝██║  ██║██████╔╝██║  ██║╚██████╔╝${R}`);
-  console.log(`${Y}${B}  ╚═╝     ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝ ╚═════╝${R}`);
-  console.log(`${GREY}  ──────────────────────── AI COMMAND INTERFACE ────────────────────────${R}`);
-  console.log();
+  out();
+  if (cols >= 26) {
+    out(yellow(bold(' ╔╦╗╔═╗╔═╗╔═╗╔╗ ╦═╗╔═╗')));
+    out(yellow(bold(' ║║║║╣ ║ ╦╠═╣╠╩╗╠╦╝║ ║')));
+    out(yellow(bold(' ╩ ╩╚═╝╚═╝╩ ╩╚═╝╩╚═╚═╝')));
+  } else out(' ' + yellow(bold('MEGABRO')));
+  out(` v${pkg.version}`);
+  out(' ' + '─'.repeat(Math.min(cols - 2, 24)));
 }
 
-// ─── Real progress bar with ETA ─────────────────────────────────────────────
-const STAGES = [
-  { label: 'Waking up the bro...      ', weight: 12 },
-  { label: 'Loading AI modules...     ', weight: 20 },
-  { label: 'Spinning up server...     ', weight: 28 },
-  { label: 'Connecting endpoints...   ', weight: 22 },
-  { label: 'Launching interface...    ', weight: 18 },
-];
+// ── real checks ──────────────────────────────────────────────────────────────
+const has = cmd => (process.env.PATH || '').split(path.delimiter).some(d => d && fs.existsSync(path.join(d, cmd)));
+const portOpen = port => new Promise(r => {
+  const s = new net.Socket(); s.setTimeout(700);
+  s.once('connect', () => { s.destroy(); r(true); });
+  s.once('error', () => r(false)); s.once('timeout', () => { s.destroy(); r(false); });
+  s.connect(port, '127.0.0.1');
+});
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const BAR_WIDTH   = 36;
-const FILL_CHAR   = '█';
-const EMPTY_CHAR  = '░';
-
-function renderBar(pct, label, eta) {
-  const filled = Math.round((pct / 100) * BAR_WIDTH);
-  const bar    = FILL_CHAR.repeat(filled) + EMPTY_CHAR.repeat(BAR_WIDTH - filled);
-  const pctStr = String(Math.round(pct)).padStart(3, ' ');
-  const etaStr = eta > 0 ? `ETA ${(eta / 1000).toFixed(1)}s` : 'Done!     ';
-  clearLine();
-  process.stdout.write(
-    `  ${Y}[${bar}]${R} ${W}${B}${pctStr}%${R}  ${GREY}${label}${R}${C}${etaStr}${R}`
-  );
+// ── progress bar (one line, redrawn; skipped when not a TTY) ─────────────────
+const BAR = Math.min(20, cols - 14);
+function draw(pct, label) {
+  if (!color) return;
+  const n = Math.round(BAR * pct / 100);
+  process.stdout.write(`\r\x1b[2K ${yellow('█'.repeat(n))}${'░'.repeat(BAR - n)} ${String(pct).padStart(3)}% ${label}`.slice(0, cols + 24));
 }
+const clearBar = () => color && process.stdout.write('\r\x1b[2K');
 
-async function runProgress() {
-  hideCursor();
-  let overall = 0;
-  const totalMs  = 1800;   // total fake-boot time
-  const stepMs   = 30;     // tick every 30ms
-  const totalTicks = totalMs / stepMs;
-  let tick = 0;
-
-  // Compute cumulative weight breakpoints
-  const totalWeight = STAGES.reduce((a, s) => a + s.weight, 0);
-  let stageStart = 0;
-  const breakpoints = STAGES.map(s => {
-    const start = stageStart;
-    stageStart += (s.weight / totalWeight) * 100;
-    return { start, end: stageStart };
-  });
-
-  console.log(`${GREY}  ▸ Booting MEGABRO runtime${R}`);
-  console.log();
-
-  await new Promise(resolve => {
-    const iv = setInterval(() => {
-      tick++;
-      overall = Math.min(99.5, (tick / totalTicks) * 100);
-
-      // Which stage are we in?
-      const stageIdx = breakpoints.findIndex(b => overall < b.end);
-      const idx = stageIdx === -1 ? STAGES.length - 1 : stageIdx;
-      const label = STAGES[idx].label;
-
-      const elapsed = tick * stepMs;
-      const eta     = Math.max(0, totalMs - elapsed);
-
-      renderBar(overall, label, eta);
-
-      if (tick >= totalTicks) {
-        clearInterval(iv);
-        renderBar(100, 'Complete!                ', 0);
-        resolve();
-      }
-    }, stepMs);
-  });
-
-  console.log();
-  console.log();
-  showCursor();
-}
-
-// ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   banner();
-  await runProgress();
+  hideCursor();
+  const { start, PORT, getKey, DISPLAY } = require('../index.js');
+  const url = `http://localhost:${PORT}`;
+  const lines = [];
+  const steps = [
+    ['Starting server', async () => {
+      try { await start(); lines.push(`${OK} Server      :${PORT}`); return true; }
+      catch (e) {
+        showCursor(); clearBar();
+        out(` ${BAD} ${e.code === 'EADDRINUSE' ? `Port ${PORT} is busy.\n   Try: PORT=8080 megabro` : e.message}\n`);
+        process.exit(1);
+      }
+    }],
+    ['Checking key', async () => lines.push(getKey() ? `${OK} Gemini key saved` : `${WARN} Gemini key  not set\n   add it in the app (Key)`)],
+    ['Checking tools', async () => {
+      const need = ['xdotool', 'scrot'], miss = need.filter(t => !has(t));
+      const browser = ['chromium', 'chromium-browser', 'google-chrome', 'firefox'].some(has);
+      lines.push(miss.length ? `${WARN} Control     missing ${miss.join(', ')}` : `${OK} Control     xdotool, scrot`);
+      lines.push(browser ? `${OK} Browser     found` : `${WARN} Browser     install chromium`);
+    }],
+    ['Checking screen', async () => {
+      const [vnc, novnc] = await Promise.all([portOpen(5901), portOpen(8080)]);
+      lines.push(vnc && novnc ? `${OK} Screen      ${DISPLAY} live` : `${WARN} Screen      ${vnc ? 'start noVNC (8080)' : 'VNC offline'}`);
+    }],
+  ];
 
-  console.log(`  ${G}✔${R}  Server started on ${W}${B}http://localhost:3000${R}`);
-  console.log(`  ${Y}◉${R}  Opening your browser...`);
-  console.log();
-  console.log(`  ${GREY}Press Ctrl+C to stop${R}`);
-  console.log();
+  for (let i = 0; i < steps.length; i++) {
+    draw(Math.round((i / steps.length) * 100), steps[i][0]);
+    await steps[i][1]();
+    if (color) await sleep(160); // brief, so each stage is readable
+  }
+  draw(100, 'Ready');
+  if (color) await sleep(180);
+  clearBar();
+  showCursor();
 
-  // Start server
-  const server = require('../index.js');
+  lines.forEach(l => out(' ' + l));
+  out();
+  out(` ${bold('▸ ' + url)}`);
+  out(' Ctrl+C to stop');
+  out();
 
-  // Small delay then open browser
-  setTimeout(async () => {
-    try {
-      const open = (await import('open')).default;
-      await open('http://localhost:3000');
-    } catch (_) {
-      // open is optional — user can navigate manually
-    }
-  }, 400);
+  if (args.includes('--no-open')) return;
+  // Termux has no xdg-open; termux-open-url launches the Android browser.
+  if (has('termux-open-url')) return execFile('termux-open-url', [url], () => {});
+  try { await (await import('open')).default(url); } catch (_) { /* open it manually */ }
 }
 
-main();
+main().catch(e => { showCursor(); out(` ${BAD} ${e.message}`); process.exit(1); });

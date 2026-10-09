@@ -1,652 +1,1409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>MEGABRO | Infrastructure AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<title>Megabro AI</title>
+<meta name="description" content="Megabro AI, your personal AI workspace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#080808;--surface:#101010;--panel:#141414;
-  --border:#242424;--border2:#2e2e2e;
-  --text:#f0f0f0;--muted:#5a5a5a;--muted2:#7a7a7a;
-  --cream:#F5F8A4;--cream2:#fffde8;
-  --cream-bg:rgba(245,248,164,.06);--cream-bd:rgba(245,248,164,.18);
-  --green:#10b981;--red:#ef4444;--orange:#f59e0b;
-  --s1:#F5F8A4;--s2:#e8d84a;--s3:#fff8c0;--s4:#F5F8A4;
+:root {
+  color-scheme: dark;
+  --bg: #101010;
+  --panel: #171717;
+  --panel2: #202020;
+  --line: #2c2c2c;
+  --text: #f3f1eb;
+  --muted: #93918a;
+  --accent: #d5ff62;
+  --danger: #ff8585;
 }
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-.screen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-.screen.gone{display:none}
-
-/* KEY */
-.key-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:44px 40px 38px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03)}
-.key-logo{width:62px;height:62px;object-fit:contain;display:block;margin:0 auto 22px;filter:drop-shadow(0 0 14px rgba(245,248,164,.4));animation:float 3.5s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.key-title{font-weight:700;font-size:22px;letter-spacing:.15em;color:var(--text);line-height:1;margin-bottom:5px;text-transform:uppercase}
-.key-sub{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.18em;margin-bottom:28px}
-.key-field{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:13px 16px;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;text-align:center;letter-spacing:.04em;outline:none;margin-bottom:6px;transition:border-color .2s,box-shadow .2s}
-.key-field:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(245,248,164,.1)}
-.key-field::placeholder{color:var(--muted)}
-.key-err{font-size:10px;color:var(--red);min-height:16px;margin-bottom:12px;letter-spacing:.04em}
-.key-btn{width:100%;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:13px;font-family:'Space Mono',monospace;font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s,transform .12s,box-shadow .2s}
-.key-btn:hover{background:var(--cream);color:#111;box-shadow:0 0 18px rgba(245,248,164,.25)}
-.key-btn:active{transform:scale(.97)}
-.key-note{margin-top:16px;font-size:9px;color:var(--muted);line-height:1.9;letter-spacing:.04em}
-.key-note a{color:var(--cream);text-decoration:none}
-.key-note a:hover{text-decoration:underline}
-
-/* LOADING */
-#screen-loading{flex-direction:column;gap:20px}
-.ld-logo{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(245,248,164,.35));animation:float 3s ease-in-out infinite}
-.ld-title{font-weight:700;font-size:13px;letter-spacing:.2em;color:var(--text);text-transform:uppercase}
-.ld-track{width:220px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
-.ld-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--cream),#fff8c0);transition:width .14s ease}
-.ld-sub{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.15em}
-
-/* APP */
-#app{display:flex;flex-direction:column;height:100%}
-#topbar{height:52px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
-.tb-l{display:flex;align-items:center;gap:10px}
-.tb-logo{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(245,248,164,.3))}
-.tb-name{font-weight:700;font-size:13px;letter-spacing:.16em;color:var(--text);text-transform:uppercase}
-.tb-ver{font-size:9px;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:2px 7px;border-radius:4px;letter-spacing:.06em}
-.tb-r{display:flex;align-items:center;gap:14px}
-.status-pill{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;cursor:pointer;transition:color .2s}
-.status-pill:hover{color:var(--text)}
-.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--red);transition:background .3s,box-shadow .3s}
-.pill-dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
-.pill-dot.checking{background:var(--orange);animation:pulse-dot 1s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
-.ghost-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;padding:5px 14px;border-radius:6px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s}
-.ghost-btn:hover{border-color:var(--cream);color:var(--cream)}
-#main-split{flex:1;display:grid;grid-template-columns:1fr 380px;overflow:hidden;min-height:0}
-
-/* MONITOR */
-#tv-area{padding:32px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#111 0%,var(--bg) 70%);overflow:hidden}
-.monitor-wrap{width:100%;max-width:680px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.monitor-frame{width:100%;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:11px;box-shadow:0 0 0 1px rgba(255,255,255,.03),0 28px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
-.monitor-stand{width:120px;height:18px;background:linear-gradient(to bottom,var(--border) 0%,var(--bg) 100%);border-radius:0 0 8px 8px;border:1px solid var(--border);border-top:none;box-shadow:0 8px 20px rgba(0,0,0,.4)}
-.monitor-base{width:200px;height:7px;background:var(--border);border-radius:4px}
-.monitor-screen{width:100%;height:100%;background:#000;border-radius:9px;overflow:hidden;position:relative;border:1px solid #1a1a1a}
-.monitor-screen::after{content:'';position:absolute;inset:0;z-index:20;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(0,0,0,.09) 2px,rgba(0,0,0,.09) 4px);border-radius:9px}
-#vnc-frame{width:100%;height:100%;border:none;opacity:0;transition:opacity .6s}
-#vnc-frame.live{opacity:1}
-
-/* IDLE */
-#idle-screen{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#000;transition:opacity .5s}
-.idle-clouds{position:absolute;top:14px;left:0;right:0;display:flex;gap:48px;padding:0 20px;overflow:hidden}
-.icloud{height:11px;background:#111;border-radius:6px;flex-shrink:0;animation:cmove 10s linear infinite}
-.icloud:nth-child(1){width:38px}.icloud:nth-child(2){width:24px;animation-delay:-3.5s}.icloud:nth-child(3){width:50px;animation-delay:-7s}
-@keyframes cmove{from{transform:translateX(600px)}to{transform:translateX(-200px)}}
-.idle-label{font-weight:700;font-size:11px;letter-spacing:.22em;color:#2a2a2a;text-transform:uppercase}
-.dino-scene{position:relative;width:260px;height:56px}
-.dino-svg{position:absolute;left:24px;bottom:0}
-.cactus-svg{position:absolute;right:16px;bottom:0}
-.dino-ground{position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#1e1e1e}
-.idle-hint{font-size:9px;color:#2e2e2e;text-transform:uppercase;letter-spacing:.16em;animation:blink 1.1s step-start infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.leg-l{animation:la .26s alternate infinite ease-in-out;transform-origin:50% 0}
-.leg-r{animation:la .26s alternate-reverse infinite ease-in-out;transform-origin:50% 0}
-@keyframes la{from{transform:translateY(0)}to{transform:translateY(5px)}}
-
-/* VNC SETUP TOOLTIP */
-#vnc-setup{position:absolute;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:20px;gap:10px}
-#vnc-setup.show{display:flex}
-.setup-title{font-weight:700;font-size:10px;letter-spacing:.2em;color:var(--cream);text-transform:uppercase}
-.setup-code{background:#0a0a0a;border:1px solid var(--border2);border-radius:6px;padding:10px 14px;font-size:9px;color:#88c;line-height:2;letter-spacing:.04em;width:100%}
-.setup-code .cmd{color:var(--cream)}
-.setup-close{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);background:transparent;border:1px solid var(--border);padding:4px 12px;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:.1em;margin-top:4px;transition:color .2s,border-color .2s}
-.setup-close:hover{color:var(--text);border-color:var(--muted2)}
-
-/* CHAT */
-#chat-pane{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-#chat-header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.chat-header-l{font-weight:700;font-size:10px;letter-spacing:.18em;color:var(--muted2);text-transform:uppercase}
-.chat-header-r{display:flex;gap:8px}
-.mini-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;font-weight:700;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 12px;border-radius:5px;cursor:pointer;text-transform:uppercase;transition:all .15s}
-.mini-btn:hover{border-color:var(--muted2);color:var(--text)}
-.mini-btn.danger:hover{border-color:var(--red);color:var(--red)}
-#chat-msgs{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:16px;min-height:0}
-#chat-msgs::-webkit-scrollbar{width:3px}
-#chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted)}
-.chat-empty img{width:38px;height:38px;object-fit:contain;opacity:.15;filter:grayscale(1)}
-.chat-empty p{font-size:10px;text-transform:uppercase;letter-spacing:.12em;line-height:1.8;text-align:center}
-
-/* MESSAGES */
-.msg{display:flex;flex-direction:column;gap:4px;animation:fadeup .22s ease}
-@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.msg-who{font-weight:700;font-size:9px;letter-spacing:.16em;color:var(--muted);padding:0 2px;text-transform:uppercase}
-.msg-text{font-size:12px;line-height:1.7;padding:11px 14px;border-radius:4px 10px 10px 10px;word-break:break-word;white-space:pre-wrap}
-.msg.bot .msg-text{background:var(--panel);border:1px solid var(--border);color:var(--text)}
-.msg.user{align-items:flex-end}
-.msg.user .msg-who{color:var(--cream);opacity:.7}
-.msg.user .msg-text{background:var(--cream-bg);border:1px solid var(--cream-bd);color:var(--cream2);border-radius:10px 4px 10px 10px}
-.msg-text code{background:rgba(245,248,164,.07);border:1px solid rgba(245,248,164,.15);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--cream)}
-.msg-text pre{background:#0d0d0d;border:1px solid var(--border);padding:10px;border-radius:6px;overflow-x:auto;margin:6px 0;font-size:11px;color:#aaa}
-.typing-bubble{background:var(--panel);border:1px solid var(--border);padding:11px 16px;border-radius:4px 10px 10px 10px;display:inline-flex;gap:5px;align-items:center}
-.typing-bubble span{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:tdot 1.3s infinite ease-in-out}
-.typing-bubble span:nth-child(2){animation-delay:.18s}
-.typing-bubble span:nth-child(3){animation-delay:.36s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-4px);opacity:1}}
-
-/* QUOTA ERROR CARD */
-.quota-card{background:#1a0f00;border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.6}
-.quota-card .qc-title{font-weight:700;font-size:9px;letter-spacing:.18em;color:var(--orange);text-transform:uppercase}
-.quota-card .qc-msg{color:#d4a060;font-size:11px}
-.quota-card .qc-hint{color:var(--muted2);font-size:10px;line-height:1.7}
-.quota-card .qc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
-.qc-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;font-weight:700;background:transparent;border:1px solid rgba(245,158,11,.35);color:var(--orange);padding:5px 10px;border-radius:5px;cursor:pointer;text-transform:uppercase;transition:all .15s}
-.qc-btn:hover{background:rgba(245,158,11,.08);border-color:var(--orange)}
-.qc-retry-countdown{font-size:9px;color:var(--muted);letter-spacing:.06em;align-self:center}
-
-/* SABER INPUT */
-#input-area{padding:14px 16px 16px;flex-shrink:0}
-@property --sa{syntax:'<angle>';initial-value:0deg;inherits:false}
-.saber-wrap{position:relative;border-radius:11px;padding:1.5px;background:var(--border);transition:box-shadow .3s}
-.saber-wrap:focus-within{background:conic-gradient(from var(--sa),var(--s1),var(--s2),var(--s3),var(--s4),var(--s1));animation:saberspin 2.5s linear infinite;box-shadow:0 0 18px rgba(245,248,164,.2),0 0 40px rgba(245,248,164,.07)}
-@keyframes saberspin{to{--sa:360deg}}
-@supports not (background:conic-gradient(red,blue)){
-  .saber-wrap:focus-within{background:linear-gradient(90deg,var(--s1),var(--s2),var(--s3));background-size:200% 100%;animation:saberslide 2s linear infinite}
-  @keyframes saberslide{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; }
+body {
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-.saber-inner{background:var(--bg);border-radius:9.5px;padding:10px 12px;display:flex;align-items:flex-end;gap:10px}
-#chat-ta{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:12px;color:var(--text);resize:none;min-height:22px;max-height:110px;overflow-y:auto;line-height:1.6}
-#chat-ta::placeholder{color:var(--muted)}
-#chat-ta::-webkit-scrollbar{width:2px}
-#chat-ta::-webkit-scrollbar-thumb{background:var(--border)}
-#chat-send{background:none;border:none;cursor:pointer;color:var(--cream);padding:4px;flex-shrink:0;transition:transform .15s,filter .15s;line-height:0}
-#chat-send:hover{transform:scale(1.12);filter:drop-shadow(0 0 6px var(--cream))}
-#chat-send:active{transform:scale(.95)}
-#chat-send:disabled{opacity:.25;cursor:not-allowed;transform:none;filter:none}
-.input-hint{margin-top:6px;font-size:9px;color:var(--muted);text-align:center;letter-spacing:.07em;padding:0 2px}
-
-/* BOTTOM BAR */
-#bottombar{height:38px;flex-shrink:0;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
-.bstats{display:flex;gap:20px}
-.bstat b{font-weight:700;font-size:12px;color:var(--text);letter-spacing:.06em;margin-left:5px}
-.bmode{color:var(--muted2)}
-.bmode span{color:var(--cream)}
-
-/* CUSTOM DROPDOWN */
-.model-dropdown{position:relative}
-.model-trigger{background:var(--panel);border:1px solid var(--border);color:var(--muted2);font-family:'Space Mono',monospace;font-size:9px;padding:5px 28px 5px 10px;border-radius:5px;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;position:relative;transition:border-color .2s,color .2s;user-select:none;white-space:nowrap;min-width:148px}
-.model-trigger:hover{border-color:var(--cream);color:var(--cream)}
-.model-trigger::after{content:'';position:absolute;right:10px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid var(--muted);transition:transform .2s,border-top-color .2s}
-.model-dropdown.open .model-trigger{border-color:var(--cream);color:var(--cream)}
-.model-dropdown.open .model-trigger::after{transform:translateY(-50%) rotate(180deg);border-top-color:var(--cream)}
-.model-menu{position:absolute;bottom:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;min-width:200px;box-shadow:0 -14px 36px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;z-index:99}
-.model-dropdown.open .model-menu{opacity:1;pointer-events:all;transform:translateY(0)}
-.model-option{display:block;width:100%;padding:10px 14px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;text-align:left;transition:background .12s,color .12s;border-bottom:1px solid var(--border)}
-.model-option:last-child{border-bottom:none}
-.model-option:hover{background:var(--panel);color:var(--text)}
-.model-option.selected{color:var(--cream);background:rgba(245,248,164,.04)}
-.model-option.selected::before{content:'> ';opacity:.5}
-.model-option .opt-note{display:block;font-size:8px;color:var(--muted);margin-top:2px;letter-spacing:.04em;text-transform:none}
-
-/* MOBILE */
-@media(max-width:720px){
-  #main-split{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-  #tv-area{padding:16px;height:180px;flex-shrink:0}
-  .monitor-stand,.monitor-base{display:none}
-  #chat-pane{border-left:none;border-top:1px solid var(--border)}
-  .tb-ver,.ghost-btn{display:none}
-  #bottombar{padding:0 14px}
+button, input, textarea, select { font: inherit; }
+button { color: inherit; cursor: pointer; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+a { color: inherit; text-decoration: none; }
+button:focus-visible, a:focus-visible, textarea:focus-visible,
+input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
-@media(max-width:420px){
-  .key-card{padding:32px 24px 28px}
-  .key-title{font-size:18px}
-  #tv-area{height:150px}
+#app {
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.topbar {
+  height: 64px;
+  flex: 0 0 64px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line);
+  background: #111111ee;
+  backdrop-filter: blur(16px);
+  position: relative;
+  z-index: 20;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: var(--accent); color: #101010;
+  border-radius: 12px;
+  font-size: 16px;
+  transform: rotate(-4deg);
+}
+.brand-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 20px; font-weight: 700; letter-spacing: -1px;
+}
+.brand-name span { color: var(--accent); }
+.brand-sub {
+  font-size: 9px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.spacer { flex: 1; }
+.top-actions { display: flex; align-items: center; gap: 5px; }
+.icon-btn {
+  width: 37px; height: 37px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: 11px;
+  background: transparent; color: #c3c1ba;
+  transition: .2s ease;
+}
+.icon-btn:hover { background: #242424; border-color: #363636; color: white; }
+.icon-btn:active { transform: scale(.94); }
+.mobile-menu { display: none; }
+#modelSelect {
+  max-width: 185px;
+  padding: 9px 28px 9px 10px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 11px;
+}
+.workspace {
+  flex: 1; min-height: 0;
+  display: flex; position: relative; overflow: hidden;
+}
+.sidebar {
+  flex: 0 0 235px; width: 235px;
+  display: flex; flex-direction: column; gap: 20px;
+  min-height: 0; overflow-y: auto;
+  padding: 17px 13px;
+  border-right: 1px solid var(--line);
+  background: #121212;
+}
+.primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 15px;
+  border: 0; border-radius: 11px;
+  background: var(--accent); color: #111;
+  font-weight: 800; font-size: 12px;
+  transition: transform .18s, background .18s;
+}
+.primary:hover { background: #e3ff99; }
+.primary:active { transform: scale(.97); }
+.new-chat { width: 100%; justify-content: flex-start; }
+.side-label {
+  padding: 0 10px;
+  color: #77756f; font-size: 10px;
+  font-weight: 700; letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+.side-nav, .history-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.side-link {
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; padding: 11px 12px;
+  text-align: left; font-size: 12px;
+  color: #aaa8a1; background: transparent;
+  border: 1px solid transparent; border-radius: 10px;
+}
+.side-link i { width: 16px; text-align: center; }
+.side-link:hover, .side-link.active {
+  color: var(--text); background: #202020; border-color: #303030;
+}
+.history-item {
+  width: 100%; padding: 10px;
+  text-align: left; font-size: 11px;
+  color: #a5a29b; background: transparent;
+  border: 1px solid transparent; border-radius: 9px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.history-item:hover { background: #222; color: white; }
+.sidebar-bottom { margin-top: auto; border-top: 1px solid var(--line); padding-top: 12px; }
+.connection {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; font-size: 10px; color: var(--muted);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #78d79a; }
+.dot.offline { background: var(--danger); }
+.main-col {
+  flex: 1; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column;
+}
+.chat-head {
+  flex: 0 0 46px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 0 19px; border-bottom: 1px solid #252525;
+}
+.chat-title {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 11px; color: #b2afa7;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.chat-head-actions { display: flex; align-items: center; gap: 5px; }
+.chat-head-actions .icon-btn { width: 32px; height: 32px; }
+.chat-scroll {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #454545 transparent;
+  scroll-behavior: smooth;
+}
+.chat-scroll::-webkit-scrollbar { width: 6px; }
+.chat-scroll::-webkit-scrollbar-thumb { background: #414141; border-radius: 8px; }
+.thread {
+  width: 100%; max-width: 850px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 30px 25px 35px;
+  display: flex; flex-direction: column; gap: 25px;
+}
+.landing {
+  min-height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 24px 0 35px;
+  animation: appear .5s ease both;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  width: fit-content; padding: 7px 11px;
+  border: 1px solid #3b422e; border-radius: 100px;
+  color: var(--accent); background: #d5ff620a;
+  font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase;
+  font-weight: 700;
+}
+.hero-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(43px, 6vw, 69px);
+  line-height: 1.03; letter-spacing: -3.5px;
+  margin: 23px 0 15px; font-weight: 700;
+}
+.hero-title span { color: var(--accent); }
+.hero-desc { max-width: 485px; color: #99968e; font-size: 13px; line-height: 1.85; }
+.prompt-grid {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px; max-width: 650px; margin-top: 32px;
+}
+.prompt-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 15px; text-align: left;
+  background: linear-gradient(145deg,#1b1b1b,#151515);
+  border: 1px solid #303030; border-radius: 14px;
+  transition: transform .2s, border-color .2s, background .2s;
+}
+.prompt-card:hover { transform: translateY(-3px); border-color: #657443; background: #1b1e16; }
+.prompt-icon {
+  flex: 0 0 34px; width: 34px; height: 34px;
+  display: grid; place-items: center;
+  background: #d5ff6215; color: var(--accent); border-radius: 10px;
+}
+.prompt-card strong { display: block; font-size: 11px; margin: 2px 0 6px; }
+.prompt-card small { display: block; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.landing-foot { margin-top: 23px; color: #64625d; font-size: 9px; }
+.message { display: flex; align-items: flex-start; gap: 12px; animation: rise .22s ease both; }
+.avatar {
+  width: 32px; height: 32px; flex: 0 0 32px;
+  display: grid; place-items: center;
+  border: 1px solid #353535; border-radius: 10px;
+  background: #252525; color: #eee; font-size: 12px;
+}
+.message.assistant .avatar { background: var(--accent); color: #111; border-color: transparent; }
+.message-content { min-width: 0; flex: 1; padding-top: 3px; }
+.message-author { color: #c7c4bd; font-size: 10px; font-weight: 700; margin-bottom: 9px; }
+.message.user .message-author { color: var(--accent); }
+.message-body { color: #dedbd4; font-size: 13px; line-height: 1.85; overflow-wrap: anywhere; }
+.message-body p { margin: 0 0 12px; }
+.message-body p:last-child { margin-bottom: 0; }
+.message-body h1, .message-body h2, .message-body h3 {
+  font-family: "Space Grotesk", sans-serif; line-height: 1.3; margin: 20px 0 9px;
+}
+.message-body h1 { font-size: 23px; }
+.message-body h2 { font-size: 19px; }
+.message-body h3 { font-size: 16px; }
+.message-body ul, .message-body ol { padding-left: 22px; margin: 10px 0; }
+.message-body li { margin: 5px 0; }
+.message-body a { color: var(--accent); text-decoration: underline; }
+.message-body blockquote { margin: 12px 0; padding: 8px 13px; border-left: 3px solid var(--accent); background: #d5ff6208; }
+.message-body code { padding: 2px 5px; border-radius: 5px; background: #292929; border: 1px solid #393939; font-family: monospace; font-size: .9em; }
+.code-wrap { margin: 12px 0; border: 1px solid #343434; border-radius: 12px; overflow: hidden; background: #0c0c0c; }
+.code-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #1b1b1b; border-bottom: 1px solid #303030; font-size: 10px; color: #aaa; }
+.code-head button { border: 1px solid #393939; background: #252525; border-radius: 7px; padding: 5px 8px; font-size: 10px; }
+.code-wrap pre { max-width: 100%; overflow: auto; margin: 0; padding: 14px; font-size: 12px; line-height: 1.7; tab-size: 2; }
+.code-wrap pre code { padding: 0; border: 0; background: transparent; white-space: pre; }
+.msg-tools { display: flex; gap: 5px; margin-top: 9px; opacity: .7; }
+.msg-tools:hover { opacity: 1; }
+.msg-tools button { padding: 5px 8px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #999; font-size: 10px; }
+.msg-tools button:hover { background: #252525; border-color: #353535; color: white; }
+.typing-dots { display: flex; gap: 5px; padding: 9px 0; }
+.typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: bounce 1s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: .15s; }
+.typing-dots span:nth-child(3) { animation-delay: .3s; }
+.error-box { padding: 14px; border: 1px solid #603c3c; border-radius: 12px; background: #251818; color: #ffbcbc; font-size: 12px; line-height: 1.7; }
+.error-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+.error-actions button { padding: 7px 10px; border: 1px solid #704747; border-radius: 8px; background: #321f1f; color: #ffd5d5; font-size: 10px; }
+.composer-area {
+  flex: 0 0 auto;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg,#101010 75%,#101010ee);
+  position: relative; z-index: 5;
+}
+.composer-inner { max-width: 850px; margin: 0 auto; }
+.composer {
+  padding: 9px 10px;
+  border: 1px solid #383838; border-radius: 17px;
+  background: #1a1a1a;
+  transition: border-color .2s, box-shadow .2s;
+}
+.composer:focus-within { border-color: #657443; box-shadow: 0 0 0 3px #d5ff6208; }
+#prompt {
+  display: block; width: 100%; min-height: 30px; max-height: 170px;
+  padding: 5px 6px 9px; resize: none; overflow-y: auto;
+  background: transparent; border: 0; outline: 0;
+  color: var(--text); font-size: 13px; line-height: 1.65;
+}
+#prompt::placeholder { color: #77746e; }
+.composer-tools { display: flex; align-items: center; gap: 8px; }
+.tool-left { display: flex; align-items: center; gap: 5px; flex: 1; min-width: 0; }
+.mode-toggle { display: flex; gap: 2px; padding: 3px; border: 1px solid #303030; background: #111; border-radius: 9px; }
+.mode-btn { padding: 6px 8px; border: 0; border-radius: 7px; background: transparent; color: #85827b; font-size: 10px; }
+.mode-btn.active { background: #303030; color: var(--accent); }
+.tool-btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: #aaa79f; font-size: 10px; }
+.tool-btn:hover { background: #292929; border-color: #3a3a3a; color: white; }
+.send-btn {
+  flex: 0 0 35px; width: 35px; height: 35px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 11px; background: var(--accent); color: #111;
+  transition: transform .2s, background .2s;
+}
+.send-btn:hover { background: #e3ff97; transform: translateY(-1px); }
+.send-btn.stop { background: var(--danger); }
+.disclaimer { margin-top: 9px; text-align: center; color: #69665f; font-size: 9px; }
+.screen-panel {
+  display: flex; flex-direction: column;
+  flex: 0 0 0; width: 0; overflow: hidden;
+  border-left: 0 solid var(--line); background: #141414;
+  transition: width .22s ease, flex-basis .22s ease;
+}
+.screen-panel.open { flex-basis: 320px; width: 320px; border-left-width: 1px; }
+.screen-head { display: flex; align-items: center; justify-content: space-between; padding: 13px; border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+.screen-content { min-height: 0; flex: 1; overflow: auto; padding: 14px; }
+.screen-preview { display: grid; place-items: center; width: 100%; aspect-ratio: 16/10; overflow: hidden; border: 1px solid #333; border-radius: 12px; background: #090909; }
+.screen-preview img { width: 100%; height: 100%; object-fit: contain; }
+.screen-placeholder { padding: 18px; text-align: center; color: #777; font-size: 11px; line-height: 1.8; overflow-wrap: anywhere; }
+.screen-placeholder i { display: block; margin-bottom: 12px; font-size: 28px; color: #555; }
+.screen-buttons { display: flex; gap: 8px; margin-top: 12px; }
+.screen-buttons button { flex: 1; font-size: 10px; }
+.screen-note { color: #777; font-size: 10px; line-height: 1.7; }
+.modal-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  align-items: center; justify-content: center; padding: 18px;
+  background: #000b; backdrop-filter: blur(8px);
+}
+.modal-backdrop.show { display: flex; animation: fade .18s ease; }
+.modal {
+  width: min(440px,100%); max-height: 90dvh; overflow-y: auto;
+  padding: 23px; border: 1px solid #373737; border-radius: 19px;
+  background: #191919; box-shadow: 0 20px 70px #0008;
+  animation: rise .22s ease;
+}
+.modal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.modal-title { font-family: "Space Grotesk",sans-serif; font-size: 20px; font-weight: 700; }
+.modal-sub { margin-bottom: 18px; color: #999; font-size: 11px; line-height: 1.8; }
+.field-label { display: block; margin: 13px 0 7px; color: #bbb8b1; font-size: 11px; font-weight: 700; }
+.field { width: 100%; padding: 12px; border: 1px solid #393939; border-radius: 10px; background: #101010; color: white; font-size: 12px; }
+.field:focus { border-color: #77834f; outline: 0; }
+.modal-actions { display: flex; gap: 9px; margin-top: 12px; }
+.modal-actions button { flex: 1; }
+.modal-actions .secondary { border: 1px solid #393939; background: #242424; border-radius: 10px; font-size: 11px; }
+.key-status { margin-top: 10px; color: #9a978f; font-size: 10px; line-height: 1.7; }
+.hidden { display: none !important; }
+.toast {
+  position: fixed; z-index: 200; left: 50%; bottom: 90px;
+  max-width: calc(100% - 28px); padding: 11px 15px;
+  transform: translate(-50%,12px);
+  border: 1px solid #444; border-radius: 11px;
+  background: #252525; color: white; font-size: 11px;
+  text-align: center; box-shadow: 0 10px 40px #0007;
+  opacity: 0; pointer-events: none; transition: .2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%,0); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+@media (min-width:1200px) { .thread { padding-top: 38px; } }
+@media (max-width:850px) {
+  .sidebar { flex-basis: 205px; width: 205px; }
+  .thread { padding-left: 19px; padding-right: 19px; }
+  .topbar { padding: 0 13px; }
+  .brand-sub { display: none; }
+}
+@media (max-width:650px) {
+  .topbar { height: 57px; flex-basis: 57px; gap: 7px; padding: 0 9px; }
+  .brand-mark { width: 31px; height: 31px; border-radius: 9px; }
+  .brand-name { font-size: 18px; }
+  .mobile-menu { display: inline-flex; width: 32px; }
+  .top-actions { gap: 1px; }
+  .top-actions .icon-btn { width: 32px; height: 33px; }
+  .desktop-only { display: none !important; }
+  .sidebar {
+    position: absolute; z-index: 30; top: 0; bottom: 0; left: 0;
+    width: min(280px,85vw); transform: translateX(-105%);
+    transition: transform .22s ease; box-shadow: 0 12px 45px #0009;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .chat-head { flex-basis: 41px; padding: 0 11px; }
+  .thread { padding: 22px 14px 24px; gap: 22px; }
+  .landing { justify-content: flex-start; padding-top: 25px; }
+  .hero-title { font-size: 43px; letter-spacing: -2.6px; margin-top: 20px; }
+  .hero-desc { font-size: 12px; }
+  .prompt-grid { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
+  .prompt-card { padding: 12px; }
+  .prompt-icon { width: 31px; height: 31px; flex-basis: 31px; }
+  .landing-foot { margin-top: 17px; }
+  .composer-area { padding: 8px 9px calc(8px + env(safe-area-inset-bottom)); }
+  .composer { padding: 8px; border-radius: 14px; }
+  #prompt { max-height: 130px; font-size: 13px; }
+  .disclaimer { font-size: 8px; margin-top: 7px; }
+  .screen-panel.open { position: absolute; z-index: 25; top: 0; right: 0; bottom: 0; width: min(330px,100%); border-left-width: 1px; box-shadow: 0 10px 45px #0008; }
+  .message { gap: 9px; }
+  .avatar { width: 29px; height: 29px; flex-basis: 29px; }
+}
+@media (max-width:390px) {
+  .brand-name { font-size: 16px; }
+  .brand-mark { width: 29px; height: 29px; }
+  .topbar { gap: 4px; }
+  .top-actions .social { width: 29px; }
+  .hero-title { font-size: 39px; }
+  .tool-label { display: none; }
+  .mode-btn { padding: 6px; font-size: 9px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 </style>
 </head>
 <body>
-
-<div class="screen" id="screen-key">
-  <div class="key-card">
-    <img class="key-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="MEGABRO" onerror="this.style.display='none'"/>
-    <div class="key-title">MEGABRO</div>
-    <div class="key-sub">Infrastructure Access Gate</div>
-    <input class="key-field" type="password" id="key-in" placeholder="Enter Gemini API key" autocomplete="off" aria-label="Gemini API Key"/>
-    <div class="key-err" id="key-err"></div>
-    <button class="key-btn" id="key-btn">INITIALIZE SYSTEM</button>
-    <p class="key-note">Free key at <a href="https://aistudio.google.com/" target="_blank" rel="noopener">aistudio.google.com</a><br/>Stored in your browser session only.</p>
-  </div>
-</div>
-
-<div class="screen gone" id="screen-loading">
-  <img class="ld-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
-  <div class="ld-title" id="ld-msg">INITIALISING</div>
-  <div class="ld-track"><div class="ld-fill" id="ld-bar"></div></div>
-  <div class="ld-sub" id="ld-sub">WAKING UP THE BRO</div>
-</div>
-
-<div id="app" style="display:none;height:100%">
-  <div id="topbar">
-    <div class="tb-l">
-      <img class="tb-logo" src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
-      <span class="tb-name">MEGABRO</span>
-      <span class="tb-ver">v2.1</span>
-    </div>
-    <div class="tb-r">
-      <div class="status-pill" id="vnc-pill" title="Click for VNC setup guide">
-        <div class="pill-dot checking" id="vnc-dot"></div>
-        <span id="vnc-label">CHECKING...</span>
+<div id="app">
+  <header class="topbar">
+    <button class="icon-btn mobile-menu" id="menuBtn" title="Open menu" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a class="brand" href="#" id="brandHome">
+      <div class="brand-mark"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="brand-name">mega<span>bro</span></div>
+        <div class="brand-sub">Your AI workspace</div>
       </div>
-      <button class="ghost-btn" id="change-key-btn">API KEY</button>
+    </a>
+    <div class="spacer"></div>
+    <div class="top-actions">
+      <a class="icon-btn social" href="https://github.com/amanmohdtp/megabro" target="_blank" rel="noopener noreferrer" title="GitHub repository" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a class="icon-btn social" href="https://discord.gg/nazsuzQqXX" target="_blank" rel="noopener noreferrer" title="Join Discord" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+      <button class="icon-btn desktop-only" id="screenBtn" title="Screen preview" aria-label="Screen preview"><i class="fa-solid fa-display"></i></button>
+      <button class="icon-btn desktop-only" id="exportBtn" title="Export chat" aria-label="Export chat"><i class="fa-solid fa-download"></i></button>
+      <button class="icon-btn desktop-only" id="newChatTop" title="New chat" aria-label="New chat"><i class="fa-solid fa-plus"></i></button>
+      <button class="icon-btn" id="keyBtn" title="API settings" aria-label="API settings"><i class="fa-solid fa-key"></i></button>
     </div>
-  </div>
+  </header>
 
-  <div id="main-split">
-    <div id="tv-area">
-      <div class="monitor-wrap">
-        <div class="monitor-frame">
-          <div class="monitor-screen">
-            <iframe id="vnc-frame" src="" title="VNC Live" allow="clipboard-read; clipboard-write"></iframe>
+  <div class="workspace">
+    <aside class="sidebar" id="sidebar">
+      <button class="primary new-chat" id="newChatBtn"><i class="fa-solid fa-plus"></i> New conversation</button>
+      <div>
+        <div class="side-label">Workspace</div>
+        <div class="side-nav">
+          <button class="side-link active" id="chatNav"><i class="fa-regular fa-comments"></i> AI Chat</button>
+          <button class="side-link" id="controlNav"><i class="fa-solid fa-terminal"></i> Control mode</button>
+          <button class="side-link" id="screenNav"><i class="fa-solid fa-display"></i> Screen preview</button>
+        </div>
+      </div>
+      <div>
+        <div class="side-label">Recent chats</div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="connection"><span class="dot" id="connectionDot"></span><span id="connectionText">Checking server...</span></div>
+        <button class="side-link" id="settingsNav"><i class="fa-solid fa-sliders"></i> Settings & API key</button>
+      </div>
+    </aside>
 
-            <div id="idle-screen">
-              <div class="idle-clouds"><div class="icloud"></div><div class="icloud"></div><div class="icloud"></div></div>
-              <div class="idle-label" id="idle-label">SIGNAL LOST</div>
-              <div class="dino-scene">
-                <svg class="dino-svg" width="44" height="52" viewBox="0 0 44 52" fill="none">
-                  <rect x="16" y="2" width="20" height="14" rx="3" fill="#1e1e1e"/>
-                  <rect x="28" y="4" width="4" height="4" rx="1" fill="#444"/>
-                  <rect x="33" y="8" width="9" height="4" rx="2" fill="#1e1e1e"/>
-                  <rect x="10" y="14" width="26" height="22" rx="3" fill="#1e1e1e"/>
-                  <rect x="4" y="18" width="9" height="5" rx="2" fill="#1e1e1e"/>
-                  <rect class="leg-l" x="16" y="34" width="8" height="16" rx="2" fill="#1e1e1e"/>
-                  <rect class="leg-r" x="26" y="34" width="8" height="16" rx="2" fill="#1e1e1e"/>
-                </svg>
-                <svg class="cactus-svg" width="22" height="42" viewBox="0 0 22 42" fill="#1a2a1a">
-                  <rect x="8" y="8" width="6" height="34" rx="3"/>
-                  <rect x="0" y="18" width="10" height="5" rx="2"/>
-                  <rect x="12" y="22" width="10" height="5" rx="2"/>
-                  <rect x="0" y="14" width="5" height="9" rx="2"/>
-                  <rect x="17" y="18" width="5" height="9" rx="2"/>
-                </svg>
-                <div class="dino-ground"></div>
-              </div>
-              <div class="idle-hint" id="idle-hint">Awaiting VNC packets</div>
+    <section class="main-col">
+      <div class="chat-head">
+        <div class="chat-title"><span class="dot"></span><span id="chatTitle">New conversation</span></div>
+        <div class="chat-head-actions">
+          <select id="modelSelect" aria-label="AI model">
+            <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+          </select>
+          <button class="icon-btn" id="clearBtn" title="Clear chat" aria-label="Clear chat"><i class="fa-regular fa-trash-can"></i></button>
+        </div>
+      </div>
+
+      <div class="chat-scroll" id="chatScroll">
+        <div class="thread" id="thread">
+          <section class="landing" id="landing">
+            <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> A little smarter, every day</div>
+            <h1 class="hero-title">What's on<br>your <span>mind?</span></h1>
+            <div class="hero-desc">Your ideas, questions, code and big plans. Bring them here and let's figure things out together.</div>
+            <div class="prompt-grid">
+              <button class="prompt-card" data-prompt="Explain a difficult topic simply, with examples and a practical analogy.">
+                <span class="prompt-icon"><i class="fa-solid fa-lightbulb"></i></span>
+                <span><strong>Explain anything</strong><small>Make difficult ideas easy to understand.</small></span>
+              </button>
+              <button class="prompt-card" data-prompt="Help me build a polished, modern website. Suggest a strong design and give me the complete code.">
+                <span class="prompt-icon"><i class="fa-solid fa-code"></i></span>
+                <span><strong>Build something</strong><small>Create websites, apps and useful tools.</small></span>
+              </button>
+              <button class="prompt-card" data-prompt="Brainstorm original ideas for a project, including unusual approaches and practical next steps.">
+                <span class="prompt-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                <span><strong>Brainstorm ideas</strong><small>Find fresh angles and new possibilities.</small></span>
+              </button>
+              <button class="prompt-card" data-prompt="Help me debug a problem. Explain likely causes, how to diagnose it, and give me a reliable fix.">
+                <span class="prompt-icon"><i class="fa-solid fa-bug"></i></span>
+                <span><strong>Fix a problem</strong><small>Debug errors and work through solutions.</small></span>
+              </button>
             </div>
+            <div class="landing-foot">Made for curiosity. Powered by your configured AI model.</div>
+          </section>
+        </div>
+      </div>
 
-            <!-- VNC SETUP GUIDE (shown when user clicks status pill) -->
-            <div id="vnc-setup">
-              <div class="setup-title">⚡ Start VNC on Termux</div>
-              <div class="setup-code">
-                <span class="cmd">vncserver :1 -geometry 1280x720 -depth 24</span><br/>
-                <span style="color:var(--muted)"># then start noVNC websockify:</span><br/>
-                <span class="cmd">websockify --web=/usr/share/novnc 8080 localhost:5901 &amp;</span>
+      <div class="composer-area">
+        <div class="composer-inner">
+          <div class="composer">
+            <textarea id="prompt" rows="1" placeholder="Ask Megabro anything..." aria-label="Message Megabro"></textarea>
+            <div class="composer-tools">
+              <div class="tool-left">
+                <div class="mode-toggle">
+                  <button class="mode-btn active" id="chatModeBtn" data-mode="chat"><i class="fa-regular fa-message"></i> Chat</button>
+                  <button class="mode-btn" id="controlModeBtn" data-mode="control"><i class="fa-solid fa-terminal"></i> Control</button>
+                </div>
+                <button class="tool-btn" id="attachBtn" title="Attach a text or code file"><i class="fa-solid fa-paperclip"></i><span class="tool-label">Attach</span></button>
+                <input type="file" id="fileInput" class="hidden" accept=".txt,.md,.json,.js,.html,.css,.py,.log,.xml,.csv">
               </div>
-              <div style="font-size:9px;color:var(--muted2);text-align:center;letter-spacing:.06em">
-                MEGABRO checks port 5901 (VNC) &amp; 8080 (noVNC) every 5s
-              </div>
-              <button class="setup-close" id="vnc-setup-close">CLOSE</button>
+              <button class="send-btn" id="sendBtn" title="Send message" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
             </div>
           </div>
+          <div class="disclaimer">AI can make mistakes. Check important information. <span id="modeHint">Chat mode is active.</span></div>
         </div>
-        <div class="monitor-stand"></div>
-        <div class="monitor-base"></div>
       </div>
-    </div>
+    </section>
 
-    <div id="chat-pane">
-      <div id="chat-header">
-        <span class="chat-header-l">AI TERMINAL</span>
-        <div class="chat-header-r">
-          <button class="mini-btn" id="export-btn">EXPORT</button>
-          <button class="mini-btn danger" id="clear-btn">CLEAR</button>
+    <aside class="screen-panel" id="screenPanel">
+      <div class="screen-head"><span><i class="fa-solid fa-display" style="color:var(--accent);margin-right:8px"></i>Screen preview</span><button class="icon-btn" id="closeScreen" aria-label="Close preview"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="screen-content">
+        <div class="screen-preview" id="screenPreview"><div class="screen-placeholder"><i class="fa-solid fa-desktop"></i>Request a screenshot to view it here.</div></div>
+        <div class="screen-buttons">
+          <button class="primary" id="refreshScreen"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          <button class="primary" id="saveScreen"><i class="fa-solid fa-download"></i> Save</button>
         </div>
+        <p class="screen-note">Screenshot availability depends on your local Megabro server setup.</p>
       </div>
-      <div id="chat-msgs">
-        <div class="chat-empty" id="chat-empty">
-          <img src="https://s6.imgcdn.dev/Yx103M.png" alt="" onerror="this.style.display='none'"/>
-          <p>System nominal.<br/>Awaiting your command.</p>
-        </div>
-      </div>
-      <div id="input-area">
-        <div class="saber-wrap">
-          <div class="saber-inner">
-            <textarea id="chat-ta" rows="1" placeholder="Type a command..." aria-label="Message input"></textarea>
-            <button id="chat-send" aria-label="Send message" title="Send (Enter)">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="input-hint">Enter to send &middot; Shift+Enter for new line</div>
-      </div>
-    </div>
+    </aside>
   </div>
+</div>
 
-  <div id="bottombar">
-    <div class="bmode">INFRA MODE &nbsp;<span>STABLE</span></div>
-    <div class="bstats">
-      <span class="bstat">MSGS<b id="b-msgs">0</b></span>
-      <span class="bstat">TOKENS<b id="b-toks">0</b></span>
+<div class="modal-backdrop" id="keyModal" role="dialog" aria-modal="true" aria-labelledby="keyModalTitle">
+  <div class="modal">
+    <div class="modal-top">
+      <div class="modal-title" id="keyModalTitle"><i class="fa-solid fa-key" style="color:var(--accent)"></i> API settings</div>
+      <button class="icon-btn" id="closeKey" aria-label="Close settings"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="model-dropdown" id="model-dropdown">
-      <div class="model-trigger" id="model-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-        <span id="model-label">GEMINI-2.0-FLASH</span>
+    <p class="modal-sub">Configure the API key used by your local server. The server still requires a valid provider key, but this interface does not enforce a particular prefix.</p>
+    <label class="field-label" for="apiKeyInput">Gemini API key</label>
+    <input class="field" id="apiKeyInput" type="password" placeholder="Paste your API key" autocomplete="off" spellcheck="false">
+    <div class="modal-actions">
+      <button class="secondary" id="toggleKeyVisibility"><i class="fa-regular fa-eye"></i> Show</button>
+      <button class="primary" id="saveKey"><i class="fa-solid fa-check"></i> Save key</button>
+    </div>
+    <div class="key-status" id="keyStatus">The local server must support the /api/key endpoint.</div>
+    <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:8px">
+      <label class="field-label" for="endpointInput">Local server address</label>
+      <input class="field" id="endpointInput" placeholder="Same origin as this page">
+      <div class="modal-actions">
+        <button class="secondary" id="resetEndpoint">Use current origin</button>
+        <button class="primary" id="saveEndpoint">Apply server</button>
       </div>
-      <div class="model-menu" role="listbox" id="model-menu">
-        <button class="model-option selected" data-value="gemini-2.0-flash" role="option">
-          Gemini 2.0 Flash
-          <span class="opt-note">Fast · Default</span>
-        </button>
-        <button class="model-option" data-value="gemini-2.0-flash-lite" role="option">
-          Gemini 2.0 Flash Lite
-          <span class="opt-note">Highest quota · Try if rate limited</span>
-        </button>
-        <button class="model-option" data-value="gemini-1.5-flash" role="option">
-          Gemini 1.5 Flash
-          <span class="opt-note">Reliable fallback</span>
-        </button>
-        <button class="model-option" data-value="gemini-1.5-pro" role="option">
-          Gemini 1.5 Pro
-          <span class="opt-note">Smartest · Lower quota</span>
-        </button>
-      </div>
+      <div class="key-status">Only change this if your backend runs at a different address. Cross-origin requests may require CORS configuration.</div>
     </div>
   </div>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-'use strict';
-const $=id=>document.getElementById(id);
-const show=el=>{el.style.display='';el.classList.remove('gone')};
-const hide=el=>{el.style.display='none';el.classList.add('gone')};
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(() => {
+"use strict";
 
-const $sKey=$('screen-key'),$sLoad=$('screen-loading'),$app=$('app');
-const $keyIn=$('key-in'),$keyErr=$('key-err');
-const $ldBar=$('ld-bar'),$ldMsg=$('ld-msg'),$ldSub=$('ld-sub');
-const $msgs=$('chat-msgs'),$ta=$('chat-ta'),$send=$('chat-send');
-const $bMsgs=$('b-msgs'),$bToks=$('b-toks');
-const $vnc=$('vnc-frame'),$idle=$('idle-screen');
-const $vncDot=$('vnc-dot'),$vncLbl=$('vnc-label');
+const $ = id => document.getElementById(id);
+const thread = $("thread");
+const scrollBox = $("chatScroll");
+const promptInput = $("prompt");
+const sendBtn = $("sendBtn");
+const landing = $("landing");
+const modelSelect = $("modelSelect");
 
-let apiKey=sessionStorage.getItem('mb_key')||'';
-let history=[],msgCount=0,tokenEst=0,busy=false,vncLive=false;
-let selectedModel='gemini-2.0-flash';
-let retryTimer=null;
-
-// ── Custom dropdown ──────────────────────────────────────────────────────────
-const $dd=$('model-dropdown'),$trigger=$('model-trigger'),$label=$('model-label'),$menu=$('model-menu');
-const opts=$menu.querySelectorAll('.model-option');
-const LABELS={
-  'gemini-2.0-flash':'GEMINI-2.0-FLASH',
-  'gemini-1.5-flash':'GEMINI-1.5-FLASH',
-  'gemini-1.5-pro':'GEMINI-1.5-PRO',
-  'gemini-2.0-flash-lite':'GEMINI-2.0-LITE'
+const STORE = {
+  endpoint: "megabro_endpoint",
+  model: "megabro_model",
+  mode: "megabro_mode",
+  chats: "megabro_chats_v3"
 };
 
-function toggleDD(force){
-  const open=force!==undefined?force:!$dd.classList.contains('open');
-  $dd.classList.toggle('open',open);
-  $trigger.setAttribute('aria-expanded',open);
+let messages = [];
+let chats = [];
+let mode = localStorage.getItem(STORE.mode) || "chat";
+let busy = false;
+let controller = null;
+let lastUserMessage = "";
+let attachedText = "";
+let lastScreenImage = "";
+let activeChatId = null;
+let toastTimeout;
+
+function endpoint() {
+  return (localStorage.getItem(STORE.endpoint) || location.origin).replace(/\/+$/, "");
 }
-$trigger.addEventListener('click',e=>{e.stopPropagation();toggleDD()});
-$trigger.addEventListener('keydown',e=>{
-  if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleDD()}
-  if(e.key==='Escape')toggleDD(false);
-});
-opts.forEach(opt=>{
-  opt.addEventListener('click',()=>{
-    selectedModel=opt.dataset.value;
-    $label.textContent=LABELS[selectedModel]||selectedModel.toUpperCase();
-    opts.forEach(o=>o.classList.toggle('selected',o===opt));
-    toggleDD(false);
-    $trigger.focus();
+function api(path) { return endpoint() + path; }
+
+async function request(path, options = {}) {
+  const headers = {...(options.headers || {})};
+  if (options.body && !headers["Content-Type"]) headers["Content-Type"] = "application/json";
+  const response = await fetch(api(path), {...options, headers});
+  const raw = await response.text();
+  let data = {};
+  try { data = raw ? JSON.parse(raw) : {}; }
+  catch { data = {error: raw || "Invalid server response"}; }
+  if (!response.ok) {
+    const error = new Error(data.error || data.message || `HTTP ${response.status}`);
+    error.status = response.status;
+    error.data = data;
+    throw error;
+  }
+  return data;
+}
+
+function notify(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+
+function scrollBottom(force = false) {
+  requestAnimationFrame(() => {
+    const distance = scrollBox.scrollHeight - scrollBox.scrollTop - scrollBox.clientHeight;
+    if (force || distance < 260) scrollBox.scrollTop = scrollBox.scrollHeight;
   });
-});
-document.addEventListener('click',e=>{if(!$dd.contains(e.target))toggleDD(false)});
+}
 
-// ── Loader ───────────────────────────────────────────────────────────────────
-async function runLoader(){
-  const steps=[
-    {pct:15,msg:'INITIALISING',sub:'WAKING UP THE BRO'},
-    {pct:38,msg:'LOADING MODULES',sub:'SETTING UP AI BRIDGE'},
-    {pct:62,msg:'CONNECTING API',sub:'REACHING GEMINI'},
-    {pct:84,msg:'ALMOST READY',sub:'BOOTING INTERFACE'},
-    {pct:100,msg:'SYSTEMS ONLINE',sub:'WELCOME BACK, BRO'},
-  ];
-  for(const s of steps){
-    $ldBar.style.width=s.pct+'%';
-    $ldMsg.textContent=s.msg;
-    $ldSub.textContent=s.sub;
-    await sleep(290+Math.random()*210);
+function renderMarkdown(source) {
+  const codeBlocks = [];
+  let text = esc(source).replace(/\r\n?/g, "\n");
+  text = text.replace(/```([a-zA-Z0-9_+#.-]*)\n([\s\S]*?)```/g, (_, language, code) => {
+    const i = codeBlocks.length;
+    codeBlocks.push({language: language || "code", code});
+    return `@@CB${i}@@`;
+  });
+
+  text = text.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  text = text.replace(/^### (.+)$/gm, "<h3>$1</h3>")
+    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+    .replace(/^# (.+)$/gm, "<h1>$1</h1>")
+    .replace(/^&gt; ?(.+)$/gm, "<blockquote>$1</blockquote>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/__(.+?)__/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+  const lines = text.split("\n");
+  let out = "", paragraph = false, ul = false, ol = false;
+  function closeParagraph() { if (paragraph) { out += "</p>"; paragraph = false; } }
+  function closeLists() {
+    closeParagraph();
+    if (ul) { out += "</ul>"; ul = false; }
+    if (ol) { out += "</ol>"; ol = false; }
   }
-  await sleep(260);
-}
 
-async function boot(){
-  const k=$keyIn.value.trim();
-  if(!k){$keyErr.textContent='Please enter your API key.';return}
-  if(!k.startsWith('AIza')){$keyErr.textContent='Key should start with AIza...';return}
-  $keyErr.textContent='';
-  apiKey=k;sessionStorage.setItem('mb_key',k);
-  hide($sKey);show($sLoad);
-  await runLoader();
-  hide($sLoad);$app.style.display='flex';$ta.focus();checkVNC();
-}
-$('key-btn').addEventListener('click',boot);
-$keyIn.addEventListener('keydown',e=>{if(e.key==='Enter')boot()});
-
-if(apiKey){
-  hide($sKey);show($sLoad);
-  (async()=>{await runLoader();hide($sLoad);$app.style.display='flex';$ta.focus();checkVNC()})();
-}
-
-$('change-key-btn').addEventListener('click',()=>{
-  $app.style.display='none';$keyIn.value='';$keyErr.textContent='';show($sKey);$keyIn.focus();
-});
-
-// ── VNC Status ───────────────────────────────────────────────────────────────
-// FIX: Now uses port check on server. Handles 3 states:
-//   running=true  novncReady=true  → VNC + noVNC live → show iframe
-//   running=true  novncReady=false → VNC up but no noVNC → show hint
-//   running=false                  → fully offline → idle animation
-let vncCheckScheduled = false;
-async function checkVNC(){
-  vncCheckScheduled = false;
-  $vncDot.className='pill-dot checking';
-  try{
-    const r=await fetch('/api/vnc-status');
-    const d=await r.json();
-
-    if(d.novncReady && d.running){
-      // Both VNC and noVNC are up → show iframe
-      if(!vncLive){
-        vncLive=true;
-        $vncDot.className='pill-dot on';
-        $vncLbl.textContent='VNC LIVE';
-        $vnc.src=d.vncUrl;
-        $vnc.classList.add('live');
-        $idle.style.opacity='0';
-        setTimeout(()=>{$idle.style.display='none'},500);
-      } else {
-        $vncDot.className='pill-dot on';
-        $vncLbl.textContent='VNC LIVE';
-      }
-    } else if(d.running && !d.novncReady){
-      // VNC port open but noVNC not running
-      vncLive=false;
-      $vnc.classList.remove('live');
-      $idle.style.display='';$idle.style.opacity='1';
-      $vncDot.className='pill-dot';
-      $vncDot.style.background='var(--orange)';
-      $vncLbl.textContent='VNC UP · NO NOVNC';
-      $('idle-label').textContent='VNC DETECTED';
-      $('idle-hint').textContent='Start websockify on port 8080';
+  for (const line of lines) {
+    const unordered = line.match(/^\s*[-*] (.+)$/);
+    const ordered = line.match(/^\s*\d+[.)] (.+)$/);
+    if (unordered) {
+      closeParagraph();
+      if (ol) { out += "</ol>"; ol = false; }
+      if (!ul) { out += "<ul>"; ul = true; }
+      out += `<li>${unordered[1]}</li>`;
+    } else if (ordered) {
+      closeParagraph();
+      if (ul) { out += "</ul>"; ul = false; }
+      if (!ol) { out += "<ol>"; ol = true; }
+      out += `<li>${ordered[1]}</li>`;
+    } else if (!line.trim()) {
+      closeLists();
+    } else if (/^<h[1-3]>/.test(line) || line.startsWith("<blockquote>") || /^@@CB\d+@@$/.test(line)) {
+      closeLists();
+      out += line;
     } else {
-      // Nothing running
-      vncLive=false;
-      $vnc.classList.remove('live');
-      $idle.style.display='';$idle.style.opacity='1';
-      $vncDot.className='pill-dot';
-      $vncDot.style.background='var(--red)';
-      $vncLbl.textContent='VNC OFFLINE';
-      $('idle-label').textContent='SIGNAL LOST';
-      $('idle-hint').textContent='Awaiting VNC packets';
+      if (!paragraph) { out += "<p>"; paragraph = true; }
+      else out += "<br>";
+      out += line;
     }
-  }catch(_){
-    $vncDot.className='pill-dot';
-    $vncDot.style.background='var(--muted)';
-    $vncLbl.textContent='NO SIGNAL';
   }
-  if(!vncCheckScheduled){
-    vncCheckScheduled=true;
-    setTimeout(checkVNC,5000);
-  }
+  closeLists();
+
+  return out.replace(/@@CB(\d+)@@/g, (_, index) => {
+    const block = codeBlocks[Number(index)];
+    if (!block) return "";
+    return `<div class="code-wrap">
+      <div class="code-head"><span>${esc(block.language)}</span>
+      <button type="button" data-copy-code="${Number(index)}"><i class="fa-regular fa-copy"></i> Copy code</button></div>
+      <pre><code>${block.code}</code></pre></div>`;
+  });
 }
 
-// VNC setup guide toggle
-$('vnc-pill').addEventListener('click',()=>{
-  const setup=$('vnc-setup');
-  setup.classList.toggle('show');
-});
-$('vnc-setup-close').addEventListener('click',()=>{
-  $('vnc-setup').classList.remove('show');
-});
+function titleFrom(text, count = 6) {
+  const words = String(text || "").trim().replace(/\s+/g, " ").split(" ");
+  return words.length > count ? words.slice(0,count).join(" ") + "..." : words.join(" ");
+}
 
-// ── Chat input ────────────────────────────────────────────────────────────────
-$ta.addEventListener('input',()=>{$ta.style.height='auto';$ta.style.height=Math.min($ta.scrollHeight,110)+'px'});
-$ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-$send.addEventListener('click',send);
+function addMessage(role, content) {
+  const message = {role, content: String(content ?? ""), time: Date.now()};
+  messages.push(message);
+  $("landing")?.remove();
 
-async function send(){
-  const text=$ta.value.trim();if(!text||busy)return;
-  $ta.value='';$ta.style.height='auto';busy=true;$send.disabled=true;
-  const empty=$('chat-empty');if(empty)empty.style.display='none';
-  appendMsg('user',text);
-  history.push({role:'user',parts:[{text}]});
-  msgCount++;tokenEst+=Math.ceil(text.length/4);updateStats();
-  const typing=appendTyping();
-  try{
-    const res=await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:text,apiKey,history:history.slice(0,-1),model:selectedModel})
+  const row = document.createElement("article");
+  row.className = `message ${role}`;
+  const avatar = role === "assistant"
+    ? '<i class="fa-solid fa-bolt"></i>'
+    : role === "system"
+      ? '<i class="fa-solid fa-circle-info"></i>'
+      : '<i class="fa-regular fa-user"></i>';
+  const author = role === "assistant" ? "Megabro" : role === "system" ? "System" : "You";
+  const index = messages.length - 1;
+
+  row.innerHTML = `<div class="avatar">${avatar}</div>
+    <div class="message-content">
+      <div class="message-author">${author}</div>
+      <div class="message-body">${renderMarkdown(message.content)}</div>
+      <div class="msg-tools">
+        <button type="button" data-copy-message="${index}"><i class="fa-regular fa-copy"></i> Copy</button>
+        ${role === "assistant" ? `<button type="button" data-regenerate="${index}"><i class="fa-solid fa-rotate-right"></i> Regenerate</button>` : ""}
+      </div>
+    </div>`;
+  thread.appendChild(row);
+
+  const firstUser = messages.find(m => m.role === "user");
+  $("chatTitle").textContent = titleFrom(firstUser?.content || "New conversation");
+  scrollBottom(true);
+  return row;
+}
+
+function typing() {
+  $("landing")?.remove();
+  const row = document.createElement("article");
+  row.className = "message assistant";
+  row.id = "typingIndicator";
+  row.innerHTML = `<div class="avatar"><i class="fa-solid fa-bolt"></i></div>
+    <div class="message-content"><div class="message-author">Megabro</div>
+    <div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  thread.appendChild(row);
+  scrollBottom(true);
+}
+function stopTyping() { $("typingIndicator")?.remove(); }
+
+function friendlyError(error) {
+  const raw = String(error?.message || error || "Unknown error");
+  if (/MALFORMED_FUNCTION_CALL/i.test(raw)) {
+    return "Gemini returned an invalid function call. Try again or switch to Chat mode. If it keeps happening, the server needs a fallback that retries generation without the invalid tool call.";
+  }
+  if (/NO_KEY|API key.*(missing|required|not configured)|key.*not configured/i.test(raw)) {
+    return "No API key is configured on the local server. Open API settings and save a valid Gemini API key.";
+  }
+  if (/quota|resource_exhausted|rate.?limit|429/i.test(raw)) {
+    return "The API rate limit or quota was reached. Wait a little and try again, or check your provider quota.";
+  }
+  if (/invalid.?api.?key|API_KEY_INVALID|401|403|permission denied/i.test(raw)) {
+    return "The API key was rejected or does not have access to this model. Check the key and model permissions.";
+  }
+  if (/failed to fetch|networkerror|load failed/i.test(raw)) {
+    return "Megabro could not reach the server. Check that the server is running and the address in API settings is correct.";
+  }
+  return raw;
+}
+
+function errorMessage(error, retryText = lastUserMessage) {
+  const row = document.createElement("article");
+  row.className = "message assistant";
+  row.innerHTML = `<div class="avatar"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="message-content">
+      <div class="message-author">Something went wrong</div>
+      <div class="error-box">${esc(friendlyError(error))}
+        <div class="error-actions">
+          <button type="button" data-retry-text="${esc(retryText)}"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+          <button type="button" data-open-settings><i class="fa-solid fa-key"></i> API settings</button>
+        </div>
+      </div>
+    </div>`;
+  thread.appendChild(row);
+  scrollBottom(true);
+}
+
+async function chat(text, options = {}) {
+  const clean = String(text || "").trim();
+  if (!clean || busy) return;
+  lastUserMessage = clean;
+
+  if (!options.retry) addMessage("user", clean);
+  busy = true;
+  controller = new AbortController();
+  sendBtn.classList.add("stop");
+  sendBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+  typing();
+
+  try {
+    const history = messages
+      .filter(m => m.role === "user" || m.role === "assistant")
+      .slice(-20)
+      .map(m => ({role: m.role, content: m.content}));
+
+    let messageToSend = clean;
+    if (attachedText && !options.retry) {
+      messageToSend += "\n\nAttached file content:\n" + attachedText;
+      attachedText = "";
+    }
+
+    const payload = {
+      message: messageToSend,
+      prompt: messageToSend,
+      model: modelSelect.value,
+      mode: "chat",
+      history
+    };
+
+    const data = await request("/api/chat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      signal: controller.signal
     });
-    const data=await res.json();
-    typing.remove();
 
-    if(data.errorType==='QUOTA_EXCEEDED'){
-      // Special quota error UI
-      appendQuotaError(data);
-    } else if(data.error){
-      appendMsg('bot','⚠ '+data.error+(data.hint?'\n\n'+data.hint:''));
+    stopTyping();
+    const reply = data.reply ?? data.text ?? data.response;
+    if (typeof reply !== "string" || !reply.trim()) {
+      throw new Error(data.error || "No reply from Gemini.");
+    }
+    addMessage("assistant", reply);
+    saveCurrentChat();
+  } catch (error) {
+    stopTyping();
+    if (error.name === "AbortError") {
+      addMessage("system", "Generation stopped.");
     } else {
-      history.push({role:'model',parts:[{text:data.reply}]});
-      msgCount++;
-      tokenEst+=Math.ceil(data.reply.length/4);
-      appendMsg('bot',data.reply);
+      console.error("Megabro chat error:", error);
+      errorMessage(error, clean);
     }
-  }catch(err){
-    typing.remove();
-    appendMsg('bot','Network error. Is the megabro server running?');
+  } finally {
+    busy = false;
+    controller = null;
+    sendBtn.classList.remove("stop");
+    sendBtn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    scrollBottom(true);
   }
-  updateStats();busy=false;$send.disabled=false;$msgs.scrollTop=$msgs.scrollHeight;$ta.focus();
 }
 
-// ── Quota error card ──────────────────────────────────────────────────────────
-function appendQuotaError(data){
-  const wrap=document.createElement('div');wrap.className='msg bot';
-  const who=document.createElement('div');who.className='msg-who';who.textContent='MEGABRO';
+async function control(text) {
+  const clean = String(text || "").trim();
+  if (!clean || busy) return;
+  lastUserMessage = clean;
+  addMessage("user", clean);
+  busy = true;
+  controller = new AbortController();
+  sendBtn.classList.add("stop");
+  sendBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+  typing();
 
-  const card=document.createElement('div');card.className='quota-card';
-  card.innerHTML=`
-    <div class="qc-title">⚠ Rate Limit / Quota Exceeded</div>
-    <div class="qc-msg">${escHtml(data.error||'Gemini quota exhausted')}</div>
-    <div class="qc-hint">
-      Free Gemini tier has per-minute &amp; per-day limits.<br/>
-      💡 <strong>Try Gemini 2.0 Flash Lite</strong> — it has the highest free quota.<br/>
-      Or wait ~60 seconds for the per-minute limit to reset.
-    </div>
-    <div class="qc-actions">
-      <button class="qc-btn" id="qc-switch">Switch to Flash Lite</button>
-      <button class="qc-btn" id="qc-retry">Retry in <span id="qc-cd">60</span>s</button>
-    </div>
-  `;
+  try {
+    const response = await fetch(api("/api/agent"), {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({message:clean, prompt:clean, model:modelSelect.value}),
+      signal: controller.signal
+    });
 
-  wrap.appendChild(who);wrap.appendChild(card);
-  $msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;
-
-  // Switch model button
-  wrap.querySelector('#qc-switch').addEventListener('click',()=>{
-    const liteOpt=[...opts].find(o=>o.dataset.value==='gemini-2.0-flash-lite');
-    if(liteOpt) liteOpt.click();
-  });
-
-  // Retry countdown
-  let cd=60;
-  const cdEl=wrap.querySelector('#qc-cd');
-  const retryBtn=wrap.querySelector('#qc-retry');
-  if(retryTimer) clearInterval(retryTimer);
-  retryTimer=setInterval(()=>{
-    cd--;cdEl.textContent=cd;
-    if(cd<=0){
-      clearInterval(retryTimer);retryTimer=null;
-      retryBtn.textContent='Retry Now';
-      retryBtn.addEventListener('click',()=>{
-        wrap.remove();
-        $ta.value=history[history.length-1]?.parts?.[0]?.text||'';
-        // Pop last user message from history so it re-sends clean
-        if(history.length&&history[history.length-1].role==='user') history.pop();
-        msgCount=Math.max(0,msgCount-1);updateStats();
-        send();
-      },{once:true});
+    if (!response.ok) {
+      const raw = await response.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { data = {error:raw}; }
+      throw new Error(data.error || `Control request failed (${response.status})`);
     }
-  },1000);
+
+    const type = response.headers.get("content-type") || "";
+    if (type.includes("ndjson") || type.includes("event-stream")) {
+      stopTyping();
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "", result = "", assistantRow = null;
+
+      while (true) {
+        const {value, done} = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, {stream:true});
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          let item;
+          try { item = JSON.parse(line); } catch { continue; }
+          if (item.error) throw new Error(item.error);
+          const delta = item.delta ?? item.text ?? item.reply ?? item.output ?? "";
+          if (typeof delta === "string" && delta) {
+            result += delta;
+            if (!assistantRow) {
+              assistantRow = addMessage("assistant", "");
+            }
+            assistantRow.querySelector(".message-body").innerHTML = renderMarkdown(result);
+            scrollBottom();
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        try {
+          const item = JSON.parse(buffer);
+          if (item.error) throw new Error(item.error);
+          result += item.delta ?? item.text ?? item.reply ?? "";
+        } catch (e) {
+          if (e.message && !/JSON|Unexpected token/i.test(e.message)) throw e;
+        }
+      }
+
+      if (!result.trim()) throw new Error("Control mode returned no output.");
+      if (!assistantRow) addMessage("assistant", result);
+      else {
+        const last = messages[messages.length-1];
+        if (last?.role === "assistant") last.content = result;
+      }
+    } else {
+      const data = await response.json();
+      stopTyping();
+      const result = data.reply ?? data.text ?? data.response ?? data.output ?? data.result;
+      if (!result) throw new Error(data.error || "Control mode returned no output.");
+      addMessage("assistant", typeof result === "string" ? result : JSON.stringify(result,null,2));
+    }
+    saveCurrentChat();
+  } catch (error) {
+    stopTyping();
+    if (error.name === "AbortError") addMessage("system", "Control action stopped.");
+    else {
+      console.error("Megabro control error:", error);
+      errorMessage(error, clean);
+    }
+  } finally {
+    busy = false;
+    controller = null;
+    sendBtn.classList.remove("stop");
+    sendBtn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    scrollBottom(true);
+  }
 }
 
-function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-function appendMsg(role,text){
-  const wrap=document.createElement('div');wrap.className='msg '+role;
-  const who=document.createElement('div');who.className='msg-who';who.textContent=role==='user'?'YOU':'MEGABRO';
-  const body=document.createElement('div');body.className='msg-text';body.innerHTML=fmt(text);
-  wrap.appendChild(who);wrap.appendChild(body);$msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;return wrap;
+function submit(text) {
+  const value = String(text ?? promptInput.value).trim();
+  if (!value) return;
+  promptInput.value = "";
+  resizePrompt();
+  if (mode === "control") control(value);
+  else chat(value);
 }
 
-function appendTyping(){
-  const wrap=document.createElement('div');wrap.className='msg bot';
-  const who=document.createElement('div');who.className='msg-who';who.textContent='MEGABRO';
-  const b=document.createElement('div');b.className='typing-bubble';b.innerHTML='<span></span><span></span><span></span>';
-  wrap.appendChild(who);wrap.appendChild(b);$msgs.appendChild(wrap);$msgs.scrollTop=$msgs.scrollHeight;return wrap;
+function resizePrompt() {
+  promptInput.style.height = "auto";
+  promptInput.style.height = Math.min(promptInput.scrollHeight, 170) + "px";
 }
 
-function fmt(t){
-  return escHtml(t)
-    .replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>')
-    .replace(/`([^`\n]+)`/g,'<code>$1</code>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+function resetThread() {
+  if (controller) controller.abort();
+  busy = false;
+  controller = null;
+  messages = [];
+  activeChatId = null;
+  thread.innerHTML = "";
+  const newLanding = document.createElement("section");
+  newLanding.className = "landing";
+  newLanding.id = "landing";
+  newLanding.innerHTML = `
+    <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> A little smarter, every day</div>
+    <h1 class="hero-title">What's on<br>your <span>mind?</span></h1>
+    <div class="hero-desc">Your ideas, questions, code and big plans. Bring them here and let's figure things out together.</div>
+    <div class="prompt-grid">
+      <button class="prompt-card" data-prompt="Explain a difficult topic simply, with examples and a practical analogy."><span class="prompt-icon"><i class="fa-solid fa-lightbulb"></i></span><span><strong>Explain anything</strong><small>Make difficult ideas easy to understand.</small></span></button>
+      <button class="prompt-card" data-prompt="Help me build a polished, modern website. Suggest a strong design and give me the complete code."><span class="prompt-icon"><i class="fa-solid fa-code"></i></span><span><strong>Build something</strong><small>Create websites, apps and useful tools.</small></span></button>
+      <button class="prompt-card" data-prompt="Brainstorm original ideas for a project, including unusual approaches and practical next steps."><span class="prompt-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><span><strong>Brainstorm ideas</strong><small>Find fresh angles and new possibilities.</small></span></button>
+      <button class="prompt-card" data-prompt="Help me debug a problem. Explain likely causes, how to diagnose it, and give me a reliable fix."><span class="prompt-icon"><i class="fa-solid fa-bug"></i></span><span><strong>Fix a problem</strong><small>Debug errors and work through solutions.</small></span></button>
+    </div>
+    <div class="landing-foot">Made for curiosity. Powered by your configured AI model.</div>`;
+  thread.appendChild(newLanding);
+  $("chatTitle").textContent = "New conversation";
+  promptInput.value = "";
+  resizePrompt();
+  scrollBox.scrollTop = 0;
+  closeSidebar();
 }
 
-function updateStats(){$bMsgs.textContent=msgCount;$bToks.textContent=tokenEst>999?(tokenEst/1000).toFixed(1)+'k':tokenEst}
+function saveCurrentChat() {
+  if (!messages.length) return;
+  if (!activeChatId) activeChatId = String(Date.now());
+  const first = messages.find(m => m.role === "user");
+  const entry = {
+    id: activeChatId,
+    title: titleFrom(first?.content || "Conversation", 5),
+    messages: messages.slice(-60),
+    updated: Date.now()
+  };
+  const index = chats.findIndex(c => c.id === activeChatId);
+  if (index >= 0) chats[index] = entry;
+  else chats.unshift(entry);
+  chats = chats.slice(0,30);
+  try { localStorage.setItem(STORE.chats, JSON.stringify(chats)); } catch {}
+  renderHistory();
+}
 
-$('clear-btn').addEventListener('click',()=>{
-  history=[];msgCount=0;tokenEst=0;
-  if(retryTimer){clearInterval(retryTimer);retryTimer=null;}
-  $msgs.innerHTML='<div class="chat-empty" id="chat-empty"><img src="https://s6.imgcdn.dev/Yx103M.png" style="width:38px;height:38px;object-fit:contain;opacity:.15;filter:grayscale(1)" onerror="this.style.display=\'none\'"/><p>System nominal.<br/>Awaiting your command.</p></div>';
-  updateStats();
-});
-
-$('export-btn').addEventListener('click',()=>{
-  if(!msgCount)return;
-  let out=`MEGABRO Export | ${new Date().toLocaleString()} | ${selectedModel}\n${'─'.repeat(52)}\n\n`;
-  document.querySelectorAll('.msg').forEach(m=>{
-    const who=m.querySelector('.msg-who')?.textContent||'';
-    const text=m.querySelector('.msg-text,.quota-card')?.textContent||'';
-    if(text)out+=`[${who}]\n${text.trim()}\n\n`;
+function renderHistory() {
+  const list = $("historyList");
+  list.innerHTML = "";
+  if (!chats.length) {
+    list.innerHTML = '<div style="padding:10px;color:#696761;font-size:11px">Your recent chats appear here.</div>';
+    return;
+  }
+  chats.slice(0,15).forEach(entry => {
+    const button = document.createElement("button");
+    button.className = "history-item";
+    button.textContent = entry.title || "Conversation";
+    button.title = entry.title || "Conversation";
+    button.addEventListener("click", () => openChat(entry.id));
+    list.appendChild(button);
   });
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([out],{type:'text/plain'}));
-  a.download=`megabro-${Date.now()}.txt`;a.click();URL.revokeObjectURL(a.href);
+}
+
+function loadHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE.chats) || "[]");
+    chats = Array.isArray(saved) ? saved : [];
+  } catch { chats = []; }
+  renderHistory();
+}
+
+function openChat(id) {
+  const entry = chats.find(c => c.id === id);
+  if (!entry) return;
+  if (controller) controller.abort();
+  busy = false;
+  messages = [];
+  activeChatId = entry.id;
+  thread.innerHTML = "";
+  entry.messages.forEach(m => {
+    if (["user","assistant","system"].includes(m.role)) addMessage(m.role,m.content);
+  });
+  $("chatTitle").textContent = entry.title || "Conversation";
+  closeSidebar();
+  scrollBottom(true);
+}
+
+function exportChat() {
+  const data = {
+    app: "Megabro",
+    exportedAt: new Date().toISOString(),
+    model: modelSelect.value,
+    mode,
+    messages
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "megabro-chat-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  notify("Conversation exported.");
+}
+
+function setMode(next) {
+  mode = next === "control" ? "control" : "chat";
+  localStorage.setItem(STORE.mode,mode);
+  $("chatModeBtn").classList.toggle("active",mode === "chat");
+  $("controlModeBtn").classList.toggle("active",mode === "control");
+  $("chatNav").classList.toggle("active",mode === "chat");
+  $("controlNav").classList.toggle("active",mode === "control");
+  $("modeHint").textContent = mode === "chat" ? "Chat mode is active." : "Control mode uses your local agent.";
+  promptInput.placeholder = mode === "chat" ? "Ask Megabro anything..." : "Describe a task for control mode...";
+}
+
+function openSettings() {
+  $("endpointInput").value = localStorage.getItem(STORE.endpoint) || "";
+  $("keyModal").classList.add("show");
+  $("apiKeyInput").focus();
+}
+function closeSettings() { $("keyModal").classList.remove("show"); }
+function closeSidebar() { $("sidebar").classList.remove("open"); }
+
+async function loadConfig() {
+  try {
+    const data = await request("/api/config");
+    serverKeyConfigured = Boolean(data.hasKey || data.keyConfigured || data.apiKeyConfigured || data.configured);
+    if (data.model && typeof data.model === "string") {
+      const exists = [...modelSelect.options].some(o => o.value === data.model);
+      if (!exists) modelSelect.add(new Option(data.model,data.model));
+      modelSelect.value = data.model;
+    }
+    if (data.models && Array.isArray(data.models)) populateModels(data.models);
+    $("connectionDot").classList.remove("offline");
+    $("connectionText").textContent = "Local server connected";
+    if (data.apiKey && !serverKeyConfigured) serverKeyConfigured = true;
+  } catch (error) {
+    $("connectionDot").classList.add("offline");
+    $("connectionText").textContent = "Server unavailable";
+    console.warn("Config could not be loaded:",error);
+  }
+}
+
+function populateModels(models) {
+  const previous = localStorage.getItem(STORE.model) || modelSelect.value;
+  const cleaned = models.map(item => typeof item === "string" ? item : item.id || item.name).filter(Boolean);
+  if (!cleaned.length) return;
+  modelSelect.innerHTML = "";
+  cleaned.forEach(id => modelSelect.add(new Option(id.replace(/^models\//,""),id.replace(/^models\//,""))));
+  if ([...modelSelect.options].some(o => o.value === previous)) modelSelect.value = previous;
+}
+
+async function loadModels() {
+  try {
+    const data = await request("/api/models");
+    const models = Array.isArray(data) ? data : data.models || data.items || [];
+    populateModels(models);
+  } catch (error) {
+    console.warn("Model list unavailable:",error);
+  }
+}
+
+async function saveKey() {
+  const key = $("apiKeyInput").value.trim();
+  if (!key) {
+    $("keyStatus").textContent = "Enter your API key first.";
+    return;
+  }
+  $("saveKey").disabled = true;
+  $("keyStatus").textContent = "Saving key...";
+  try {
+    const data = await request("/api/key", {
+      method: "POST",
+      body: JSON.stringify({key, apiKey:key, api_key:key})
+    });
+    serverKeyConfigured = true;
+    $("keyStatus").textContent = data.message || "The server accepted the key.";
+    $("apiKeyInput").value = "";
+    notify("API key saved.");
+    await loadConfig();
+  } catch (error) {
+    $("keyStatus").textContent = friendlyError(error);
+  } finally {
+    $("saveKey").disabled = false;
+  }
+}
+
+async function loadScreenshot() {
+  const preview = $("screenPreview");
+  preview.innerHTML = '<div class="screen-placeholder"><i class="fa-solid fa-spinner fa-spin"></i>Loading screenshot...</div>';
+  try {
+    const response = await fetch(api("/api/screenshot"));
+    if (!response.ok) {
+      const raw = await response.text();
+      let detail = raw;
+      try { detail = JSON.parse(raw).error || raw; } catch {}
+      throw new Error(detail || `Screenshot failed (${response.status})`);
+    }
+    const type = response.headers.get("content-type") || "";
+    let src;
+    if (type.includes("application/json")) {
+      const data = await response.json();
+      const image = data.image || data.screenshot || data.data || data.base64;
+      if (!image) throw new Error(data.error || "No screenshot image was returned.");
+      src = image.startsWith("data:") ? image : "data:image/png;base64," + image;
+    } else {
+      src = URL.createObjectURL(await response.blob());
+    }
+    lastScreenImage = src;
+    preview.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Screen screenshot";
+    preview.appendChild(img);
+  } catch (error) {
+    preview.innerHTML = `<div class="screen-placeholder"><i class="fa-solid fa-circle-exclamation"></i>${esc(friendlyError(error.message))}</div>`;
+  }
+}
+
+function saveScreenshot() {
+  if (!lastScreenImage) {
+    notify("Load a screenshot first.");
+    return;
+  }
+  const a = document.createElement("a");
+  a.href = lastScreenImage;
+  a.download = "megabro-screenshot.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// Main interactions
+sendBtn.addEventListener("click", () => {
+  if (busy && controller) {
+    controller.abort();
+    return;
+  }
+  submit();
 });
+
+promptInput.addEventListener("input", () => {
+  resizePrompt();
+  scrollBottom();
+});
+promptInput.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+    event.preventDefault();
+    submit();
+  }
+});
+
+document.addEventListener("click", async event => {
+  const promptCard = event.target.closest("[data-prompt]");
+  if (promptCard) {
+    promptInput.value = promptCard.dataset.prompt;
+    resizePrompt();
+    promptInput.focus();
+    return;
+  }
+
+  const copyMessage = event.target.closest("[data-copy-message]");
+  if (copyMessage) {
+    const message = messages[Number(copyMessage.dataset.copyMessage)];
+    if (message) {
+      try { await navigator.clipboard.writeText(message.content); notify("Message copied."); }
+      catch { notify("Clipboard access is unavailable."); }
+    }
+    return;
+  }
+
+  const copyCode = event.target.closest("[data-copy-code]");
+  if (copyCode) {
+    const wrap = copyCode.closest(".code-wrap");
+    const code = wrap?.querySelector("pre code")?.textContent || "";
+    try { await navigator.clipboard.writeText(code); notify("Code copied."); }
+    catch { notify("Clipboard access is unavailable."); }
+    return;
+  }
+
+  const retry = event.target.closest("[data-retry-text]");
+  if (retry) {
+    const value = retry.dataset.retryText || lastUserMessage;
+    retry.closest(".message")?.remove();
+    submitRetry(value);
+    return;
+  }
+
+  const regenerate = event.target.closest("[data-regenerate]");
+  if (regenerate) {
+    const index = Number(regenerate.dataset.regenerate);
+    const preceding = messages.slice(0,index).reverse().find(m => m.role === "user");
+    if (preceding) {
+      messages = messages.slice(0,index);
+      regenerate.closest(".message")?.remove();
+      chat(preceding.content);
+    }
+    return;
+  }
+
+  if (event.target.closest("[data-open-settings]")) {
+    openSettings();
+    return;
+  }
+});
+
+function submitRetry(text) {
+  if (!text || busy) return;
+  if (mode === "control") control(text);
+  else chat(text, {retry:true});
+}
+
+$("newChatBtn").addEventListener("click", () => {
+  if (messages.length) saveCurrentChat();
+  resetThread();
+});
+$("newChatTop").addEventListener("click", () => {
+  if (messages.length) saveCurrentChat();
+  resetThread();
+});
+$("clearBtn").addEventListener("click", () => {
+  if (messages.length && !confirm("Clear this conversation?")) return;
+  resetThread();
+});
+$("brandHome").addEventListener("click", event => {
+  event.preventDefault();
+  if (messages.length) saveCurrentChat();
+  resetThread();
+});
+$("exportBtn").addEventListener("click", exportChat);
+
+$("chatModeBtn").addEventListener("click", () => setMode("chat"));
+$("controlModeBtn").addEventListener("click", () => setMode("control"));
+$("chatNav").addEventListener("click", () => { setMode("chat"); closeSidebar(); });
+$("controlNav").addEventListener("click", () => { setMode("control"); closeSidebar(); });
+$("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+$("settingsNav").addEventListener("click", openSettings);
+$("keyBtn").addEventListener("click", openSettings);
+$("closeKey").addEventListener("click", closeSettings);
+$("keyModal").addEventListener("click", event => {
+  if (event.target === $("keyModal")) closeSettings();
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeSettings();
+    closeSidebar();
+    $("screenPanel").classList.remove("open");
+  }
+});
+
+$("toggleKeyVisibility").addEventListener("click", () => {
+  const input = $("apiKeyInput");
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  $("toggleKeyVisibility").innerHTML = show
+    ? '<i class="fa-regular fa-eye-slash"></i> Hide'
+    : '<i class="fa-regular fa-eye"></i> Show';
+});
+$("saveKey").addEventListener("click", saveKey);
+$("endpointInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") $("saveEndpoint").click();
+});
+$("saveEndpoint").addEventListener("click", async () => {
+  const value = $("endpointInput").value.trim().replace(/\/+$/,"");
+  if (value && !/^https?:\/\/.+/i.test(value)) {
+    notify("Enter a full server URL beginning with http:// or https://");
+    return;
+  }
+  if (value) localStorage.setItem(STORE.endpoint,value);
+  else localStorage.removeItem(STORE.endpoint);
+  notify("Server address updated.");
+  await loadConfig();
+  await loadModels();
+});
+$("resetEndpoint").addEventListener("click", () => {
+  localStorage.removeItem(STORE.endpoint);
+  $("endpointInput").value = "";
+  notify("Using the current page's server address.");
+});
+modelSelect.addEventListener("change", () => {
+  localStorage.setItem(STORE.model,modelSelect.value);
+});
+$("screenBtn").addEventListener("click", () => toggleScreen());
+$("screenNav").addEventListener("click", () => {
+  toggleScreen(true);
+  closeSidebar();
+});
+$("closeScreen").addEventListener("click", () => toggleScreen(false));
+$("refreshScreen").addEventListener("click", loadScreenshot);
+$("saveScreen").addEventListener("click", saveScreenshot);
+
+$("attachBtn").addEventListener("click", () => $("fileInput").click());
+$("fileInput").addEventListener("change", async event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (file.size > 1024 * 1024) {
+    notify("Please choose a file smaller than 1 MB.");
+    event.target.value = "";
+    return;
+  }
+  try {
+    attachedText = await file.text();
+    promptInput.value = (promptInput.value ? promptInput.value + "\n" : "") +
+      "Please review the attached file: " + file.name;
+    resizePrompt();
+    notify(file.name + " attached.");
+  } catch {
+    notify("Could not read that file.");
+  }
+  event.target.value = "";
+});
+
+function toggleScreen(open) {
+  const panel = $("screenPanel");
+  panel.classList.toggle("open", typeof open === "boolean" ? open : !panel.classList.contains("open"));
+  if (panel.classList.contains("open")) loadScreenshot();
+}
+
+// Keep the chat pinned only when the user is already near the bottom.
+scrollBox.addEventListener("scroll", () => {
+  scrollBox.dataset.nearBottom =
+    scrollBox.scrollHeight - scrollBox.scrollTop - scrollBox.clientHeight < 100 ? "1" : "0";
+});
+
+window.addEventListener("resize", () => {
+  if (scrollBox.dataset.nearBottom === "1") scrollBottom(true);
+});
+
+// Start up
+loadHistory();
+setMode(mode);
+const savedModel = localStorage.getItem(STORE.model);
+if (savedModel) {
+  if (![...modelSelect.options].some(option => option.value === savedModel)) {
+    modelSelect.add(new Option(savedModel,savedModel));
+  }
+  modelSelect.value = savedModel;
+}
+loadConfig();
+loadModels();
+setTimeout(() => promptInput.focus({preventScroll:true}), 200);
+})();
 </script>
 </body>
 </html>

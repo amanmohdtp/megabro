@@ -31,12 +31,27 @@ Megabro is a local AI interface that connects to **Google Gemini** directly from
 
 - **Instant Boot** : zero-config startup, launches your browser automatically
 - **Live Chat** : send prompts, get intelligent AI responses in real time
-- **Retro TV Interface** : beautiful CRT-style display with scanlines and glow effects
+- **Minimal Interface** : clean dark UI with a live remote-screen panel
 - **Session Stats** : live message count and token estimation
 - **Export** : save your full conversation to a `.txt` file with one click
 - **Model Picker** : switch between Gemini models on the fly
 - **Privacy First** : your API key stays in `sessionStorage` only, never logged or stored on disk
 - **Lightweight** : just Express + one HTML file, minimal footprint
+
+<br/>
+
+## Control mode
+
+Switch the composer to **Control** and tell Megabro what to do ("open wikipedia.org and search for Alan Turing"). It looks at the screen, then clicks, types, scrolls and opens sites in a loop (up to 25 steps) until it is done. Press stop at any time.
+
+It controls the VNC desktop on display `:1` (override with `MEGABRO_DISPLAY`). You need `xdotool`, `scrot`, a browser (`chromium`) and a VNC desktop. On Termux run `npm run setup:termux`, then:
+
+```bash
+vncserver :1 -geometry 1280x720 -depth 24
+websockify --web=/usr/share/novnc 8080 localhost:5901 &
+```
+
+Megabro is told never to enter passwords or payment details, but you are responsible for what it does on that screen. Watch it.
 
 <br/>
 
@@ -60,10 +75,12 @@ That is it. A progress bar boots, your browser opens, and you are ready to go.
 
 ## Get a Free API Key
 
+Megabro opens straight into chat. Add your key once (the **Key** button, or `export GEMINI_API_KEY=AIza...`) and it is remembered in `~/.megabro/config.json`.
+
 1. Go to [aistudio.google.com](https://aistudio.google.com/)
 2. Click **Get API Key**
 3. Copy the key (starts with `AIza...`)
-4. Paste it into the Megabro boot screen
+4. Paste it into the **Key** dialog
 
 Your key is stored in `sessionStorage` only and is never sent anywhere except directly to Google's Gemini API through your own local server.
 
@@ -117,9 +134,8 @@ PORT=8080 megabro
 
 | Model | Description |
 |-------|-------------|
-| `gemini-2.0-flash` | Latest fast model (default) |
-| `gemini-1.5-flash` | Fast and efficient |
-| `gemini-1.5-pro` | Most capable |
+| `gemini-3.5-flash` | Fast and capable (default) |
+| `gemini-3.1-flash-lite` | Lightest, highest free quota |
 
 Switch models from the dropdown in the bottom bar of the interface.
 
@@ -138,7 +154,7 @@ Switch models from the dropdown in the bottom bar of the interface.
 {
   "message": "Hello!",
   "apiKey": "AIza...",
-  "model": "gemini-2.0-flash",
+  "model": "gemini-3.5-flash",
   "history": []
 }
 ```
